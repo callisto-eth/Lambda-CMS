@@ -3,8 +3,13 @@ import './globals.css';
 import React from 'react';
 
 export const metadata: Metadata = {
-  title: 'Lambda',
+  title: 'Lambda | Supercharge your Socials',
   description: 'Supercharge your Socials',
+  icons: [
+    {
+      url: '/Lambda.png',
+    },
+  ],
 };
 
 export default function RootLayout({
@@ -14,7 +19,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body className="bg-[#212325]">{children}</body>
     </html>
   );
 }
