@@ -1,5 +1,6 @@
 {
   "extends": ["next/core-web-vitals", "airbnb", "airbnb/hooks"],
+  "plugins": ["import"],
   "rules": {
     "import/extensions": [
       "error",
@@ -12,6 +13,12 @@
       }
     ],
     "react/react-in-jsx-scope": "off",
+    "import/prefer-default-export": "off",
+    "import/no-extraneous-dependencies": "off",
+    "react/jsx-props-no-spreading": "off",
+    "object-curly-newline": "off",
+    "implicit-arrow-linebreak": "off",
+    "operator-linebreak": "off",
     "react/jsx-filename-extension": [
       2,
       { "extensions": [".js", ".jsx", ".ts", ".tsx"] }
