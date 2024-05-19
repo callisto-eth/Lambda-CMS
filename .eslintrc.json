@@ -1,5 +1,6 @@
+// "airbnb", "airbnb/hooks"
 {
-  "extends": ["next/core-web-vitals", "airbnb", "airbnb/hooks"],
+  "extends": ["next/core-web-vitals"],
   "plugins": ["import"],
   "rules": {
     "import/extensions": [
