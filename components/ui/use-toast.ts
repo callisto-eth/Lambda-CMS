@@ -1,11 +1,3 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable no-shadow */
-/* eslint-disable consistent-return */
-/* eslint-disable function-paren-newline */
-/* eslint-disable no-confusing-arrow */
-/* eslint-disable indent */
-/* eslint-disable no-use-before-define */
-
 'use client';
 
 // Inspired by react-hot-toast library
@@ -80,7 +72,6 @@ const addToRemoveQueue = (toastId: string) => {
 };
 
 export const reducer = (state: State, action: Action): State => {
-  // eslint-disable-next-line default-case
   switch (action.type) {
     case 'ADD_TOAST':
       return {

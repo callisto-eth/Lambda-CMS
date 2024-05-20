@@ -1,17 +1,20 @@
 'use client';
 
 import { MdiLambda, SolarLogin3BoldDuotone } from '@/components/Icons';
-// import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import Image from 'next/image';
-import Link from 'next/link';
+
 import { useState, ChangeEvent } from 'react';
 
 export default function Home() {
-  const [email, setEmail] = useState<string>('');
+  const [userEmail, setUserEmail] = useState<string>('');
 
   return (
     <main className="relative">
+      <div>
+        <div className="md:w-[400px] md:h-[400px] z-[-1] w-[250px] h-[250px] bg-[#fb4500] left-0 absolute top-[850px] blur-[50px] md:blur-[100px]" />
+      </div>
       <section
         className="grid md:grid-cols-2 md:h-screen grid-rows-2 md:grid-rows-1"
         style={{
@@ -48,18 +51,17 @@ export default function Home() {
                   <input
                     type="email"
                     className="w-full outline-none py-2 px-4 bg-transparent border border-white border-opacity-10 rounded-xl"
-                    onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                      setEmail(e.target.value);
+                    onChange={(eV: ChangeEvent<HTMLInputElement>) => {
+                      setUserEmail(eV.target.value);
                     }}
                   />
                 </div>
-                <Link
+                <Button
                   type="submit"
                   className="font-DM-Sans p-3 rounded-xl bg-[#323132] text-md font-semibold text-[#b4b3b4] hover:bg-[#b4b3b4] hover:text-[#323132]"
-                  href={`/logiin?email=${email}`}
                 >
                   Continue with Email
-                </Link>
+                </Button>
               </DialogContent>
             </Dialog>
           </div>
@@ -87,10 +89,18 @@ export default function Home() {
           cost and quality
         </p>
         <div className="col-span-2">
-          <div className="border-solid border-white border-t-[1px] border-r-[1px] rounded-tr-[100px] h-[300px]" />
-          <div className="border-r-[1px] border-[#FB4500] h-[300px] flex justify-end">
-            <div className="w-[15px] h-[15px]  rounded-full mr-[-8px] bg-[#FB4500]" />
-          </div>
+          <svg
+            width="195"
+            height="446"
+            viewBox="0 0 195 446"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0 1.00001L93.7838 1.00001C93.7838 1.00001 194.005 0.652054 194.005 113.194V446"
+              stroke="black"
+            />
+          </svg>
         </div>
         <div className="col-span-6 mt-[-80px] flex justify-center items-center">
           <div className="w-[330px] text-xl  text-[#FB4500]">
