@@ -16,22 +16,32 @@ import { Input } from '@/components/ui/input';
 import { SolarLogin3BoldDuotone } from './Icons';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useState } from 'react';
 
 export default function AuthModal() {
+  const [authState, setAuthState] = useState<'signin' | 'signup'>('signin');
+
   return (
     <Dialog>
       <DialogTrigger className="border border-[#FB4500] bg-transparent rounded-3xl text-md px-16 py-3.5 text-[#FB4500] hover:bg-[#FB4500] hover:text-white transition-all duration-200">
         Build your Event
       </DialogTrigger>
-      {FormComponent()}
+      {FormComponent({ authType: authState, setAuthState: setAuthState })}
     </Dialog>
   );
 }
 
-function FormComponent() {
+function FormComponent({
+  authType,
+  setAuthState,
+}: {
+  authType: 'signin' | 'signup';
+  setAuthState: (val: 'signin' | 'signup') => void;
+}) {
   const pageRouter = useRouter();
   async function onSubmit(formValues: z.infer<typeof authSchema>) {
-    const resp = await fetch('/api/auth/signup', {
+    const resp = await fetch(`/api/auth/${authType}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -63,56 +73,130 @@ function FormComponent() {
       <SolarLogin3BoldDuotone className="text-6xl text-[#d83e08]" />
       <div className="leading-tight">
         <p className="text-3xl font-semibold">Welcome to Lambda</p>
-        <p className="text-lg">Please sign up or sign in below</p>
       </div>
-      <Form {...authForm}>
-        <form
-          className="space-y-2 font-DM-Sans"
-          onSubmit={authForm.handleSubmit(onSubmit)}
-        >
-          <FormField
-            name="email"
-            control={authForm.control}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="Email"
-                    type="email"
-                    {...field}
-                    className="bg-transparent outline-none py-2.5 border border-white border-opacity-10 rounded-xl"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            name="password"
-            control={authForm.control}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Password</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="Password"
-                    type="password"
-                    {...field}
-                    className="bg-transparent outline-none py-2.5 border border-white border-opacity-10 rounded-xl"
-                  />
-                </FormControl>
-              </FormItem>
-            )}
-          ></FormField>
-          <Button
-            type="submit"
-            className="font-DM-Sans p-3 rounded-xl w-full bg-[#323132] text-md font-semibold text-[#b4b3b4] hover:bg-[#b4b3b4] hover:text-[#323132]"
+      <Tabs
+        defaultValue="signin"
+        className="w-full"
+        onValueChange={(val: string) => {
+          setAuthState(val as 'signin' | 'signup');
+        }}
+      >
+        <TabsList className="grid w-full grid-cols-2 bg-transparent">
+          <TabsTrigger
+            value="signin"
+            className="data-[state=active]:bg-white/20 data-[state=active]:text-white backdrop-blur-sm text-white"
           >
-            Continue
-          </Button>
-        </form>
-      </Form>
+            Login
+          </TabsTrigger>
+          <TabsTrigger
+            value="signup"
+            className="data-[state=active]:bg-white/20 data-[state=active]:text-white backdrop-blur-sm text-white"
+          >
+            Sign up
+          </TabsTrigger>
+        </TabsList>
+        <TabsContent value="signin">
+          <Form {...authForm}>
+            <form
+              className="space-y-2 font-DM-Sans"
+              onSubmit={authForm.handleSubmit(onSubmit)}
+            >
+              <FormField
+                name="email"
+                control={authForm.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Email"
+                        type="email"
+                        {...field}
+                        className="bg-transparent outline-none py-2.5 border border-white border-opacity-10 rounded-xl"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                name="password"
+                control={authForm.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Password"
+                        type="password"
+                        {...field}
+                        className="bg-transparent outline-none py-2.5 border border-white border-opacity-10 rounded-xl"
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              ></FormField>
+              <Button
+                type="submit"
+                className="font-DM-Sans p-3 rounded-xl w-full bg-[#323132] text-md font-semibold text-[#b4b3b4] hover:bg-[#b4b3b4] hover:text-[#323132]"
+              >
+                Continue
+              </Button>
+            </form>
+          </Form>
+        </TabsContent>
+        <TabsContent value="signup">
+          {' '}
+          <Form {...authForm}>
+            <form
+              className="space-y-2 font-DM-Sans"
+              onSubmit={authForm.handleSubmit(onSubmit)}
+            >
+              <FormField
+                name="email"
+                control={authForm.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Email"
+                        type="email"
+                        {...field}
+                        className="bg-transparent outline-none py-2.5 border border-white border-opacity-10 rounded-xl"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                name="password"
+                control={authForm.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Password"
+                        type="password"
+                        {...field}
+                        className="bg-transparent outline-none py-2.5 border border-white border-opacity-10 rounded-xl"
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              ></FormField>
+              <Button
+                type="submit"
+                className="font-DM-Sans p-3 rounded-xl w-full bg-[#323132] text-md font-semibold text-[#b4b3b4] hover:bg-[#b4b3b4] hover:text-[#323132]"
+              >
+                Continue
+              </Button>
+            </form>
+          </Form>
+        </TabsContent>
+      </Tabs>
     </DialogContent>
   );
 }
