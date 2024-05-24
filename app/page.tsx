@@ -1,16 +1,13 @@
 'use client';
 
-import { MdiLambda, SolarLogin3BoldDuotone } from '@/components/Icons';
-import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import AuthModal from '@/components/AuthModal';
+import { MdiLambda } from '@/components/Icons';
+
 import Image from 'next/image';
-import { useState, ChangeEvent } from 'react';
 
 export default function Home() {
-  const [email, setEmail] = useState<string>('');
   return (
     <main className="relative">
-      <BlobEffect />
       <section
         className="grid md:grid-cols-2 md:h-screen grid-rows-2 md:grid-rows-1"
         style={{
@@ -28,38 +25,11 @@ export default function Home() {
               <br />
               audience.
             </p>
-            <p className="text-lg">
+            <p className="text-md">
               Supercharge your Socials with our Plugin-Driven Event Management
               Platform
             </p>
-            <Dialog>
-              <DialogTrigger className="border border-[#FB4500] bg-transparent rounded-3xl text-md px-16 py-3.5 text-[#FB4500] hover:bg-[#FB4500] hover:text-white transition-all duration-200">
-                Build your Event
-              </DialogTrigger>
-              <DialogContent className="p-6 w-[350px] bg-black rounded-3xl text-white font-DM-Sans bg-clip-padding backdrop-filter backdrop-blur-md bg-opacity-10 border border-white border-opacity-10">
-                <SolarLogin3BoldDuotone className="text-6xl text-[#d83e08]" />
-                <div className="leading-tight">
-                  <p className="text-3xl font-semibold">Welcome to Lambda</p>
-                  <p className="text-lg">Please sign up or sign in below</p>
-                </div>
-                <div className="space-y-1">
-                  <p>Email</p>
-                  <input
-                    type="email"
-                    className="w-full outline-none py-2 px-4 bg-transparent border border-white border-opacity-10 rounded-xl"
-                    onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                      setEmail(e.target.value);
-                    }}
-                  />
-                </div>
-                <Button
-                  type="submit"
-                  className="font-DM-Sans p-3 rounded-xl bg-[#323132] text-md font-semibold text-[#b4b3b4] hover:bg-[#b4b3b4] hover:text-[#323132]"
-                >
-                  Continue with Email
-                </Button>
-              </DialogContent>
-            </Dialog>
+            <AuthModal />
           </div>
           <div />
         </div>
@@ -75,32 +45,35 @@ export default function Home() {
           />
         </div>
       </section>
-      <div className="h-[300px]" />
-      <section className="grid grid-cols-12 font-DM-Sans px-20 space-x-4">
-        <p className="text-white text-4xl col-span-4 font-medium h-full mt-[-62px]">
+      <div className="hidden h-[300px] md:block" />
+      <section className="grid grid-cols-12 font-DM-Sans md:px-20 px-10 space-x-0 md:space-x-4 grid-rows-2 md:grid-rows-none gap-y-4 md:gap-y-0 ">
+        <div className="bg-white w-[1px] col-span-1 row-span-2 md:hidden h-[200px]" />
+        <p className="text-white text-2xl md:text-4xl md:col-span-4 font-medium h-full md:mt-[-62px] grid-rows-1 col-span-11">
           Today, Event Management
           <br />
           require trade offs between
           <br />
           cost and quality
         </p>
-        <div className="col-span-2">
+        <div className="col-span-2 hidden md:block">
           <div className="border-solid border-white border-t-[1px] border-r-[1px] rounded-tr-[100px] h-[300px]" />
           <div className="border-r-[1px] border-[#FB4500] h-[300px] flex justify-end">
             <div className="w-[15px] h-[15px]  rounded-full mr-[-8px] bg-[#FB4500]" />
           </div>
         </div>
-        <div className="col-span-6 mt-[-80px] flex justify-center items-center">
-          <div className="w-[330px] text-xl  text-[#FB4500]">
+        <div className="md:col-span-6  col-span-11 md:mt-[-80px] md:flex justify-center items-center">
+          <div className="w-[330px] md:text-xl text-lg  text-[#FB4500]">
             Nowadays, it has become difficult to host Events with cost
             efficiency without compromising its quality.
           </div>
         </div>
       </section>
-      <section className="font-DM-Sans font-medium">
-        <div className="py-5 ">
-          <p className="text-center text-[#FB4500]">CUSTOMIZABLE EVENTS</p>
-          <p className="text-[80px] leading-none text-center text-white">
+      <section className="font-DM-Sans font-medium px-10">
+        <div className="py-10 md:py-5 ">
+          <p className="text-center text-[#FB4500] text-sm md:text-base">
+            CUSTOMIZABLE EVENTS
+          </p>
+          <p className="md:text-[80px] text-4xl leading-none text-center text-white">
             hundreds of
             <br />
             plugins to choose
@@ -108,20 +81,21 @@ export default function Home() {
             from
           </p>
         </div>
-        <div className="grid grid-cols-12 px-20">
-          <p className="col-span-5 text-[#FB4500] text-xl place-content-center">
+        <div className="grid grid-cols-12 md:px-20 grid-rows-2 md:grid-rows-none gap-y-6 md:gap-y-0">
+          <div className="bg-white w-[1px] col-span-1 row-span-2 md:hidden" />
+          <p className="md:col-span-5 col-span-11 text-[#FB4500] md:text-xl text-lg place-content-center">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
             eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
             ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
             aliquip ex ea commodo consequat.
           </p>
-          <div className="flex flex-col items-center col-span-2">
+          <div className="flex-col items-center col-span-2  relative hidden md:flex">
             <div className="border-r-[1px] border-[#FB4500] h-[200px]" />
-            <div className="border-r-[1px] border-[#FB4500] h-[200px] relative">
+            <div className="border-r-[1px] border-[#FB4500] h-[200px]">
               <div className="w-[15px] h-[15px] absolute left-[-7px] rounded-full bg-[#FB4500]" />
             </div>
           </div>
-          <div className="col-span-5 h-full w-full bg-white rounded-[60px] bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-10 border border-white border-opacity-10" />
+          <div className="md:col-span-5 col-span-11 h-full w-full bg-white rounded-[60px] bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-10 border border-white border-opacity-10" />
         </div>
         <div className="justify-center items-center relative hidden md:flex">
           <div className="absolute w-[70px] h-[70px] rounded-full border border-[#FB4500] top-[50px] left-[37%] bg-[#212325]" />
@@ -140,9 +114,11 @@ export default function Home() {
         </div>
       </section>
       <section className="font-DM-Sans font-medium">
-        <div className="py-5 ">
-          <p className="text-center text-[#FB4500]">AFFORDABLE PRICING</p>
-          <p className="text-[80px] leading-none text-center text-white">
+        <div className="py-10 md:py-5">
+          <p className="text-center text-[#FB4500] text-sm md:text-base">
+            AFFORDABLE PRICING
+          </p>
+          <p className="md:text-[80px] text-4xl leading-none text-center text-white">
             our plans are
             <br />
             customizable as
@@ -150,7 +126,7 @@ export default function Home() {
             well
           </p>
         </div>
-        <div className="grid grid-cols-3 px-20 gap-5">
+        <div className="grid md:grid-cols-3 md:px-20 px-10 gap-5 grid-rows-3 md:grid-rows-none">
           <div className="col-span-1 w-full bg-white rounded-[60px] bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-10 border border-white border-opacity-10 h-[600px]" />
           <div className="col-span-1 h-full w-full bg-white rounded-[60px] bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-10 border border-white border-opacity-10" />
           <div className="col-span-1 h-full w-full bg-white rounded-[60px] bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-10 border border-white border-opacity-10" />
@@ -165,16 +141,5 @@ export default function Home() {
         </div>
       </footer>
     </main>
-  );
-}
-
-function BlobEffect() {
-  return (
-    <div className="w-full h-full fixed z-[-1]">
-      <div
-        style={{ top: '476px', left: '1427px' }}
-        className="md:w-[400px] md:h-[400px] opacity-50  w-[250px] h-[250px] bg-[#fb4500] rounded-full -translate-x-1/2 -translate-y-1/2 relative blur-[50px] md:blur-[100px]"
-      />
-    </div>
   );
 }

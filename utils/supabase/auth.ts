@@ -1,3 +1,5 @@
+import { redirect } from 'next/navigation';
+
 export async function userLogin() {
   const resp = await fetch('/api/auth/signin', {
     method: 'POST',
@@ -12,7 +14,7 @@ export async function userLogin() {
 }
 
 export async function checkUserRecord(userEmail: string) {
-  const resp = await fetch('/api/user/fetch', {
+  const resp = await fetch('/api/user/doesexist', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -21,4 +23,11 @@ export async function checkUserRecord(userEmail: string) {
       userEmail: userEmail,
     }),
   });
+
+  console.log(resp);
+}
+
+export async function successNavigate() {
+  'use server';
+  redirect('/@me');
 }
