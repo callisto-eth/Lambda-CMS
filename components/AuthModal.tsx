@@ -23,12 +23,12 @@ export default function AuthModal() {
       <DialogTrigger className="border border-[#FB4500] bg-transparent rounded-3xl text-md px-16 py-3.5 text-[#FB4500] hover:bg-[#FB4500] hover:text-white transition-all duration-200">
         Build your Event
       </DialogTrigger>
-      {formComponent()}
+      {FormComponent()}
     </Dialog>
   );
 }
 
-function formComponent() {
+function FormComponent() {
   const pageRouter = useRouter();
   async function onSubmit(formValues: z.infer<typeof authSchema>) {
     const resp = await fetch('/api/auth/signup', {
