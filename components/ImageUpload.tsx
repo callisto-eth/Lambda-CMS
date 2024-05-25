@@ -17,27 +17,30 @@ export default function ImageUpload({
     SetStateAction<string | ArrayBuffer | null | undefined>
   >;
 }) {
-  const onDrop = useCallback(async (acceptedFiles: File[]) => {
-    acceptedFiles.forEach((acceptedFile) => {
-      const fileReader = new FileReader();
-      fileReader.onabort = () =>
-        toast({
-          title: 'Image Upload',
-          description: 'File reading was aborted',
-        });
-      fileReader.onerror = () =>
-        toast({
-          title: 'Image Upload',
-          description: 'File reading errored out',
-        });
-      fileReader.onload = async () => {
-        const dataUrl = fileReader.result;
-        setUploadedFile(dataUrl);
-      };
+  const onDrop = useCallback(
+    async (acceptedFiles: File[]) => {
+      acceptedFiles.forEach((acceptedFile) => {
+        const fileReader = new FileReader();
+        fileReader.onabort = () =>
+          toast({
+            title: 'Image Upload',
+            description: 'File reading was aborted',
+          });
+        fileReader.onerror = () =>
+          toast({
+            title: 'Image Upload',
+            description: 'File reading errored out',
+          });
+        fileReader.onload = async () => {
+          const dataUrl = fileReader.result;
+          setUploadedFile(dataUrl);
+        };
 
-      fileReader.readAsDataURL(acceptedFile);
-    });
-  }, []);
+        fileReader.readAsDataURL(acceptedFile);
+      });
+    },
+    [setUploadedFile],
+  );
 
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
 

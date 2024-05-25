@@ -6,9 +6,17 @@ import { MdiLambda } from '@/components/Icons';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 
-export default function Home() {
+export default function Wrapper() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <Home />
+    </Suspense>
+  );
+}
+
+function Home() {
   const searchParam = useSearchParams();
   const [modalOpen, setModalOpen] = useState<boolean>(
     searchParam.get('login') == 'true' ? true : false,
