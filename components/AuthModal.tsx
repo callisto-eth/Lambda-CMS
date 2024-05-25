@@ -15,19 +15,29 @@ import {
 import { Input } from '@/components/ui/input';
 import { SolarLogin3BoldDuotone } from './Icons';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
+import { animatePageIn } from '@/utils/animation';
 
-export default function AuthModal() {
+export default function AuthModal({
+  modalOpen,
+  setModalOpen,
+}: {
+  modalOpen: boolean;
+  setModalOpen: Dispatch<SetStateAction<boolean>>;
+}) {
   const [authState, setAuthState] = useState<'signin' | 'signup'>('signin');
-
   return (
-    <Dialog>
+    <Dialog open={modalOpen} onOpenChange={setModalOpen}>
       <DialogTrigger className="border border-[#FB4500] bg-transparent rounded-3xl text-md px-16 py-3.5 text-[#FB4500] hover:bg-[#FB4500] hover:text-white transition-all duration-200">
         Build your Event
       </DialogTrigger>
-      {FormComponent({ authType: authState, setAuthState: setAuthState })}
+      <FormComponent
+        setModalOpen={setModalOpen}
+        authType={authState}
+        setAuthState={setAuthState}
+      />
     </Dialog>
   );
 }
@@ -35,9 +45,11 @@ export default function AuthModal() {
 function FormComponent({
   authType,
   setAuthState,
+  setModalOpen,
 }: {
   authType: 'signin' | 'signup';
   setAuthState: (val: 'signin' | 'signup') => void;
+  setModalOpen: Dispatch<SetStateAction<boolean>>;
 }) {
   const pageRouter = useRouter();
   async function onSubmit(formValues: z.infer<typeof authSchema>) {
@@ -53,7 +65,10 @@ function FormComponent({
     });
 
     if (resp.status === 200) {
-      pageRouter.push('/@me');
+      setModalOpen(false);
+      animatePageIn(() => {
+        pageRouter.push('/@me');
+      });
     }
   }
 
@@ -81,16 +96,16 @@ function FormComponent({
           setAuthState(val as 'signin' | 'signup');
         }}
       >
-        <TabsList className="grid w-full grid-cols-2 bg-transparent">
+        <TabsList className="grid w-full grid-cols-2 bg-transparent gap-x-1">
           <TabsTrigger
             value="signin"
-            className="data-[state=active]:bg-white/20 data-[state=active]:text-white backdrop-blur-sm text-white"
+            className="data-[state=active]:bg-white/20 py-2 data-[state=active]:text-white backdrop-blur-sm text-white rounded-xl bg-clip-padding backdrop-filter bg-opacity-10 border border-white border-opacity-10"
           >
             Login
           </TabsTrigger>
           <TabsTrigger
             value="signup"
-            className="data-[state=active]:bg-white/20 data-[state=active]:text-white backdrop-blur-sm text-white"
+            className="data-[state=active]:bg-white/20 py-2 data-[state=active]:text-white backdrop-blur-sm text-white rounded-xl bg-clip-padding backdrop-filter bg-opacity-10 border border-white border-opacity-10"
           >
             Sign up
           </TabsTrigger>

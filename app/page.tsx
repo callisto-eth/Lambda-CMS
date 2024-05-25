@@ -4,10 +4,23 @@ import AuthModal from '@/components/AuthModal';
 import { MdiLambda } from '@/components/Icons';
 
 import Image from 'next/image';
+import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
+import { useState } from 'react';
 
 export default function Home() {
+  const searchParam = useSearchParams();
+  const [modalOpen, setModalOpen] = useState<boolean>(
+    searchParam.get('login') == 'true' ? true : false,
+  );
   return (
     <main className="relative">
+      <div className="fixed h-screen animateOnLogIn w-screen z-[-1] opacity-0 flex justify-center items-center flex-col">
+        <p className="font-DM-Sans text-4xl font-medium text-white">
+          Welcome, Vishal
+        </p>
+        <div className="w-[100px] h-[100px] rounded-full shadow-[0_0_2px_#fb4500,inset_0_0_2px_#fb4500,0_0_5px_#fb4500,0_0_15px_#fb4500,0_0_30px_#fb4500] my-5" />
+      </div>
       <section
         className="grid md:grid-cols-2 md:h-screen grid-rows-2 md:grid-rows-1"
         style={{
@@ -29,7 +42,18 @@ export default function Home() {
               Supercharge your Socials with our Plugin-Driven Event Management
               Platform
             </p>
-            <AuthModal />
+            {modalOpen ? (
+              <AuthModal setModalOpen={setModalOpen} modalOpen={modalOpen} />
+            ) : (
+              <div>
+                <Link
+                  href={'/@me'}
+                  className="border border-[#FB4500] bg-transparent rounded-3xl text-md px-16 py-3.5 text-[#FB4500] hover:bg-[#FB4500] hover:text-white transition-all duration-200"
+                >
+                  Build your Event
+                </Link>
+              </div>
+            )}
           </div>
           <div />
         </div>
@@ -111,6 +135,36 @@ export default function Home() {
               className="text-[#FB4500]"
             />
           </svg>
+        </div>
+      </section>
+      <section className="font-DM-Sans font-medium px-10">
+        <div className="py-10 md:py-5 ">
+          <p className="text-center text-[#FB4500] text-sm md:text-base">
+            DISCOVER PEOPLE
+          </p>
+          <p className="md:text-[80px] text-4xl leading-none text-center text-white">
+            connect with
+            <br />
+            people who are
+            <br />
+            nearby
+          </p>
+        </div>
+        <div className="grid grid-cols-12 md:px-20 grid-rows-2 md:grid-rows-none gap-y-6 md:gap-y-0">
+          <div className="bg-white w-[1px] col-span-1 row-span-2 md:hidden" />
+          <p className="md:col-span-5 col-span-11 text-[#FB4500] md:text-xl text-lg place-content-center">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
+            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+            aliquip ex ea commodo consequat.
+          </p>
+          <div className="flex-col items-center col-span-2  relative hidden md:flex">
+            <div className="border-r-[1px] border-[#FB4500] h-[200px]" />
+            <div className="border-r-[1px] border-[#FB4500] h-[200px] relative">
+              <div className="w-[15px] h-[15px] absolute left-[-7px] rounded-full bg-[#FB4500]" />
+            </div>
+          </div>
+          <div className="md:col-span-5 col-span-11 h-full w-full bg-white rounded-[60px] bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-10 border border-white border-opacity-10" />
         </div>
       </section>
       <section className="font-DM-Sans font-medium">
