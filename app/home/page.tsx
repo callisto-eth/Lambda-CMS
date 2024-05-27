@@ -1,3 +1,4 @@
+import { AvatarDropDown } from '@/components/AvatarDropdown';
 import CreateEventModal from '@/components/CreateEventModal';
 import {
   IconamoonDiscoverFill,
@@ -6,7 +7,8 @@ import {
   MaterialSymbolsTipsAndUpdates,
   MdiLambda,
 } from '@/components/Icons';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import JoinEventDialog from '@/components/JoinEventDialog';
+
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import Link from 'next/link';
 
@@ -37,25 +39,11 @@ export default function Home() {
             </DialogTrigger>
             <CreateEventModal />
           </Dialog>
-          <Dialog>
-            <DialogTrigger className="inline-flex items-center justify-center whitespace-nowrap font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-fit transition-shadow hover:shadow-[0_0_2px_#fb4500,inset_0_0_2px_#fb4500,0_0_2px_#fb4500,0_0_10px_#fb4500,0_0_10px_#fb4500] py-1.5 px-2 hover:bg-[#FB4500] rounded-full text-base space-x-2 bg-[#FB4500] text-[#212325]">
-              <MaterialSymbolsJoin className="text-xl" />
-              <p className="px-1">Join</p>
-            </DialogTrigger>
-            <DialogContent className="p-6 w-[350px] bg-black rounded-3xl text-white font-DM-Sans bg-clip-padding backdrop-filter backdrop-blur-md bg-opacity-10 border border-white border-opacity-10">
-              <MaterialSymbolsJoin className="text-6xl text-[#d83e08]" />
-              <div className="leading-tight">
-                <p className="text-3xl font-semibold">Join an Event</p>
-                <p className="text-lg">Please sign up or sign in below</p>
-              </div>
-            </DialogContent>
-          </Dialog>
-          <Avatar>
-            <AvatarImage src="https://github.com/shadcn.png" />
-            <AvatarFallback>CN</AvatarFallback>
-          </Avatar>
+          <JoinEventDialog />
+          <AvatarDropDown />
         </div>
       </nav>
+      
     </main>
   );
 }
