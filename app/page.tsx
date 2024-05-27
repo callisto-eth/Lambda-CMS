@@ -2,25 +2,23 @@
 
 import AuthModal from '@/components/AuthModal';
 import { MdiLambda } from '@/components/Icons';
+import { createClient } from '@/utils/supabase/client';
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
-import { Suspense, useState } from 'react';
+import { useEffect, useState } from 'react';
 
-export default function Wrapper() {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <Home />
-    </Suspense>
-  );
-}
+const supabaseClient = createClient();
 
-function Home() {
-  const searchParam = useSearchParams();
-  const [modalOpen, setModalOpen] = useState<boolean>(
-    searchParam.get('login') == 'true' ? true : false,
-  );
+export default function Home() {
+  const [userSession, setUserSession] = useState<any>(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  useEffect(() => {
+    supabaseClient.auth
+      .getSession()
+      .then(({ data: { session } }) => setUserSession(session));
+  }, []);
+
   return (
     <main className="relative">
       <div className="fixed h-screen animateOnLogIn w-screen z-[-1] opacity-0 flex justify-center items-center flex-col">
@@ -50,7 +48,7 @@ function Home() {
               Supercharge your Socials with our Plugin-Driven Event Management
               Platform
             </p>
-            {modalOpen ? (
+            {!userSession ? (
               <AuthModal setModalOpen={setModalOpen} modalOpen={modalOpen} />
             ) : (
               <div>

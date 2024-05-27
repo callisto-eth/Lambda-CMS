@@ -1,7 +1,7 @@
 'use client';
 
 import { z } from 'zod';
-import { SolarCalendarAddBoldDuotone } from './Icons';
+import { PhCaretLeft } from './Icons';
 import { DialogContent } from './ui/dialog';
 import {
   Form,
@@ -14,22 +14,25 @@ import {
 import { Input } from './ui/input';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import CalendarPopover from './CalendarForm';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Button } from './ui/button';
 import { useState } from 'react';
-import { Separator } from './ui/separator';
 import ImageUpload from './ImageUpload';
+import { DatePickerWithRange } from './CalenderRange';
 
 export default function CreateEventModal() {
   const createEventSchema = z.object({
     event_name: z.string(),
     event_desc: z.string(),
-    start_date: z.string(),
-    end_date: z.string(),
+    date: z.object({
+      from: z.string(),
+      to: z.string(),
+    }),
     event_mode: z.string(),
     base_plugin: z.string(),
     sub_event: z.string(),
+    banner_image: z.string(),
+    profile_image: z.string(),
   });
   const createEventForm = useForm({
     resolver: zodResolver(createEventSchema),
@@ -48,9 +51,16 @@ export default function CreateEventModal() {
   >();
 
   return (
-    <DialogContent className="p-6 w-[370px] bg-black rounded-3xl text-white font-DM-Sans bg-clip-padding backdrop-filter backdrop-blur-md bg-opacity-10 border border-white border-opacity-10">
-      <SolarCalendarAddBoldDuotone className="text-6xl text-[#d83e08]" />
-      <div className="leading-tight">
+    <DialogContent className="p-6  w-[370px] bg-black rounded-3xl text-white font-DM-Sans bg-clip-padding backdrop-filter backdrop-blur-md bg-opacity-10 border border-white border-opacity-10">
+      <PhCaretLeft
+        className="absolute top-4 left-4 cursor-pointer font-bold text-current"
+        onClick={() => {
+          if (contentState == 'plugins') setContentState('basic');
+          if (contentState == 'preview') setContentState('plugins');
+        }}
+      />
+      {/* <SolarCalendarAddBoldDuotone className="text-6xl text-[#d83e08] mt-4" /> */}
+      <div className="leading-tight mt-6">
         <p className="text-3xl font-semibold">
           {contentState === 'basic'
             ? 'Basics'
@@ -106,28 +116,16 @@ export default function CreateEventModal() {
                 </FormItem>
               )}
             />
-            <div className="grid grid-cols-2 gap-2">
-              <FormField
-                name="start_date"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Start Date</FormLabel>
-                    <FormControl>{CalendarPopover({ field })}</FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                name="end_date"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>End Date</FormLabel>
-                    <FormControl>{CalendarPopover({ field })}</FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
+            <FormField
+              name="date"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Date</FormLabel>
+                  <FormControl>{DatePickerWithRange({ field })}</FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <FormField
               name="event_mode"
               render={({ field }) => (
@@ -184,7 +182,7 @@ export default function CreateEventModal() {
           </div>
           <div
             data-state={contentState}
-            className="hidden data-[state=preview]:block"
+            className="hidden data-[state=preview]:block mb-4"
           >
             {uploadedFileBanner && (
               <div
@@ -199,7 +197,7 @@ export default function CreateEventModal() {
             )}
             {uploadedFileProfile && (
               <div
-                className="bg-cover rounded-xl mb-4 mt-[-50px] ml-[20px]"
+                className="bg-cover rounded-xl mt-[-50px] ml-[20px]"
                 style={{
                   backgroundImage: `url(${uploadedFileProfile})`,
                   borderRadius: '100px',
@@ -208,11 +206,16 @@ export default function CreateEventModal() {
                 }}
               />
             )}
+            <p className="text-2xl font-semibold">
+              {createEventForm.getValues()['event_name']}
+            </p>
+            <p>{createEventForm.getValues()['event_desc']}</p>
           </div>
           <Button
             type="button"
             className="font-DM-Sans p-3 rounded-xl w-full bg-[#323132] text-md font-semibold text-[#b4b3b4] hover:bg-[#b4b3b4] hover:text-[#323132]"
             onClick={() => {
+              console.log(createEventForm.getValues());
               if (contentState == 'basic') setContentState('plugins');
               if (contentState == 'plugins') setContentState('preview');
             }}
