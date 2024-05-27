@@ -17,14 +17,20 @@ export default function Home() {
     <main>
       <nav className="flex p-10 items-center justify-between space-x-12">
         <MdiLambda className="text-5xl text-[#FB4500]" />
-        <div className="font-DM-Sans text-2xl font-medium text-[#948B96] flex space-x-4 flex-grow">
-          <Link href="#" className="flex items-center space-x-2">
+        <div className="font-DM-Sans text-2xl font-medium text-[#948B96] *:transition-colors flex space-x-4 flex-grow">
+          <Link
+            href="#"
+            className="flex items-center space-x-2 hover:text-white"
+          >
             <span>
               <MaterialSymbolsTipsAndUpdates />
             </span>
             <span className="text-lg">Events</span>
           </Link>
-          <Link href="#" className="flex items-center space-x-2">
+          <Link
+            href="#"
+            className="flex items-center space-x-2 hover:text-white"
+          >
             <span>
               <IconamoonDiscoverFill />
             </span>
