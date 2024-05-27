@@ -1,7 +1,11 @@
 'use client';
 
-import { z } from 'zod';
-import { PhCaretLeft } from './Icons';
+import { optional, z } from 'zod';
+import {
+  MajesticonsStatusOnline,
+  PhCaretLeft,
+  SolarCalendarAddBoldDuotone,
+} from './Icons';
 import { DialogContent } from './ui/dialog';
 import {
   Form,
@@ -12,7 +16,7 @@ import {
   FormMessage,
 } from './ui/form';
 import { Input } from './ui/input';
-import { useForm } from 'react-hook-form';
+import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Button } from './ui/button';
@@ -22,17 +26,25 @@ import { DatePickerWithRange } from './CalenderRange';
 
 export default function CreateEventModal() {
   const createEventSchema = z.object({
-    event_name: z.string(),
-    event_desc: z.string(),
-    date: z.object({
-      from: z.string(),
-      to: z.string(),
+    event_name: z.string({
+      message: 'Please enter a valid name',
     }),
-    event_mode: z.string(),
-    base_plugin: z.string(),
-    sub_event: z.string(),
-    banner_image: z.string(),
-    profile_image: z.string(),
+    event_desc: z.string({
+      message: 'Please enter a valid description',
+    }),
+    date: z.object({
+      from: z.date({
+        message: 'Please enter a valid date',
+      }),
+      to: z.date({
+        message: 'Please enter a valid date',
+      }),
+    }),
+    event_mode: z.string({
+      message: 'Please select a valid mode',
+    }),
+    banner_image: z.string().optional(),
+    profile_image: z.string().optional(),
   });
   const createEventForm = useForm({
     resolver: zodResolver(createEventSchema),
@@ -50,6 +62,14 @@ export default function CreateEventModal() {
     string | ArrayBuffer | null
   >();
 
+  function onSubmit(values: z.infer<typeof createEventSchema>) {
+    if (isPublished) {
+      console.log(values);
+    }
+  }
+
+  const [isPublished, setIsPublished] = useState(false);
+
   return (
     <DialogContent className="p-6  w-[370px] bg-black rounded-3xl text-white font-DM-Sans bg-clip-padding backdrop-filter backdrop-blur-md bg-opacity-10 border border-white border-opacity-10">
       <PhCaretLeft
@@ -59,7 +79,6 @@ export default function CreateEventModal() {
           if (contentState == 'preview') setContentState('plugins');
         }}
       />
-      {/* <SolarCalendarAddBoldDuotone className="text-6xl text-[#d83e08] mt-4" /> */}
       <div className="leading-tight mt-6">
         <p className="text-3xl font-semibold">
           {contentState === 'basic'
@@ -77,13 +96,19 @@ export default function CreateEventModal() {
         </p>
       </div>
       <Form {...createEventForm}>
-        <form className="font-DM-Sans">
+        <form
+          className="font-DM-Sans"
+          onSubmit={createEventForm.handleSubmit(
+            onSubmit as SubmitHandler<FieldValues>,
+          )}
+        >
           <div
             data-state={contentState}
             className="space-y-4 hidden data-[state=basic]:block mb-4"
           >
             <FormField
               name="event_name"
+              control={createEventForm.control}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Name</FormLabel>
@@ -101,6 +126,7 @@ export default function CreateEventModal() {
             />
             <FormField
               name="event_desc"
+              control={createEventForm.control}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Description</FormLabel>
@@ -118,6 +144,7 @@ export default function CreateEventModal() {
             />
             <FormField
               name="date"
+              control={createEventForm.control}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Date</FormLabel>
@@ -128,6 +155,7 @@ export default function CreateEventModal() {
             />
             <FormField
               name="event_mode"
+              control={createEventForm.control}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Mode</FormLabel>
@@ -168,12 +196,14 @@ export default function CreateEventModal() {
           >
             <p className="mb-2">Image</p>
             <ImageUpload
+              formField={createEventForm}
               avatarImage={false}
               uploadedFile={uploadedFileBanner}
               setUploadedFile={setUploadedBannerFile}
             />
             <div className="mt-[-40px] ml-[20px]">
               <ImageUpload
+                formField={createEventForm}
                 avatarImage={true}
                 uploadedFile={uploadedFileProfile}
                 setUploadedFile={setUploadedProfileFile}
@@ -197,7 +227,7 @@ export default function CreateEventModal() {
             )}
             {uploadedFileProfile && (
               <div
-                className="bg-cover rounded-xl mt-[-50px] ml-[20px]"
+                className="bg-cover rounded-xl mt-[-50px] ml-[20px] space-y-2"
                 style={{
                   backgroundImage: `url(${uploadedFileProfile})`,
                   borderRadius: '100px',
@@ -210,18 +240,67 @@ export default function CreateEventModal() {
               {createEventForm.getValues()['event_name']}
             </p>
             <p>{createEventForm.getValues()['event_desc']}</p>
+            <p className="flex items-center space-x-2">
+              <SolarCalendarAddBoldDuotone />
+              <span>
+                {`${
+                  createEventForm
+                    .getValues()
+                    ['date']?.from.toString()
+                    .split(' ')[1]
+                } ${
+                  createEventForm
+                    .getValues()
+                    ['date']?.from.toString()
+                    .split(' ')[2]
+                } - ${
+                  createEventForm
+                    .getValues()
+                    ['date']?.to?.toString()
+                    .split(' ')[1]
+                } ${
+                  createEventForm
+                    .getValues()
+                    ['date']?.to?.toString()
+                    .split(' ')[2]
+                }`}
+              </span>
+            </p>
+            <p className="flex items-center space-x-4">
+              <MajesticonsStatusOnline />
+              <span>
+                {createEventForm
+                  .getValues()
+                  ['event_mode']?.charAt(0)
+                  .toUpperCase() +
+                  createEventForm.getValues()['event_mode']?.slice(1)}
+              </span>
+            </p>
           </div>
-          <Button
-            type="button"
-            className="font-DM-Sans p-3 rounded-xl w-full bg-[#323132] text-md font-semibold text-[#b4b3b4] hover:bg-[#b4b3b4] hover:text-[#323132]"
-            onClick={() => {
-              console.log(createEventForm.getValues());
-              if (contentState == 'basic') setContentState('plugins');
-              if (contentState == 'plugins') setContentState('preview');
-            }}
-          >
-            {contentState == 'preview' ? 'Publish' : 'Continue'}
-          </Button>
+          {contentState != 'preview' ? (
+            <Button
+              type="button"
+              className="font-DM-Sans p-3 rounded-xl w-full bg-[#323132] text-md font-semibold text-[#b4b3b4] hover:bg-[#b4b3b4] hover:text-[#323132]"
+              onClick={() => {
+                if (contentState == 'basic') setContentState('plugins');
+                if (
+                  contentState == 'plugins' &&
+                  createEventForm.formState.isValid
+                )
+                  setContentState('preview');
+              }}
+            >
+              Continue
+            </Button>
+          ) : (
+            <Button
+              type="submit"
+              onClick={() => setIsPublished(true)}
+              className="font-DM-Sans p-3 rounded-xl w-full bg-[#323132] text-md font-semibold text-[#b4b3b4] hover:bg-[#b4b3b4] hover:text-[#323132]"
+            >
+              Publish
+            </Button>
+          )}
         </form>
       </Form>
     </DialogContent>

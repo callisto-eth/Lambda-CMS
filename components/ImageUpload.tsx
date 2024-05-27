@@ -10,12 +10,14 @@ export default function ImageUpload({
   avatarImage,
   uploadedFile,
   setUploadedFile,
+  formField,
 }: {
   avatarImage: boolean;
   uploadedFile: string | ArrayBuffer | null | undefined;
   setUploadedFile: Dispatch<
     SetStateAction<string | ArrayBuffer | null | undefined>
   >;
+  formField: any;
 }) {
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
@@ -33,6 +35,10 @@ export default function ImageUpload({
           });
         fileReader.onload = async () => {
           const dataUrl = fileReader.result;
+          formField.setValue(
+            avatarImage ? 'profile_image' : 'banner_image',
+            dataUrl,
+          );
           setUploadedFile(dataUrl);
         };
 

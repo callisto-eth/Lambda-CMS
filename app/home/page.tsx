@@ -33,7 +33,7 @@ export default function Home() {
         </div>
         <div className="flex items-center space-x-4 font-DM-Sans">
           <Dialog>
-            <DialogTrigger className="inline-flex items-center justify-center whitespace-nowrap font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-fit py-1.5 px-2 text-[#948b96] rounded-full bg-clip-padding backdrop-filter text-base bg-white backdrop-blur-sm bg-opacity-10 border border-opacity-10 border-gray-100">
+            <DialogTrigger className="inline-flex items-center justify-center whitespace-nowrap font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-fit py-1.5 px-2 text-[#948b96] rounded-full bg-clip-padding backdrop-filter text-base bg-white backdrop-blur-sm bg-opacity-70 border border-opacity-10 border-gray-100">
               <MaterialSymbolsAddCircle className="text-xl" />
               <p className="px-1">Create</p>
             </DialogTrigger>
@@ -43,7 +43,6 @@ export default function Home() {
           <AvatarDropDown />
         </div>
       </nav>
-      
     </main>
   );
 }
