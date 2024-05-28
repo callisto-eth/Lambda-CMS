@@ -32,6 +32,9 @@ export default function CreateEventModal() {
     event_desc: z.string({
       message: 'Please enter a valid description',
     }),
+    entry_price: z.string({
+      message: 'Please enter a valid price (0 for free events)',
+    }),
     date: z.object({
       from: z.date({
         message: 'Please enter a valid date',
@@ -63,6 +66,8 @@ export default function CreateEventModal() {
   >();
 
   function onSubmit(values: z.infer<typeof createEventSchema>) {
+    console.log(values);
+
     if (isPublished) {
       console.log(values);
     }
@@ -143,12 +148,30 @@ export default function CreateEventModal() {
               )}
             />
             <FormField
-              name="date"
+              name="entry_price"
               control={createEventForm.control}
               render={({ field }) => (
                 <FormItem>
+                  <FormLabel>Entry price</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Entry price"
+                      type="number"
+                      {...field}
+                      className="bg-transparent outline-none py-2.5 border border-white border-opacity-10 rounded-xl"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              name="date"
+              control={createEventForm.control}
+              render={({ field }) => (
+                <FormItem className="">
                   <FormLabel>Date</FormLabel>
-                  <FormControl>{DatePickerWithRange({ field })}</FormControl>
+                  <FormControl>{DatePickerWithRange({ field, className: "w-full"})}</FormControl>
                   <FormMessage />
                 </FormItem>
               )}
