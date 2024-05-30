@@ -20,9 +20,11 @@ import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Button } from './ui/button';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ImageUpload from './ImageUpload';
 import { DatePickerWithRange } from './CalenderRange';
+import { Checkbox } from './ui/checkbox';
+import { CreateEventSchema } from '@/app/api/event/create/route';
 
 export default function CreateEventModal() {
   const createEventSchema = z.object({
@@ -31,9 +33,6 @@ export default function CreateEventModal() {
     }),
     event_desc: z.string({
       message: 'Please enter a valid description',
-    }),
-    entry_price: z.string({
-      message: 'Please enter a valid price (0 for free events)',
     }),
     date: z.object({
       from: z.date({
@@ -46,6 +45,11 @@ export default function CreateEventModal() {
     event_mode: z.string({
       message: 'Please select a valid mode',
     }),
+    spaces_enabled: z.boolean().optional(),
+    event_visibility: z.string({
+      message: 'Please select a valid visibility',
+    }),
+    chat_enabled: z.boolean().optional(),
     banner_image: z.string().optional(),
     profile_image: z.string().optional(),
   });
@@ -57,6 +61,12 @@ export default function CreateEventModal() {
     'basic' | 'plugins' | 'preview'
   >('basic');
 
+  // Debug remove later
+  useEffect(() => {
+    console.log(contentState);
+    createEventForm.formState.isValid;
+  }, [contentState, createEventForm.formState.isValid]);
+
   const [uploadedFileBanner, setUploadedBannerFile] = useState<
     string | ArrayBuffer | null
   >();
@@ -66,17 +76,46 @@ export default function CreateEventModal() {
   >();
 
   function onSubmit(values: z.infer<typeof createEventSchema>) {
-    console.log(values);
-
     if (isPublished) {
-      console.log(values);
+      const uploadData: CreateEventSchema = {
+        name: values.event_name,
+        description: values.event_desc,
+        start_time: values.date.from.toISOString(),
+        end_time: values.date.to.toISOString(),
+        spaces_enabled: values.spaces_enabled || false,
+        chat_enabled: values.chat_enabled || false,
+        platform: values.event_mode.toUpperCase() as
+          | 'ONLINE'
+          | 'OFFLINE'
+          | 'HYBRID',
+        visibility: values.event_visibility.toUpperCase() as
+          | 'PRIVATE'
+          | 'PUBLIC',
+        avatar_image: uploadedFileProfile as string,
+        banner_image: uploadedFileBanner as string,
+      };
+      console.log(uploadData);
+
+      fetch('/api/event/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(uploadData),
+      }).then((res) => {
+        res.json().then((data) => {
+          console.log(data)
+        })
+      })
+
     }
+
   }
 
   const [isPublished, setIsPublished] = useState(false);
 
   return (
-    <DialogContent className="p-6  w-[370px] bg-black rounded-3xl text-white font-DM-Sans bg-clip-padding backdrop-filter backdrop-blur-md bg-opacity-10 border border-white border-opacity-10">
+    <DialogContent className="p-6 w-[370px] bg-black rounded-3xl text-white font-DM-Sans bg-clip-padding backdrop-filter backdrop-blur-md bg-opacity-10 border border-white border-opacity-10">
       <PhCaretLeft
         className="absolute top-4 left-4 cursor-pointer font-bold text-current"
         onClick={() => {
@@ -148,30 +187,14 @@ export default function CreateEventModal() {
               )}
             />
             <FormField
-              name="entry_price"
-              control={createEventForm.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Entry price</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Entry price"
-                      type="number"
-                      {...field}
-                      className="bg-transparent outline-none py-2.5 border border-white border-opacity-10 rounded-xl"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
               name="date"
               control={createEventForm.control}
               render={({ field }) => (
                 <FormItem className="">
                   <FormLabel>Date</FormLabel>
-                  <FormControl>{DatePickerWithRange({ field, className: "w-full"})}</FormControl>
+                  <FormControl>
+                    {DatePickerWithRange({ field, className: 'w-full' })}
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
@@ -184,31 +207,93 @@ export default function CreateEventModal() {
                   <FormLabel>Mode</FormLabel>
                   <FormControl>
                     <RadioGroup
-                      defaultValue="online"
+                      defaultValue="ONLINE"
                       className="flex w-full space-x-2"
                       onValueChange={field.onChange}
                     >
                       <FormItem className="flex items-center space-x-3 space-y-0">
                         <FormControl>
-                          <RadioGroupItem value="online" id="r1" />
+                          <RadioGroupItem value="ONLINE" id="r1" />
                         </FormControl>
                         <FormLabel htmlFor="r1">Online</FormLabel>
                       </FormItem>
                       <FormItem className="flex items-center space-x-3 space-y-0">
                         <FormControl>
-                          <RadioGroupItem value="offline" id="r2" />
+                          <RadioGroupItem value="OFFLINE" id="r2" />
                         </FormControl>
                         <FormLabel htmlFor="r2">Offline</FormLabel>
                       </FormItem>
                       <FormItem className="flex items-center space-x-3 space-y-0">
                         <FormControl>
-                          <RadioGroupItem value="hybrid" id="r3" />
+                          <RadioGroupItem value="HYBRID" id="r3" />
                         </FormControl>
                         <FormLabel htmlFor="r3">Hybrid</FormLabel>
                       </FormItem>
                     </RadioGroup>
                   </FormControl>
                   <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              name="event_visibility"
+              control={createEventForm.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Event visibility</FormLabel>
+                  <FormControl>
+                    <RadioGroup
+                      defaultValue="PUBLIC"
+                      className="flex w-full space-x-2"
+                      onValueChange={field.onChange}
+                    >
+                      <FormItem className="flex items-center space-x-3 space-y-0">
+                        <FormControl>
+                          <RadioGroupItem value="PUBLIC" id="r1" />
+                        </FormControl>
+                        <FormLabel htmlFor="r1">Public</FormLabel>
+                      </FormItem>
+                      <FormItem className="flex items-center space-x-3 space-y-0">
+                        <FormControl>
+                          <RadioGroupItem value="PRIVATE" id="r2" />
+                        </FormControl>
+                        <FormLabel htmlFor="r2">Private</FormLabel>
+                      </FormItem>
+                    </RadioGroup>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              name="spaces_enabled"
+              control={createEventForm.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Enable spaces</FormLabel>
+                  <FormControl>
+                    <Checkbox
+                      className="flex"
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              name="chat_enabled"
+              control={createEventForm.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Enable chat</FormLabel>
+                  <FormControl>
+                    <Checkbox
+                      className="flex"
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
                 </FormItem>
               )}
             />
@@ -289,14 +374,14 @@ export default function CreateEventModal() {
                 }`}
               </span>
             </p>
-            <p className="flex items-center space-x-4">
+            <p className="flex items-center space-x-2">
               <MajesticonsStatusOnline />
               <span>
                 {createEventForm
                   .getValues()
                   ['event_mode']?.charAt(0)
                   .toUpperCase() +
-                  createEventForm.getValues()['event_mode']?.slice(1)}
+                  createEventForm.getValues()['event_mode']?.slice(1).toLowerCase()}
               </span>
             </p>
           </div>

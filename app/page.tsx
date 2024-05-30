@@ -11,14 +11,17 @@ import { useEffect, useState } from 'react';
 const supabaseClient = createClient();
 
 export default function Home() {
+
   const [userSession, setUserSession] = useState<any>(null);
   const [modalOpen, setModalOpen] = useState(false);
+
   useEffect(() => {
     supabaseClient.auth
       .getSession()
       .then(({ data: { session } }) => setUserSession(session));
   }, []);
 
+  
   return (
     <main className="relative">
       <div className="fixed h-screen animateOnLogIn w-screen z-[-1] opacity-0 flex justify-center items-center flex-col">
