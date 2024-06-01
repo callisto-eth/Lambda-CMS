@@ -33,7 +33,9 @@ export default function EventsPage() {
     <main className="px-10">
       {fetchedEvents &&
         fetchedEvents.map((fetchedEvent: any) => {
-          return <EventCard fetchedEvent={fetchedEvent} />;
+          return (
+            <EventCard fetchedEvent={fetchedEvent} key={fetchedEvent.id} />
+          );
         })}
     </main>
   );
