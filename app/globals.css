@@ -70,6 +70,12 @@
   }
 }
 
+@layer utilities {
+  .post-clip {
+    clip-path: inset(5% 0 15% 10% round 30%);
+  }
+}
+
 @layer base {
   * {
     @apply border-border;

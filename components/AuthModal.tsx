@@ -126,7 +126,8 @@ function FormComponent({
                       <Input
                         placeholder="Email"
                         type="email"
-                        {...field}
+                        value={field.value}
+                        onChange={field.onChange}
                         className="bg-transparent outline-none py-2.5 border border-white border-opacity-10 rounded-xl"
                       />
                     </FormControl>
@@ -144,7 +145,8 @@ function FormComponent({
                       <Input
                         placeholder="Password"
                         type="password"
-                        {...field}
+                        value={field.value}
+                        onChange={field.onChange}
                         className="bg-transparent outline-none py-2.5 border border-white border-opacity-10 rounded-xl"
                       />
                     </FormControl>
@@ -161,7 +163,6 @@ function FormComponent({
           </Form>
         </TabsContent>
         <TabsContent value="signup">
-          {' '}
           <Form {...authForm}>
             <form
               className="space-y-2 font-DM-Sans"
@@ -177,7 +178,8 @@ function FormComponent({
                       <Input
                         placeholder="Email"
                         type="email"
-                        {...field}
+                        value={field.value}
+                        onChange={field.onChange}
                         className="bg-transparent outline-none py-2.5 border border-white border-opacity-10 rounded-xl"
                       />
                     </FormControl>
@@ -195,7 +197,8 @@ function FormComponent({
                       <Input
                         placeholder="Password"
                         type="password"
-                        {...field}
+                        value={field.value}
+                        onChange={field.onChange}
                         className="bg-transparent outline-none py-2.5 border border-white border-opacity-10 rounded-xl"
                       />
                     </FormControl>

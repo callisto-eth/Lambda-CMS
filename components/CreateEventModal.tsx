@@ -61,9 +61,7 @@ export default function CreateEventModal() {
     'basic' | 'plugins' | 'preview'
   >('basic');
 
-  // Debug remove later
   useEffect(() => {
-    console.log(contentState);
     createEventForm.formState.isValid;
   }, [contentState, createEventForm.formState.isValid]);
 
@@ -94,8 +92,6 @@ export default function CreateEventModal() {
         avatar_image: uploadedFileProfile as string,
         banner_image: uploadedFileBanner as string,
       };
-      console.log(uploadData);
-
       fetch('/api/event/create', {
         method: 'POST',
         headers: {
@@ -104,12 +100,10 @@ export default function CreateEventModal() {
         body: JSON.stringify(uploadData),
       }).then((res) => {
         res.json().then((data) => {
-          console.log(data)
-        })
-      })
-
+          console.log(data);
+        });
+      });
     }
-
   }
 
   const [isPublished, setIsPublished] = useState(false);
@@ -207,7 +201,6 @@ export default function CreateEventModal() {
                   <FormLabel>Mode</FormLabel>
                   <FormControl>
                     <RadioGroup
-                      defaultValue="ONLINE"
                       className="flex w-full space-x-2"
                       onValueChange={field.onChange}
                     >
@@ -235,6 +228,28 @@ export default function CreateEventModal() {
                 </FormItem>
               )}
             />
+          </div>
+          <div
+            data-state={contentState}
+            className="hidden data-[state=plugins]:block mb-4 space-y-4"
+          >
+            <div>
+              <p className="mb-2">Image</p>
+              <ImageUpload
+                formField={createEventForm}
+                avatarImage={false}
+                uploadedFile={uploadedFileBanner}
+                setUploadedFile={setUploadedBannerFile}
+              />
+              <div className="mt-[-40px] ml-[20px]">
+                <ImageUpload
+                  formField={createEventForm}
+                  avatarImage={true}
+                  uploadedFile={uploadedFileProfile}
+                  setUploadedFile={setUploadedProfileFile}
+                />
+              </div>
+            </div>
             <FormField
               name="event_visibility"
               control={createEventForm.control}
@@ -243,7 +258,6 @@ export default function CreateEventModal() {
                   <FormLabel>Event visibility</FormLabel>
                   <FormControl>
                     <RadioGroup
-                      defaultValue="PUBLIC"
                       className="flex w-full space-x-2"
                       onValueChange={field.onChange}
                     >
@@ -297,26 +311,6 @@ export default function CreateEventModal() {
                 </FormItem>
               )}
             />
-          </div>
-          <div
-            data-state={contentState}
-            className="hidden data-[state=plugins]:block mb-4"
-          >
-            <p className="mb-2">Image</p>
-            <ImageUpload
-              formField={createEventForm}
-              avatarImage={false}
-              uploadedFile={uploadedFileBanner}
-              setUploadedFile={setUploadedBannerFile}
-            />
-            <div className="mt-[-40px] ml-[20px]">
-              <ImageUpload
-                formField={createEventForm}
-                avatarImage={true}
-                uploadedFile={uploadedFileProfile}
-                setUploadedFile={setUploadedProfileFile}
-              />
-            </div>
           </div>
           <div
             data-state={contentState}
@@ -381,13 +375,19 @@ export default function CreateEventModal() {
                   .getValues()
                   ['event_mode']?.charAt(0)
                   .toUpperCase() +
-                  createEventForm.getValues()['event_mode']?.slice(1).toLowerCase()}
+                  createEventForm
+                    .getValues()
+                    ['event_mode']?.slice(1)
+                    .toLowerCase()}
               </span>
             </p>
           </div>
           {contentState != 'preview' ? (
             <Button
               type="button"
+              disabled={
+                !createEventForm.formState.isValid && contentState == 'plugins'
+              }
               className="font-DM-Sans p-3 rounded-xl w-full bg-[#323132] text-md font-semibold text-[#b4b3b4] hover:bg-[#b4b3b4] hover:text-[#323132]"
               onClick={() => {
                 if (contentState == 'basic') setContentState('plugins');

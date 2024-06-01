@@ -1,10 +1,4 @@
 import {
-  Cloud,
-  CreditCard,
-  Github,
-  Keyboard,
-  LifeBuoy,
-  LogOut,
   Mail,
   MessageSquare,
   Plus,
@@ -19,7 +13,6 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuPortal,
   DropdownMenuSeparator,
   DropdownMenuShortcut,
@@ -29,28 +22,30 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { MaterialSymbolsCalendarMonthRounded } from './Icons';
+import Link from 'next/link';
 
 export function AvatarDropDown() {
   return (
-    <DropdownMenu >
-      <DropdownMenuTrigger asChild className='select-none cursor-pointer'>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild className="select-none cursor-pointer">
         <Avatar>
           <AvatarImage src="https://github.com/shadcn.png" />
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56">
-        <DropdownMenuLabel>My Account</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuGroup>
+      <DropdownMenuContent className="w-[200px] m-5 rounded-xl">
+        <DropdownMenuGroup className="*:rounded-lg">
           <DropdownMenuItem>
             <User className="mr-2 h-4 w-4" />
             <span>Profile</span>
             <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <CreditCard className="mr-2 h-4 w-4" />
-            <span>Billing</span>
+            <Link href="/@me/events" className="flex items-center">
+              <MaterialSymbolsCalendarMonthRounded className="mr-2 h-4 w-4" />
+              <span>My Events</span>
+            </Link>
             <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
           </DropdownMenuItem>
           <DropdownMenuItem>
@@ -60,7 +55,7 @@ export function AvatarDropDown() {
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuGroup>
+        <DropdownMenuGroup className="*:rounded-lg">
           <DropdownMenuItem>
             <Users className="mr-2 h-4 w-4" />
             <span>Friends</span>

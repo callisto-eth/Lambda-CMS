@@ -34,96 +34,101 @@ export async function POST(req: NextRequest) {
     })
     .select();
   if (createEventError) {
-    console.log(createEventError.code);
     return NextResponse.json(
       { error: createEventError.message },
       { status: 500 },
     );
   }
 
-  let imageUrls = {
-    avatar: '',
-    banner: '',
-  };
+  if (createEventResponse) {
+    let imageUrls = {
+      avatar: '',
+      banner: '',
+    };
 
-  if (data.avatar_image) {
-    let { error: uploadAvatarImageError } = await supabase.storage
-      .from('event_assets')
-      .upload(
-        // @ts-ignore
-        `${createEventResponse[0].id}/avatar.png`,
-        dataURLtoFile(data.avatar_image, 'avatar.png')
-      );
+    if (data.avatar_image) {
+      let { error: uploadAvatarImageError } = await supabase.storage
+        .from('event_assets')
+        .upload(
+          `${createEventResponse[0].id}/avatar.png`,
+          dataURLtoFile(data.avatar_image, 'avatar.png'),
+        );
 
-    if (uploadAvatarImageError) {
-      console.log(uploadAvatarImageError.cause);
+      if (uploadAvatarImageError) {
+        console.log('Image:' + uploadAvatarImageError.cause);
+        return NextResponse.json(
+          { error: uploadAvatarImageError.message },
+          { status: 500 },
+        );
+      }
+
+      let { data: fetchAvatarResponse } = supabase.storage
+        .from('event_assets')
+        .getPublicUrl(`${createEventResponse[0].id}/avatar.png`);
+
+      imageUrls.avatar = fetchAvatarResponse.publicUrl;
+    }
+
+    if (data.banner_image) {
+      let { error: uploadBannerImageError } = await supabase.storage
+        .from('event_assets')
+        .upload(
+          `${createEventResponse[0].id}/banner.png`,
+          dataURLtoFile(data.banner_image, 'banner.png'),
+        );
+
+      if (uploadBannerImageError) {
+        console.log(uploadBannerImageError.cause);
+        return NextResponse.json(
+          { error: uploadBannerImageError.message },
+          { status: 500 },
+        );
+      }
+      let { data: fetchBannerResponse } = supabase.storage
+        .from('event_assets')
+        .getPublicUrl(`${createEventResponse[0].id}/banner.png`);
+
+      imageUrls.banner = fetchBannerResponse.publicUrl;
+    }
+
+    let { error: eventAssetUpdateError } = await supabase
+      .from('events')
+      .update({
+        avatar: imageUrls.avatar,
+        banner: imageUrls.banner,
+      })
+      .eq('id', createEventResponse[0].id);
+
+    if (eventAssetUpdateError) {
+      console.log('here?', eventAssetUpdateError.code);
       return NextResponse.json(
-        { error: uploadAvatarImageError.message },
+        { error: eventAssetUpdateError.message },
         { status: 500 },
       );
     }
 
-    let { data: fetchAvatarResponse } = await supabase.storage
-      .from('event_assets')
-      // @ts-ignore
-      .getPublicUrl(`${createEventResponse[0].id}/avatar.png`);
+    let { error: adminJoinError } = await supabase
+      .schema('connections')
+      .from('event_attendees')
+      .insert({
+        event: createEventResponse[0].id,
+        attendee: user.data.user?.id,
+        role: 'ORGANIZER',
+      });
 
-    imageUrls.avatar = fetchAvatarResponse.publicUrl;
-  }
+    if (adminJoinError && createEventResponse) {
+      console.log(adminJoinError);
 
-  if (data.banner_image) {
-    let { error: uploadBannerImageError } = await supabase.storage
-      .from('event_assets')
-      .upload(
-        // @ts-ignore
-        `${createEventResponse[0].id}/banner.png`,
-        dataURLtoFile(data.banner_image, 'banner.png')
-      );
+      await supabase
+        .from('events')
+        .delete()
+        .eq('id', createEventResponse[0].id);
 
-    if (uploadBannerImageError) {
-      console.log(uploadBannerImageError.cause);
       return NextResponse.json(
-        { error: uploadBannerImageError.message },
+        { error: adminJoinError.message },
         { status: 500 },
       );
     }
-    let { data: fetchBannerResponse } = await supabase.storage
-      .from('event_assets')
-      // @ts-ignore
-      .getPublicUrl(`${createEventResponse[0].id}/banner.png`);
-
-    imageUrls.banner = fetchBannerResponse.publicUrl;
-  }
-
-  let { error: eventAssetUpdateError } = await supabase.from('events').update({
-    avatar: imageUrls.avatar,
-    banner: imageUrls.banner,
-  });
-
-  if (eventAssetUpdateError) {
-    console.log("here?", eventAssetUpdateError.code);
-    return NextResponse.json(
-      { error: eventAssetUpdateError.message },
-      { status: 500 },
-    );
-  }
-
-  let { error: adminJoinError } = await supabase
-    .schema('connections')
-    .from('event_attendees')
-    .insert({
-      // @ts-ignore
-      event: createEventResponse[0].id,
-      attendee: user.data.user?.id,
-      role: 'ORGANIZER',
-    });
-
-  if (adminJoinError) {
-    console.log(adminJoinError.code);
-    return NextResponse.json(
-      { error: adminJoinError.message },
-      { status: 500 },
-    );
   }
 
   return NextResponse.json(
@@ -136,13 +141,15 @@ export async function POST(req: NextRequest) {
   );
 }
 
-// copied from stackoverflow, dont come crying if it breaks
 function dataURLtoFile(dataUrl: string, filename: string) {
-	// @ts-ignore
-    var arr = dataUrl.split(','), mime = arr[0].match(/:(.*?);/)[1],
-        bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
-    while(n--){
-        u8arr[n] = bstr.charCodeAt(n);
-    }
-    return new File([u8arr], filename, {type:mime});
+  let arr = dataUrl.split(','),
+    //@ts-ignore
+    mime = arr[0].match(/:(.*?);/)[1],
+    bstr = atob(arr[1]),
+    n = bstr.length,
+    u8arr = new Uint8Array(n);
+  while (n--) {
+    u8arr[n] = bstr.charCodeAt(n);
+  }
+  return new File([u8arr], filename, { type: mime });
 }
