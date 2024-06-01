@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
     console.log(error);
     return NextResponse.json(
       { message: 'Could not authenticate user' },
-      { status: Number(error.code) },
+      { status: 500 },
     );
   }
 
