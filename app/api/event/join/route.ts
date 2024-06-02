@@ -16,6 +16,6 @@ export async function POST(req: NextRequest) {
 		.insert({
 			event: data.id,
 			attendee: user.data.user?.id,
-			role: "PARTICIPANT",
+			role: "E_EVENT_PARTICIPANT",
 		});
 }

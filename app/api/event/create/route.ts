@@ -8,8 +8,8 @@ export type CreateEventSchema = {
   end_time: string;
   spaces_enabled: boolean;
   chat_enabled: boolean;
-  platform: 'ONLINE' | 'OFFLINE' | 'HYBRID';
-  visibility: 'PRIVATE' | 'PUBLIC';
+  platform: 'E_EVENT_ONLINE' | 'E_EVENT_OFFLINE' | 'E_EVENT_HYBRID';
+  visibility: 'E_EVENT_PRIVATE' | 'E_EVENT_PUBLIC';
   avatar_image?: string;
   banner_image?: string;
 };

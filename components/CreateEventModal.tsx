@@ -26,7 +26,7 @@ import { DatePickerWithRange } from './CalenderRange';
 import { Checkbox } from './ui/checkbox';
 import { CreateEventSchema } from '@/app/api/event/create/route';
 
-export default function CreateEventModal() {
+export default function E_EVENT_CreateEventModal() {
   const createEventSchema = z.object({
     event_name: z.string({
       message: 'Please enter a valid name',
@@ -83,12 +83,12 @@ export default function CreateEventModal() {
         spaces_enabled: values.spaces_enabled || false,
         chat_enabled: values.chat_enabled || false,
         platform: values.event_mode.toUpperCase() as
-          | 'ONLINE'
-          | 'OFFLINE'
-          | 'HYBRID',
+          | 'E_EVENT_ONLINE'
+          | 'E_EVENT_OFFLINE'
+          | 'E_EVENT_HYBRID',
         visibility: values.event_visibility.toUpperCase() as
-          | 'PRIVATE'
-          | 'PUBLIC',
+          | 'E_EVENT_PRIVATE'
+          | 'E_EVENT_PUBLIC',
         avatar_image: uploadedFileProfile as string,
         banner_image: uploadedFileBanner as string,
       };
@@ -206,19 +206,19 @@ export default function CreateEventModal() {
                     >
                       <FormItem className="flex items-center space-x-3 space-y-0">
                         <FormControl>
-                          <RadioGroupItem value="ONLINE" id="r1" />
+                          <RadioGroupItem value="E_EVENT_ONLINE" id="r1" />
                         </FormControl>
                         <FormLabel htmlFor="r1">Online</FormLabel>
                       </FormItem>
                       <FormItem className="flex items-center space-x-3 space-y-0">
                         <FormControl>
-                          <RadioGroupItem value="OFFLINE" id="r2" />
+                          <RadioGroupItem value="E_EVENT_OFFLINE" id="r2" />
                         </FormControl>
                         <FormLabel htmlFor="r2">Offline</FormLabel>
                       </FormItem>
                       <FormItem className="flex items-center space-x-3 space-y-0">
                         <FormControl>
-                          <RadioGroupItem value="HYBRID" id="r3" />
+                          <RadioGroupItem value="E_EVENT_HYBRID" id="r3" />
                         </FormControl>
                         <FormLabel htmlFor="r3">Hybrid</FormLabel>
                       </FormItem>
@@ -263,13 +263,13 @@ export default function CreateEventModal() {
                     >
                       <FormItem className="flex items-center space-x-3 space-y-0">
                         <FormControl>
-                          <RadioGroupItem value="PUBLIC" id="r1" />
+                          <RadioGroupItem value="E_EVENT_PUBLIC" id="r1" />
                         </FormControl>
                         <FormLabel htmlFor="r1">Public</FormLabel>
                       </FormItem>
                       <FormItem className="flex items-center space-x-3 space-y-0">
                         <FormControl>
-                          <RadioGroupItem value="PRIVATE" id="r2" />
+                          <RadioGroupItem value="E_EVENT_PRIVATE" id="r2" />
                         </FormControl>
                         <FormLabel htmlFor="r2">Private</FormLabel>
                       </FormItem>
