@@ -373,11 +373,13 @@ export default function E_EVENT_CreateEventModal() {
               <span>
                 {createEventForm
                   .getValues()
-                  ['event_mode']?.charAt(0)
+                  ['event_mode']?.split('_')[2]
+                  ?.charAt(0)
                   .toUpperCase() +
                   createEventForm
                     .getValues()
-                    ['event_mode']?.slice(1)
+                    ['event_mode']?.split('_')[2]
+                    ?.slice(1)
                     .toLowerCase()}
               </span>
             </p>

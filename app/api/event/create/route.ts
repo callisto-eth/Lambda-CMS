@@ -91,29 +91,13 @@ export async function POST(req: NextRequest) {
       imageUrls.banner = fetchBannerResponse.publicUrl;
     }
 
-    let { error: eventAssetUpdateError } = await supabase
-      .from('events')
-      .update({
-        avatar: imageUrls.avatar,
-        banner: imageUrls.banner,
-      })
-      .eq('id', createEventResponse[0].id);
-
-    if (eventAssetUpdateError) {
-      console.log('here?', eventAssetUpdateError.code);
-      return NextResponse.json(
-        { error: eventAssetUpdateError.message },
-        { status: 500 },
-      );
-    }
-
     let { error: adminJoinError } = await supabase
       .schema('connections')
       .from('event_attendees')
       .insert({
         event: createEventResponse[0].id,
         attendee: user.data.user?.id,
-        role: 'ORGANIZER',
+        role: 'E_EVENT_ORGANIZER',
       });
 
     if (adminJoinError && createEventResponse) {

@@ -4,8 +4,11 @@ import {
   PhCaretRightBold,
 } from '@/components/Icons';
 import { AnimatedTooltip } from '@/components/ui/animated-tooltip';
+import { createClient } from '@/utils/supabase/client';
 
 export default function EventCard({ fetchedEvent }: { fetchedEvent: any }) {
+  const supabase = createClient();
+
   const people = [
     {
       id: 1,
@@ -30,7 +33,7 @@ export default function EventCard({ fetchedEvent }: { fetchedEvent: any }) {
     },
   ];
   return (
-    <div className="relative">
+    <div className="relative cursor-pointer">
       <svg
         width="472"
         height="393"
@@ -102,12 +105,12 @@ export default function EventCard({ fetchedEvent }: { fetchedEvent: any }) {
           <p className="flex items-center space-x-1">
             <MajesticonsStatusOnline />
             <span>
-              {fetchedEvent.platform.charAt(0) +
-                fetchedEvent.platform.slice(1).toLowerCase()}
+              {fetchedEvent.platform?.split('_')[2]?.charAt(0).toUpperCase() +
+                fetchedEvent.platform?.split('_')[2]?.slice(1).toLowerCase()}
             </span>
           </p>
         </div>
-        <div className="row-span-3 col-span-9 px-5 text-2xl font-bold leading-tight">
+        <div className="row-span-3 text-left col-span-9 px-5 text-2xl font-bold leading-tight">
           {fetchedEvent.name}
         </div>
         <div className="col-span-12 row-span-2 flex justify-between items-center">
@@ -123,7 +126,11 @@ export default function EventCard({ fetchedEvent }: { fetchedEvent: any }) {
         <div
           className="col-span-12 row-span-6 bg-cover rounded-3xl"
           style={{
-            backgroundImage: `url(${fetchedEvent.banner})`,
+            backgroundImage: `url(${
+              supabase.storage
+                .from('event_assets')
+                .getPublicUrl(`${fetchedEvent.id}/banner.png`).data.publicUrl
+            })`,
           }}
         ></div>
       </div>

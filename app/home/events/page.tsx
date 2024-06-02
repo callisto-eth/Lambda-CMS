@@ -1,6 +1,14 @@
 'use client';
 
 import EventCard from '@/components/EventCard';
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet';
 
 import { createClient } from '@/utils/supabase/client';
 import { useEffect, useState } from 'react';
@@ -30,11 +38,24 @@ export default function EventsPage() {
   }, [organizerID]);
 
   return (
-    <main className="px-10">
+    <main className="grid gap-5 md:gap-0 px-10 md:grid-cols-3">
       {fetchedEvents &&
         fetchedEvents.map((fetchedEvent: any) => {
           return (
-            <EventCard fetchedEvent={fetchedEvent} key={fetchedEvent.id} />
+            <Sheet>
+              <SheetTrigger>
+                <EventCard fetchedEvent={fetchedEvent} key={fetchedEvent.id} />
+              </SheetTrigger>
+              <SheetContent>
+                <SheetHeader>
+                  <SheetTitle>Are you absolutely sure?</SheetTitle>
+                  <SheetDescription>
+                    This action cannot be undone. This will permanently delete
+                    your account and remove your data from our servers.
+                  </SheetDescription>
+                </SheetHeader>
+              </SheetContent>
+            </Sheet>
           );
         })}
     </main>
