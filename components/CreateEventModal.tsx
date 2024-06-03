@@ -1,6 +1,6 @@
 'use client';
 
-import { optional, z } from 'zod';
+import { z } from 'zod';
 import {
   MajesticonsStatusOnline,
   PhCaretLeft,
@@ -26,7 +26,7 @@ import { DatePickerWithRange } from './CalenderRange';
 import { Checkbox } from './ui/checkbox';
 import { CreateEventSchema } from '@/app/api/event/create/route';
 
-export default function E_EVENT_CreateEventModal() {
+export default function CreateEventModal() {
   const createEventSchema = z.object({
     event_name: z.string({
       message: 'Please enter a valid name',

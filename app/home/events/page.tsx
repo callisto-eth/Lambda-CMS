@@ -38,7 +38,7 @@ export default function EventsPage() {
   }, [organizerID]);
 
   return (
-    <main className="grid gap-5 md:gap-0 px-10 md:grid-cols-3">
+    <main className="grid gap-5 md:gap-0 md:grid-cols-3 w-fit mx-auto md:w-full">
       {fetchedEvents &&
         fetchedEvents.map((fetchedEvent: any) => {
           return (
