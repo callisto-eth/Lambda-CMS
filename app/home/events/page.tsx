@@ -42,9 +42,9 @@ export default function EventsPage() {
       {fetchedEvents &&
         fetchedEvents.map((fetchedEvent: any) => {
           return (
-            <Sheet>
+            <Sheet key={fetchedEvent.id}>
               <SheetTrigger>
-                <EventCard fetchedEvent={fetchedEvent} key={fetchedEvent.id} />
+                <EventCard fetchedEvent={fetchedEvent} />
               </SheetTrigger>
               <SheetContent>
                 <SheetHeader>
