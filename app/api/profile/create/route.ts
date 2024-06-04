@@ -1,6 +1,6 @@
+import { dataURLtoFile } from '@/utils/helpers';
 import { createClient } from '@/utils/supabase/server';
 import { NextRequest, NextResponse } from 'next/server';
-import { dataURLtoFile } from '../../event/create/route';
 
 export async function POST(req: NextRequest) {
   const supabase = createClient();
