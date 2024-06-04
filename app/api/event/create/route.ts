@@ -41,11 +41,6 @@ export async function POST(req: NextRequest) {
     }
 
     if (createEventResponse) {
-      let imageUrls = {
-        avatar: '',
-        banner: '',
-      };
-
       if (data.avatar_image) {
         let { error: uploadAvatarImageError } = await supabase.storage
           .from('event_assets')
@@ -61,12 +56,6 @@ export async function POST(req: NextRequest) {
             { status: 500 },
           );
         }
-
-        let { data: fetchAvatarResponse } = supabase.storage
-          .from('event_assets')
-          .getPublicUrl(`${createEventResponse[0].id}/avatar.png`);
-
-        imageUrls.avatar = fetchAvatarResponse.publicUrl;
       }
 
       if (data.banner_image) {
@@ -84,11 +73,6 @@ export async function POST(req: NextRequest) {
             { status: 500 },
           );
         }
-        let { data: fetchBannerResponse } = supabase.storage
-          .from('event_assets')
-          .getPublicUrl(`${createEventResponse[0].id}/banner.png`);
-
-        imageUrls.banner = fetchBannerResponse.publicUrl;
       }
 
       if (createEventResponse[0] && user.data.user) {
@@ -148,7 +132,7 @@ export async function POST(req: NextRequest) {
   );
 }
 
-function dataURLtoFile(dataUrl: string, filename: string) {
+export function dataURLtoFile(dataUrl: string, filename: string) {
   let arr = dataUrl.split(','),
     //@ts-ignore
     mime = arr[0].match(/:(.*?);/)[1],

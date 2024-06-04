@@ -11,17 +11,17 @@ export type Database = {
     Tables: {
       chat_members: {
         Row: {
-          chat: number;
+          chat: string;
           created_at: string;
           member: string;
         };
         Insert: {
-          chat: number;
+          chat: string;
           created_at: string;
           member: string;
         };
         Update: {
-          chat?: number;
+          chat?: string;
           created_at?: string;
           member?: string;
         };
@@ -45,7 +45,7 @@ export type Database = {
       chat_messages: {
         Row: {
           author: string;
-          chat: number;
+          chat: string;
           content: string;
           created_at: string;
           id: number;
@@ -53,7 +53,7 @@ export type Database = {
         };
         Insert: {
           author: string;
-          chat: number;
+          chat: string;
           content: string;
           created_at?: string;
           id?: number;
@@ -61,7 +61,7 @@ export type Database = {
         };
         Update: {
           author?: string;
-          chat?: number;
+          chat?: string;
           content?: string;
           created_at?: string;
           id?: number;
@@ -195,6 +195,44 @@ export type Database = {
           },
         ];
       };
+      spaces_posts: {
+        Row: {
+          author: string;
+          content: string;
+          created_at: string;
+          id: number;
+          likes: number;
+          medias: string[];
+          space: string;
+        };
+        Insert: {
+          author: string;
+          content: string;
+          created_at?: string;
+          id?: number;
+          likes?: number;
+          medias?: string[];
+          space: string;
+        };
+        Update: {
+          author?: string;
+          content?: string;
+          created_at?: string;
+          id?: number;
+          likes?: number;
+          medias?: string[];
+          space?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'connections_spaces_posts_space_fkey';
+            columns: ['space'];
+            isOneToOne: false;
+            referencedRelation: 'spaces';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       subevents_attendees: {
         Row: {
           attendee: string;
@@ -267,24 +305,24 @@ export type Database = {
       chats: {
         Row: {
           created_at: string;
-          id: number;
+          id: string;
           type: Database['public']['Enums']['E_CHAT_TYPE'] | null;
         };
         Insert: {
           created_at?: string;
-          id?: number;
+          id?: string;
           type?: Database['public']['Enums']['E_CHAT_TYPE'] | null;
         };
         Update: {
           created_at?: string;
-          id?: number;
+          id?: string;
           type?: Database['public']['Enums']['E_CHAT_TYPE'] | null;
         };
         Relationships: [];
       };
       events: {
         Row: {
-          chat: number | null;
+          chat: string | null;
           created_at: string;
           description: string;
           end_time: string;
@@ -292,12 +330,12 @@ export type Database = {
           name: string;
           organizer: string;
           platform: Database['public']['Enums']['E_EVENT_PLATFORM'];
-          spaces: number | null;
+          spaces: string | null;
           start_time: string;
           visibility: Database['public']['Enums']['E_EVENT_TYPE'];
         };
         Insert: {
-          chat?: number | null;
+          chat?: string | null;
           created_at?: string;
           description: string;
           end_time: string;
@@ -305,12 +343,12 @@ export type Database = {
           name: string;
           organizer: string;
           platform: Database['public']['Enums']['E_EVENT_PLATFORM'];
-          spaces?: number | null;
+          spaces?: string | null;
           start_time: string;
           visibility?: Database['public']['Enums']['E_EVENT_TYPE'];
         };
         Update: {
-          chat?: number | null;
+          chat?: string | null;
           created_at?: string;
           description?: string;
           end_time?: string;
@@ -318,13 +356,13 @@ export type Database = {
           name?: string;
           organizer?: string;
           platform?: Database['public']['Enums']['E_EVENT_PLATFORM'];
-          spaces?: number | null;
+          spaces?: string | null;
           start_time?: string;
           visibility?: Database['public']['Enums']['E_EVENT_TYPE'];
         };
         Relationships: [
           {
-            foreignKeyName: 'events_chat_fkey';
+            foreignKeyName: 'public_events_chat_fkey';
             columns: ['chat'];
             isOneToOne: false;
             referencedRelation: 'chats';
@@ -427,17 +465,17 @@ export type Database = {
         Row: {
           allow_participants: boolean;
           created_at: string;
-          id: number;
+          id: string;
         };
         Insert: {
           allow_participants?: boolean;
           created_at?: string;
-          id?: number;
+          id?: string;
         };
         Update: {
           allow_participants?: boolean;
           created_at?: string;
-          id?: number;
+          id?: string;
         };
         Relationships: [];
       };
