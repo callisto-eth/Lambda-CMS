@@ -117,7 +117,11 @@ export function AvatarDropDown() {
           </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenu>
-      {isCreateEventDialogOpen ? <CreateEventModal /> : <JoinEventDialog />}
+      {isCreateEventDialogOpen ? (
+        <CreateEventModal setModalState={setIsCreateEventDialogOpen} />
+      ) : (
+        <JoinEventDialog />
+      )}
     </Dialog>
   );
 }

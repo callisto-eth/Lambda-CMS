@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
     .from('chat_messages')
     .insert({
       event: data.event,
-      author: user.data.user?.id,
+      author: user.data.user?.id as string,
       body: data.body,
     })
     .select();
