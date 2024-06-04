@@ -1,7 +1,7 @@
 import gsap from 'gsap';
 
-export const animatePageIn = (onComplete: VoidFunction) => {
-  const templateDiv = document.getElementsByClassName('animateOnLogIn');
+export const animatePageIn = (className: string, onComplete: VoidFunction) => {
+  const templateDiv = document.getElementsByClassName(className);
 
   if (templateDiv) {
     const pageTimeline = gsap.timeline({ onComplete: onComplete });
@@ -15,6 +15,13 @@ export const animatePageIn = (onComplete: VoidFunction) => {
         backdropFilter: 'blur(100px)',
         opacity: '100',
         duration: 3,
+      })
+      .to([templateDiv], {
+        opacity: '0',
+        duration: 1,
+      })
+      .set([templateDiv], {
+        display: 'none',
       });
   }
 };

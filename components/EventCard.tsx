@@ -46,17 +46,17 @@ export default function EventCard({ fetchedEvent }: { fetchedEvent: any }) {
           <path
             d="M24 53C24 36.4315 37.4315 23 54 23H94V93H24V53Z"
             fill="white"
-            fill-opacity="0.1"
+            fillOpacity="0.1"
           />
           <path
             d="M94.5 23V22.5H94H54C37.1553 22.5 23.5 36.1553 23.5 53V93V93.5H24H94H94.5V93V23Z"
             stroke="white"
-            stroke-opacity="0.13"
+            strokeOpacity="0.13"
           />
         </g>
         <path
-          fill-rule="evenodd"
-          clip-rule="evenodd"
+          fillRule="evenodd"
+          clipRule="evenodd"
           d="M304 0H130.725C108.081 0 89.7246 18.3563 89.7246 41V48.1824C89.7246 70.8261 71.3683 89.1824 48.7246 89.1824H41C18.3563 89.1824 0 107.539 0 130.182V245.419C0 270.825 20.5949 291.419 46 291.419H304C329.405 291.419 350 270.825 350 245.42V46C350 20.5949 329.405 0 304 0Z"
           fill="#2B2D2E"
         />
@@ -68,9 +68,9 @@ export default function EventCard({ fetchedEvent }: { fetchedEvent: any }) {
             width="94.8"
             height="94.8"
             filterUnits="userSpaceOnUse"
-            color-interpolation-filters="sRGB"
+            colorInterpolationFilters="sRGB"
           >
-            <feFlood flood-opacity="0" result="BackgroundImageFix" />
+            <feFlood floodOpacity="0" result="BackgroundImageFix" />
             <feGaussianBlur in="BackgroundImageFix" stdDeviation="5.7" />
             <feComposite
               in2="SourceAlpha"

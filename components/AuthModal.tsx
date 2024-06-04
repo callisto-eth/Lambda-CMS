@@ -66,7 +66,7 @@ function FormComponent({
 
     if (resp.status === 200) {
       setModalOpen(false);
-      animatePageIn(() => {
+      animatePageIn('animateOnLogIn', () => {
         pageRouter.push('/@me');
       });
     }

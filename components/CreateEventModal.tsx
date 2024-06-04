@@ -25,8 +25,13 @@ import ImageUpload from './ImageUpload';
 import { DatePickerWithRange } from './CalenderRange';
 import { Checkbox } from './ui/checkbox';
 import { CreateEventSchema } from '@/app/api/event/create/route';
+import { animatePageIn } from '@/utils/animation';
 
-export default function CreateEventModal() {
+export default function CreateEventModal({
+  setModalState,
+}: {
+  setModalState: (val: boolean) => void;
+}) {
   const createEventSchema = z.object({
     event_name: z.string({
       message: 'Please enter a valid name',
@@ -73,6 +78,8 @@ export default function CreateEventModal() {
     string | ArrayBuffer | null
   >();
 
+  const [createdEvent, setCreatedEvent] = useState<CreateEventSchema | null>();
+
   function onSubmit(values: z.infer<typeof createEventSchema>) {
     if (isPublished) {
       const uploadData: CreateEventSchema = {
@@ -100,7 +107,9 @@ export default function CreateEventModal() {
         body: JSON.stringify(uploadData),
       }).then((res) => {
         res.json().then((data) => {
-          console.log(data);
+          setCreatedEvent(data.data[0]);
+          setModalState(false);
+          animatePageIn('animateOnEventCreation', () => {});
         });
       });
     }
@@ -231,7 +240,10 @@ export default function CreateEventModal() {
           </div>
           <div
             data-state={contentState}
-            className="hidden data-[state=plugins]:block mb-4 space-y-4"
+            className="hidden data-[state=plugins]:block space-y-4"
+            style={{
+              marginBottom: !createdEvent ? '1rem' : '0',
+            }}
           >
             <div>
               <p className="mb-2">Image</p>
@@ -403,13 +415,15 @@ export default function CreateEventModal() {
               Continue
             </Button>
           ) : (
-            <Button
-              type="submit"
-              onClick={() => setIsPublished(true)}
-              className="font-DM-Sans p-3 rounded-xl w-full bg-[#323132] text-md font-semibold text-[#b4b3b4] hover:bg-[#b4b3b4] hover:text-[#323132]"
-            >
-              Publish
-            </Button>
+            !createdEvent && (
+              <Button
+                type="submit"
+                onClick={() => setIsPublished(true)}
+                className="font-DM-Sans p-3 rounded-xl w-full bg-[#323132] text-md font-semibold text-[#b4b3b4] hover:bg-[#b4b3b4] hover:text-[#323132]"
+              >
+                Publish
+              </Button>
+            )
           )}
         </form>
       </Form>

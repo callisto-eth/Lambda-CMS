@@ -32,7 +32,6 @@ export default function EventsPage() {
         .then((res) => res.json())
         .then((data) => {
           setFetchedEvents(data.data);
-          console.log(data.data);
         });
     }
   }, [organizerID]);
