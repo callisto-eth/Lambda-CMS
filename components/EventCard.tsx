@@ -105,8 +105,8 @@ export default function EventCard({ fetchedEvent }: { fetchedEvent: any }) {
           <p className="flex items-center space-x-1">
             <MajesticonsStatusOnline />
             <span>
-              {fetchedEvent.platform?.split('_')[2]?.charAt(0).toUpperCase() +
-                fetchedEvent.platform?.split('_')[2]?.slice(1).toLowerCase()}
+              {fetchedEvent.platform.charAt(0) +
+                fetchedEvent.platform.slice(1).toLowerCase()}
             </span>
           </p>
         </div>

@@ -6,9 +6,9 @@ export default function EventLayout({
   children: React.ReactNode;
 }) {
   return (
-    <>
+    <main className="relative">
       <Navbar />
       {children}
-    </>
+    </main>
   );
 }

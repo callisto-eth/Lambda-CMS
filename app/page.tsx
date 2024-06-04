@@ -11,7 +11,6 @@ import { useEffect, useState } from 'react';
 const supabaseClient = createClient();
 
 export default function Home() {
-
   const [userSession, setUserSession] = useState<any>(null);
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -21,15 +20,8 @@ export default function Home() {
       .then(({ data: { session } }) => setUserSession(session));
   }, []);
 
-  
   return (
-    <main className="relative">
-      <div className="fixed h-screen animateOnLogIn w-screen z-[-1] opacity-0 flex justify-center items-center flex-col">
-        <p className="font-DM-Sans text-4xl font-medium text-white">
-          Welcome, Vishal
-        </p>
-        <div className="w-[100px] h-[100px] rounded-full shadow-[0_0_2px_#fb4500,inset_0_0_2px_#fb4500,0_0_5px_#fb4500,0_0_15px_#fb4500,0_0_30px_#fb4500] my-5" />
-      </div>
+    <main>
       <section
         className="grid md:grid-cols-2 md:h-screen grid-rows-2 md:grid-rows-1"
         style={{

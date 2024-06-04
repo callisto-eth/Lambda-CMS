@@ -90,12 +90,12 @@ export default function CreateEventModal({
         spaces_enabled: values.spaces_enabled || false,
         chat_enabled: values.chat_enabled || false,
         platform: values.event_mode.toUpperCase() as
-          | 'E_EVENT_ONLINE'
-          | 'E_EVENT_OFFLINE'
-          | 'E_EVENT_HYBRID',
+          | 'ONLINE'
+          | 'OFFLINE'
+          | 'HYBRID',
         visibility: values.event_visibility.toUpperCase() as
-          | 'E_EVENT_PRIVATE'
-          | 'E_EVENT_PUBLIC',
+          | 'PRIVATE'
+          | 'PUBLIC',
         avatar_image: uploadedFileProfile as string,
         banner_image: uploadedFileBanner as string,
       };
@@ -107,9 +107,15 @@ export default function CreateEventModal({
         body: JSON.stringify(uploadData),
       }).then((res) => {
         res.json().then((data) => {
+          const modalData = document.createElement('div');
+          modalData.className = 'flex justify-center items-center flex-col';
+          const modalText = document.createElement('p');
+          modalText.innerText = `🎉 Your event was successfully created`;
+          modalText.className = 'font-DM-Sans text-4xl font-medium text-white';
+          modalData.appendChild(modalText);
           setCreatedEvent(data.data[0]);
           setModalState(false);
-          animatePageIn('animateOnEventCreation', () => {});
+          animatePageIn(() => {}, modalData);
         });
       });
     }
@@ -215,19 +221,19 @@ export default function CreateEventModal({
                     >
                       <FormItem className="flex items-center space-x-3 space-y-0">
                         <FormControl>
-                          <RadioGroupItem value="E_EVENT_ONLINE" id="r1" />
+                          <RadioGroupItem value="ONLINE" id="r1" />
                         </FormControl>
                         <FormLabel htmlFor="r1">Online</FormLabel>
                       </FormItem>
                       <FormItem className="flex items-center space-x-3 space-y-0">
                         <FormControl>
-                          <RadioGroupItem value="E_EVENT_OFFLINE" id="r2" />
+                          <RadioGroupItem value="OFFLINE" id="r2" />
                         </FormControl>
                         <FormLabel htmlFor="r2">Offline</FormLabel>
                       </FormItem>
                       <FormItem className="flex items-center space-x-3 space-y-0">
                         <FormControl>
-                          <RadioGroupItem value="E_EVENT_HYBRID" id="r3" />
+                          <RadioGroupItem value="HYBRID" id="r3" />
                         </FormControl>
                         <FormLabel htmlFor="r3">Hybrid</FormLabel>
                       </FormItem>
@@ -275,13 +281,13 @@ export default function CreateEventModal({
                     >
                       <FormItem className="flex items-center space-x-3 space-y-0">
                         <FormControl>
-                          <RadioGroupItem value="E_EVENT_PUBLIC" id="r1" />
+                          <RadioGroupItem value="PUBLIC" id="r1" />
                         </FormControl>
                         <FormLabel htmlFor="r1">Public</FormLabel>
                       </FormItem>
                       <FormItem className="flex items-center space-x-3 space-y-0">
                         <FormControl>
-                          <RadioGroupItem value="E_EVENT_PRIVATE" id="r2" />
+                          <RadioGroupItem value="PRIVATE" id="r2" />
                         </FormControl>
                         <FormLabel htmlFor="r2">Private</FormLabel>
                       </FormItem>
@@ -383,15 +389,10 @@ export default function CreateEventModal({
             <p className="flex items-center space-x-2">
               <MajesticonsStatusOnline />
               <span>
-                {createEventForm
-                  .getValues()
-                  ['event_mode']?.split('_')[2]
-                  ?.charAt(0)
-                  .toUpperCase() +
+                {createEventForm.getValues()['event_mode']?.charAt(0) +
                   createEventForm
                     .getValues()
-                    ['event_mode']?.split('_')[2]
-                    ?.slice(1)
+                    ['event_mode']?.slice(1)
                     .toLowerCase()}
               </span>
             </p>

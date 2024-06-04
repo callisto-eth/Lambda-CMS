@@ -1,7 +1,8 @@
 import gsap from 'gsap';
 
-export const animatePageIn = (className: string, onComplete: VoidFunction) => {
-  const templateDiv = document.getElementsByClassName(className);
+export const animatePageIn = (onComplete: VoidFunction, innerContent: Node) => {
+  const templateDiv = document.getElementsByClassName('animateModal');
+  templateDiv[0].appendChild(innerContent);
 
   if (templateDiv) {
     const pageTimeline = gsap.timeline({ onComplete: onComplete });

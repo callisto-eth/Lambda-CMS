@@ -37,12 +37,12 @@ export default function EventsPage() {
   }, [organizerID]);
 
   return (
-    <main className="grid gap-5 md:gap-0 md:grid-cols-3 w-fit mx-auto md:w-full">
+    <main className="grid gap-5 md:gap-0 md:grid-cols-3 w-fit mx-auto md:w-full px-0 md:px-10">
       {fetchedEvents &&
         fetchedEvents.map((fetchedEvent: any) => {
           return (
             <Sheet key={fetchedEvent.id}>
-              <SheetTrigger>
+              <SheetTrigger className="outline-none">
                 <EventCard fetchedEvent={fetchedEvent} />
               </SheetTrigger>
               <SheetContent>

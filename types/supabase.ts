@@ -9,6 +9,81 @@ export type Json =
 export type Database = {
   connections: {
     Tables: {
+      chat_members: {
+        Row: {
+          chat: number;
+          created_at: string;
+          member: string;
+        };
+        Insert: {
+          chat: number;
+          created_at: string;
+          member: string;
+        };
+        Update: {
+          chat?: number;
+          created_at?: string;
+          member?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'connections_chat_members_chat_fkey';
+            columns: ['chat'];
+            isOneToOne: false;
+            referencedRelation: 'chats';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'connections_chat_members_member_fkey';
+            columns: ['member'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      chat_messages: {
+        Row: {
+          author: string;
+          chat: number;
+          content: string;
+          created_at: string;
+          id: number;
+          medias: string[];
+        };
+        Insert: {
+          author: string;
+          chat: number;
+          content: string;
+          created_at?: string;
+          id?: number;
+          medias?: string[];
+        };
+        Update: {
+          author?: string;
+          chat?: number;
+          content?: string;
+          created_at?: string;
+          id?: number;
+          medias?: string[];
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'connections_chat_messages_author_fkey';
+            columns: ['author'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'connections_chat_messages_chat_fkey';
+            columns: ['chat'];
+            isOneToOne: false;
+            referencedRelation: 'chats';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       event_attendees: {
         Row: {
           attendee: string;
@@ -189,51 +264,27 @@ export type Database = {
   };
   public: {
     Tables: {
-      chat_messages: {
+      chats: {
         Row: {
-          author: string;
-          body: string;
           created_at: string;
-          event: string;
           id: number;
-          media: string[] | null;
+          type: Database['public']['Enums']['E_CHAT_TYPE'] | null;
         };
         Insert: {
-          author: string;
-          body: string;
           created_at?: string;
-          event: string;
           id?: number;
-          media?: string[] | null;
+          type?: Database['public']['Enums']['E_CHAT_TYPE'] | null;
         };
         Update: {
-          author?: string;
-          body?: string;
           created_at?: string;
-          event?: string;
           id?: number;
-          media?: string[] | null;
+          type?: Database['public']['Enums']['E_CHAT_TYPE'] | null;
         };
-        Relationships: [
-          {
-            foreignKeyName: 'chat_messages_author_fkey';
-            columns: ['author'];
-            isOneToOne: false;
-            referencedRelation: 'profiles';
-            referencedColumns: ['id'];
-          },
-          {
-            foreignKeyName: 'chat_messages_event_fkey';
-            columns: ['event'];
-            isOneToOne: false;
-            referencedRelation: 'events';
-            referencedColumns: ['id'];
-          },
-        ];
+        Relationships: [];
       };
       events: {
         Row: {
-          chat_enabled: boolean;
+          chat: number | null;
           created_at: string;
           description: string;
           end_time: string;
@@ -241,12 +292,12 @@ export type Database = {
           name: string;
           organizer: string;
           platform: Database['public']['Enums']['E_EVENT_PLATFORM'];
-          spaces_enabled: boolean;
+          spaces: number | null;
           start_time: string;
           visibility: Database['public']['Enums']['E_EVENT_TYPE'];
         };
         Insert: {
-          chat_enabled?: boolean;
+          chat?: number | null;
           created_at?: string;
           description: string;
           end_time: string;
@@ -254,12 +305,12 @@ export type Database = {
           name: string;
           organizer: string;
           platform: Database['public']['Enums']['E_EVENT_PLATFORM'];
-          spaces_enabled?: boolean;
+          spaces?: number | null;
           start_time: string;
           visibility?: Database['public']['Enums']['E_EVENT_TYPE'];
         };
         Update: {
-          chat_enabled?: boolean;
+          chat?: number | null;
           created_at?: string;
           description?: string;
           end_time?: string;
@@ -267,16 +318,30 @@ export type Database = {
           name?: string;
           organizer?: string;
           platform?: Database['public']['Enums']['E_EVENT_PLATFORM'];
-          spaces_enabled?: boolean;
+          spaces?: number | null;
           start_time?: string;
           visibility?: Database['public']['Enums']['E_EVENT_TYPE'];
         };
         Relationships: [
           {
+            foreignKeyName: 'events_chat_fkey';
+            columns: ['chat'];
+            isOneToOne: false;
+            referencedRelation: 'chats';
+            referencedColumns: ['id'];
+          },
+          {
             foreignKeyName: 'public_events_organizer_fkey';
             columns: ['organizer'];
             isOneToOne: false;
             referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'public_events_spaces_fkey';
+            columns: ['spaces'];
+            isOneToOne: false;
+            referencedRelation: 'spaces';
             referencedColumns: ['id'];
           },
         ];
@@ -360,38 +425,21 @@ export type Database = {
       };
       spaces: {
         Row: {
-          author: string | null;
-          body: string;
+          allow_participants: boolean;
           created_at: string;
           id: number;
-          likes: number;
-          media: string[] | null;
         };
         Insert: {
-          author?: string | null;
-          body: string;
+          allow_participants?: boolean;
           created_at?: string;
           id?: number;
-          likes?: number;
-          media?: string[] | null;
         };
         Update: {
-          author?: string | null;
-          body?: string;
+          allow_participants?: boolean;
           created_at?: string;
           id?: number;
-          likes?: number;
-          media?: string[] | null;
         };
-        Relationships: [
-          {
-            foreignKeyName: 'spaces_author_fkey';
-            columns: ['author'];
-            isOneToOne: false;
-            referencedRelation: 'profiles';
-            referencedColumns: ['id'];
-          },
-        ];
+        Relationships: [];
       };
       sub_events: {
         Row: {
@@ -462,14 +510,11 @@ export type Database = {
       };
     };
     Enums: {
-      E_CHAT_TYPE: 'E_CHAT_PUBLiC' | 'E_CHAT_GROUP';
-      E_EVENT_PLATFORM: 'E_EVENT_ONLINE' | 'E_EVENT_OFFLINE' | 'E_EVENT_HYBRID';
-      E_EVENT_ROLE:
-        | 'E_EVENT_ORGANIZER'
-        | 'E_EVENT_ADMIN'
-        | 'E_EVENT_PARTICIPANT';
-      E_EVENT_TYPE: 'E_EVENT_PRIVATE' | 'E_EVENT_PUBLIC';
-      E_PROFILE_VISIBILITY: 'E_PROFILE_PUBLIC' | 'E_PROFILE_PRIVATE';
+      E_CHAT_TYPE: 'PRIVATE' | 'GROUP';
+      E_EVENT_PLATFORM: 'ONLINE' | 'OFFLINE' | 'HYBRID';
+      E_EVENT_ROLE: 'ORGANIZER' | 'ADMIN' | 'PARTICIPANT';
+      E_EVENT_TYPE: 'PRIVATE' | 'PUBLIC';
+      E_PROFILE_VISIBILITY: 'PUBLIC' | 'PRIVATE';
     };
     CompositeTypes: {
       [_ in never]: never;

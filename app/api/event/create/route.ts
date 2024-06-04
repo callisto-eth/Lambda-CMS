@@ -9,8 +9,8 @@ export type CreateEventSchema = {
   end_time: string;
   spaces_enabled: boolean;
   chat_enabled: boolean;
-  platform: 'E_EVENT_ONLINE' | 'E_EVENT_OFFLINE' | 'E_EVENT_HYBRID';
-  visibility: 'E_EVENT_PRIVATE' | 'E_EVENT_PUBLIC';
+  platform: 'ONLINE' | 'OFFLINE' | 'HYBRID';
+  visibility: 'PRIVATE' | 'PUBLIC';
   avatar_image?: string;
   banner_image?: string;
 };
@@ -25,14 +25,12 @@ export async function POST(req: NextRequest) {
       .from('events')
       .insert({
         name: data.name,
-        organizer: user.data.user?.id,
         description: data.description,
         start_time: data.start_time,
         end_time: data.end_time,
         platform: data.platform,
         visibility: data.visibility,
-        spaces_enabled: data.spaces_enabled,
-        chat_enabled: data.chat_enabled,
+        organizer: user.data.user.id,
       })
       .select();
     if (createEventError) {
@@ -100,7 +98,7 @@ export async function POST(req: NextRequest) {
           .insert({
             event: createEventResponse[0].id,
             attendee: user.data.user?.id,
-            role: 'E_EVENT_ORGANIZER',
+            role: 'ORGANIZER',
           });
 
         if (adminJoinError && createEventResponse) {

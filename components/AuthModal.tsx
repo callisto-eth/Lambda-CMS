@@ -15,10 +15,9 @@ import {
 import { Input } from '@/components/ui/input';
 import { SolarLogin3BoldDuotone } from './Icons';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dispatch, SetStateAction, useState } from 'react';
-import { animatePageIn } from '@/utils/animation';
 
 export default function AuthModal({
   modalOpen,
@@ -66,9 +65,7 @@ function FormComponent({
 
     if (resp.status === 200) {
       setModalOpen(false);
-      animatePageIn('animateOnLogIn', () => {
-        pageRouter.push('/@me');
-      });
+      pageRouter.push('/@me');
     }
   }
 

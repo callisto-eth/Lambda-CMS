@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "gen": "supabase gen types typescript --db-url 'postgres://postgres:your-super-secret-and-long-postgres-password@150.230.141.111:5432/postgres' > types/supabase.ts",
-    "dev": "next dev --turbo",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
