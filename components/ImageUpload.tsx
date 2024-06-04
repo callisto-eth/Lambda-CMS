@@ -7,11 +7,13 @@ import { SolarCloudUploadBoldDuotone } from './Icons';
 import { toast } from './ui/use-toast';
 
 export default function ImageUpload({
+  size,
   avatarImage,
   uploadedFile,
   setUploadedFile,
   formField,
 }: {
+  size?: 'big' | 'small';
   avatarImage: boolean;
   uploadedFile: string | ArrayBuffer | null | undefined;
   setUploadedFile: Dispatch<
@@ -59,8 +61,12 @@ export default function ImageUpload({
             className="relative flex flex-col items-center justify-center py-6 border border-gray-300 border-opacity-10 cursor-pointer bg-transparent"
             style={{
               borderRadius: !avatarImage ? '20px' : '100px',
-              height: avatarImage ? '80px' : '160px',
-              width: avatarImage ? '80px' : '100%',
+              height: avatarImage
+                ? size == 'big'
+                  ? '160px'
+                  : '80px'
+                : '160px',
+              width: avatarImage ? (size == 'big' ? '160px' : '80px') : '100%',
               backgroundColor: avatarImage ? '#0e0f10' : 'transparent',
             }}
           >
@@ -97,8 +103,12 @@ export default function ImageUpload({
             style={{
               backgroundImage: `url(${uploadedFile})`,
               borderRadius: !avatarImage ? '20px' : '100px',
-              height: avatarImage ? '80px' : '160px',
-              width: avatarImage ? '80px' : '100%',
+              height: avatarImage
+                ? size == 'big'
+                  ? '160px'
+                  : '80px'
+                : '160px',
+              width: avatarImage ? (size == 'big' ? '160px' : '80px') : '100%',
             }}
           ></div>
         )}
