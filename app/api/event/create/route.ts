@@ -76,6 +76,61 @@ export async function POST(req: NextRequest) {
         }
       }
 
+      let spaceChatData = {
+        spaceId: null,
+        chatId: null,
+      };
+      if (data.spaces_enabled) {
+        let { data: CreateSpaceResponse, error: createSpacesError } =
+          await supabase
+            .from('spaces')
+            .insert({
+              allow_participants: true,
+            })
+            .select();
+
+        if (createSpacesError) {
+          console.log(createSpacesError);
+          await supabase
+            .from('events')
+            .delete()
+            .eq('id', createEventResponse[0].id);
+
+          return NextResponse.json(
+            { error: createSpacesError.message },
+            { status: 500 },
+          );
+
+          // @ts-ignore
+          spaceChatData.spaceId = CreateSpaceResponse[0].id;
+        }
+      }
+
+      if (data.chat_enabled) {
+        let { data: CreateChatResponse, error: createChatError } =
+          await supabase
+            .from('chats')
+            .insert({
+              type: 'GROUP',
+            })
+            .select();
+
+        if (createChatError) {
+          console.log(createChatError);
+          await supabase
+            .from('events')
+            .delete()
+            .eq('id', createEventResponse[0].id);
+
+          return NextResponse.json(
+            { error: createChatError.message },
+            { status: 500 },
+          );
+          // @ts-ignore
+          spaceChatData.chatId = CreateChatResponse[0].id;
+        }
+      }
+
       if (createEventResponse[0] && user.data.user) {
         let { error: adminJoinError } = await supabase
           .schema('connections')
@@ -99,6 +154,17 @@ export async function POST(req: NextRequest) {
             { status: 500 },
           );
         }
+      }
+
+      if (spaceChatData.spaceId || spaceChatData.chatId) {
+        let { data: addSpaceChatResponse, error: addSpaceChatError } =
+          await supabase
+            .from('events')
+            .update({
+              spaces: spaceChatData.spaceId,
+              chat: spaceChatData.chatId,
+            })
+            .eq('id', createEventResponse[0].id);
       }
     }
 

@@ -1,9 +1,16 @@
 import {
-  MaterialSymbolsJoin,
+  MdiDotsHorizontal,
+  PepiconsPencilLeave,
   PhChatsCircleFill,
-  SolarExitBold,
 } from '@/components/Icons';
-import { Button } from '@/components/ui/button';
+import JoinButton from '@/components/JoinButton';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { createClient } from '@/utils/supabase/server';
 import Link from 'next/link';
 
@@ -53,35 +60,68 @@ export default async function EventInfo({
               })`,
             }}
           ></div>
-          <div className="absolute space-x-4 bottom-[-25px] right-[5%] ">
-            {!eventAttendeesResponse!.some(
-              (attendee) => attendee.attendee === userData.data.user?.id,
-            ) ? (
-              <Button className="inline-flex items-center justify-center whitespace-nowrap font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-fit transition-shadow hover:shadow-[0_0_2px_#fb4500,inset_0_0_2px_#fb4500,0_0_2px_#fb4500,0_0_10px_#fb4500,0_0_10px_#fb4500] hover:bg-[#FB4500] rounded-full text-base bg-[#FB4500] text-[#212325]">
-                <MaterialSymbolsJoin className="text-2xl m-4" />
-              </Button>
-            ) : (
-              <Button className="inline-flex items-center justify-center whitespace-nowrap font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-fit transition-shadow hover:shadow-[0_0_2px_#fb4500,inset_0_0_2px_#fb4500,0_0_2px_#fb4500,0_0_10px_#fb4500,0_0_10px_#fb4500] hover:bg-[#FB4500] rounded-full text-base bg-[#FB4500] text-[#212325]">
-                <SolarExitBold className="text-2xl m-4" />
-              </Button>
-            )}
+          <div className="absolute space-x-4 bottom-[-20px] right-[5%] ">
             {eventAttendeesResponse!.some(
               (attendee) => attendee.attendee === userData.data.user?.id,
-            ) && (
-              <Link
-                href={`/${params.event_id}/discussion`}
-                className="inline-flex items-center justify-center whitespace-nowrap font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-fit transition-shadow hover:shadow-[0_0_2px_#fb4500,inset_0_0_2px_#fb4500,0_0_2px_#fb4500,0_0_10px_#fb4500,0_0_10px_#fb4500] hover:bg-[#FB4500] rounded-full text-base bg-[#FB4500] text-[#212325]"
-              >
-                <PhChatsCircleFill className="text-2xl m-4" />
-              </Link>
+            ) ? (
+              <>
+                <DropdownMenu>
+                  <DropdownMenuTrigger className="inline-flex items-center p-2  justify-center whitespace-nowrap font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-fit transition-shadow hover:shadow-[0_0_2px_#fb4500,inset_0_0_2px_#fb4500,0_0_2px_#fb4500,0_0_10px_#fb4500,0_0_10px_#fb4500] hover:bg-[#FB4500] rounded-full text-base bg-[#FB4500] text-[#212325]">
+                    <MdiDotsHorizontal className="text-2xl" />
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="m-3 rounded-xl *:rounded-lg *:cursor-pointer">
+                    <DropdownMenuItem>
+                      <PepiconsPencilLeave className="mr-2 h-4 w-4" />
+                      <span>Leave</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+                <Link
+                  href={`/${params.event_id}/discussion`}
+                  className="inline-flex items-center p-2 space-x-2  justify-center whitespace-nowrap font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-fit transition-shadow hover:shadow-[0_0_2px_#fb4500,inset_0_0_2px_#fb4500,0_0_2px_#fb4500,0_0_10px_#fb4500,0_0_10px_#fb4500] hover:bg-[#FB4500] rounded-full text-base bg-[#FB4500] text-[#212325]"
+                >
+                  <PhChatsCircleFill className="text-2xl" />
+                  <p className="hidden lg:block">Discussion</p>
+                </Link>
+              </>
+            ) : (
+              <JoinButton eventID={eventDataResponse[0].id} />
             )}
           </div>
         </div>
-        <div className="px-[10%] my-16">
+        <div className="lg:px-[10%] my-16">
           <p className="text-5xl font-bold">{eventDataResponse[0].name}</p>
           <p className="text-xl mt-4 font-light">
             {eventDataResponse[0].description}
           </p>
+          <hr className="my-5 border-[#544f55]" />
+          <Tabs defaultValue="timeline">
+            <div className="flex justify-center">
+              <TabsList className="grid w-fit grid-cols-3 gap-2  bg-[#2B2D2E] rounded-2xl *:p-3 h-fit *:rounded-xl *:text-base">
+                <TabsTrigger
+                  value="timeline"
+                  className="data-[state=active]:bg-[#FB4500] "
+                >
+                  Timeline
+                </TabsTrigger>
+                <TabsTrigger
+                  value="spaces"
+                  className="data-[state=active]:bg-[#FB4500]"
+                >
+                  Space
+                </TabsTrigger>
+                <TabsTrigger
+                  value="contact"
+                  className="data-[state=active]:bg-[#FB4500]"
+                >
+                  Contact
+                </TabsTrigger>
+              </TabsList>
+            </div>
+            <TabsContent value="timeline">Timeline</TabsContent>
+            <TabsContent value="spaces">Space</TabsContent>
+            <TabsContent value="contact">Contact</TabsContent>
+          </Tabs>
         </div>
       </main>
     );

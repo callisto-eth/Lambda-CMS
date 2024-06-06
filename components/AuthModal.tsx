@@ -52,7 +52,7 @@ function FormComponent({
 }) {
   const pageRouter = useRouter();
   async function onSubmit(formValues: z.infer<typeof authSchema>) {
-    const resp = await fetch(`/api/auth/${authType}`, {
+    const resp = await fetch(`/auth/${authType}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

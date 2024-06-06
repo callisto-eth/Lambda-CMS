@@ -7,10 +7,15 @@ import {
   IconParkSolidCircularConnection,
   MaterialSymbolsEdit,
   MaterialSymbolsSettings,
+  DeviconGithubWordmark,
+  LogosMicrosoftAzure,
+  LogosDiscordIcon,
+  PajamasGithub,
 } from '@/components/Icons';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, SVGProps, ReactNode } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import { Json } from '@/types/supabase';
+
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -31,8 +36,9 @@ import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import ImageUpload from '@/components/ImageUpload';
 import { dataURLtoFile } from '@/utils/helpers';
 import { error } from 'console';
+import ConnectionButton from '@/components/ConnectionButton';
 
-const supabaseClient = createClient();
+const supabase = createClient();
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState<'General' | 'Connections'>(
@@ -51,9 +57,9 @@ export default function Dashboard() {
   }>();
 
   useEffect(() => {
-    supabaseClient.auth.getUser().then((userData) => {
+    supabase.auth.getUser().then((userData) => {
       if (userData.data.user) {
-        supabaseClient
+        supabase
           .from('profiles')
           .select()
           .eq('id', userData.data.user.id)
@@ -70,7 +76,7 @@ export default function Dashboard() {
   useEffect(() => {
     if (userProfile) {
       setProfileImage(
-        supabaseClient.storage
+        supabase.storage
           .from('user_assets')
           .getPublicUrl(
             `${userProfile.id}/avatar.png?t=${new Date().toISOString()}`,
@@ -138,7 +144,7 @@ export default function Dashboard() {
     fieldValues: z.infer<typeof updateProfileImageSchema>,
   ) {
     if (userProfile) {
-      let { error: uploadAvatarImageError } = await supabaseClient.storage
+      let { error: uploadAvatarImageError } = await supabase.storage
         .from('user_assets')
         .upload(
           `${userProfile.id}/avatar.png`,
@@ -154,7 +160,7 @@ export default function Dashboard() {
       }
 
       setProfileImage(
-        supabaseClient.storage
+        supabase.storage
           .from('user_assets')
           .getPublicUrl(
             `${userProfile.id}/avatar.png?t=${new Date().toISOString()}`,
@@ -362,9 +368,64 @@ export default function Dashboard() {
             </div>
           </div>
         ) : (
+          <></>
+        )}
+        {activeTab === 'Connections' && userProfile ? (
+          <div className="space-y-4 col-span-10">
+            <div className="space-y-[-2px]">
+              <p className="text-5xl font-semibold">Connections</p>
+              <p>Link your Lambda Identity with various other accounts</p>
+            </div>
+            <div>
+              {identities.map((identity) => (
+                <ConnectionButton
+                  IdentityIcon={identity.icon}
+                  key={identity.name}
+                />
+              ))}
+            </div>
+          </div>
+        ) : (
           <div className="grid gap-6 col-span-10"></div>
         )}
       </div>
     </div>
   );
 }
+
+type Provider =
+  | 'apple'
+  | 'azure'
+  | 'bitbucket'
+  | 'discord'
+  | 'facebook'
+  | 'figma'
+  | 'github'
+  | 'gitlab'
+  | 'google'
+  | 'kakao'
+  | 'keycloak'
+  | 'linkedin'
+  | 'linkedin_oidc'
+  | 'notion'
+  | 'slack'
+  | 'spotify'
+  | 'twitch'
+  | 'twitter'
+  | 'workos'
+  | 'zoom'
+  | 'fly';
+
+type IdType = {
+  name: string;
+  icon: ReactNode;
+  supabaseIdentifier: Provider;
+};
+
+const identities: IdType[] = [
+  {
+    name: 'GitHub',
+    icon: <PajamasGithub className="text-5xl" />,
+    supabaseIdentifier: 'github',
+  },
+];

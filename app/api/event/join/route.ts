@@ -1,4 +1,5 @@
 import { createClient } from '@/utils/supabase/server';
+import { revalidatePath } from 'next/cache';
 import { NextRequest, NextResponse } from 'next/server';
 
 type JoinFreeEventSchema = {
@@ -23,6 +24,8 @@ export async function POST(req: NextRequest) {
     if (error) {
       return NextResponse.json({ error: error }, { status: 500 });
     }
+
+    revalidatePath('/[event_id]', 'page');
 
     return NextResponse.json(
       {

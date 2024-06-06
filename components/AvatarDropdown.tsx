@@ -26,16 +26,27 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   MaterialSymbolsCalendarMonthRounded,
   MaterialSymbolsJoin,
+  PepiconsPencilLeave,
 } from './Icons';
 import Link from 'next/link';
 import JoinEventDialog from './JoinEventDialog';
 import CreateEventModal from './CreateEventModal';
-import { Dialog, DialogTrigger } from './ui/dialog';
-import { useState } from 'react';
+import { Dialog } from './ui/dialog';
+import { useEffect, useState } from 'react';
+import { createClient } from '@/utils/supabase/client';
 
 export function AvatarDropDown() {
+  const supabaseClient = createClient();
+
   const [isCreateEventDialogOpen, setIsCreateEventDialogOpen] = useState(false);
   const [isJoinDialogOpen, setIsJoinDialogOpen] = useState(false);
+  const [userProfile, setUserProfile] = useState<any>();
+
+  useEffect(() => {
+    supabaseClient.auth.getUser().then((user) => {
+      if (user) setUserProfile(user.data.user);
+    });
+  }, []);
   return (
     <Dialog
       open={isCreateEventDialogOpen || isJoinDialogOpen}
@@ -48,7 +59,15 @@ export function AvatarDropDown() {
       <DropdownMenu>
         <DropdownMenuTrigger asChild className="select-none cursor-pointer">
           <Avatar>
-            <AvatarImage src="https://github.com/shadcn.png" />
+            <AvatarImage
+              src={
+                supabaseClient.storage
+                  .from('user_assets')
+                  .getPublicUrl(
+                    `${userProfile?.id}/avatar.png?t=${new Date().toISOString()}`,
+                  ).data.publicUrl
+              }
+            />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
         </DropdownMenuTrigger>
@@ -73,11 +92,7 @@ export function AvatarDropDown() {
             </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
-          <DropdownMenuGroup className="*:rounded-lg">
-            <DropdownMenuItem>
-              <Users className="mr-2 h-4 w-4" />
-              <span>Friends</span>
-            </DropdownMenuItem>
+          <DropdownMenuGroup className="*:rounded-lg *:cursor-pointer">
             <DropdownMenuSub>
               <DropdownMenuSubTrigger>
                 <UserPlus className="mr-2 h-4 w-4" />
@@ -113,6 +128,14 @@ export function AvatarDropDown() {
             >
               <MaterialSymbolsJoin className="mr-2 h-4 w-4" />
               <span>Join Event</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={async () => {
+                await supabaseClient.auth.signOut();
+              }}
+            >
+              <PepiconsPencilLeave className="mr-2 h-4 w-4" />
+              <span>Logout</span>
             </DropdownMenuItem>
           </DropdownMenuGroup>
         </DropdownMenuContent>
