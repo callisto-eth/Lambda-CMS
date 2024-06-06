@@ -17,23 +17,56 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import MessageContent from '@/components/MessageContent';
 import { createClient } from '@/utils/supabase/client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 type Message = {
-  id: number;
   author: string;
-  body: string;
   chat: string;
-  timestamp: string;
+  content: string;
+  created_at: string;
+  id: number;
+  media: string[];
 };
 
 export default function Chat({ params }: { params: { event_id: string } }) {
-
-  const chat = "a7e5cc4b-f9f8-4624-b86f-335f90458e73"
   const supabase = createClient();
   const [messages, setMessages] = useState<Message[]>([]);
+  const [chatID, setChatID] = useState<string>();
+  const [userName, setUserName] = useState<string>();
 
-  async function streamMessages(chat: string,) {
+  useEffect(() => {
+    supabase.auth.getUser().then((user) => {
+      if (user.data?.user) {
+        supabase
+          .from('profiles')
+          .select('username')
+          .eq('id', user.data.user.id)
+          .single()
+          .then((data) => {
+            if (data) setUserName(data.data?.username as string);
+          });
+      }
+    });
+    supabase
+      .from('events')
+      .select('*')
+      .eq('id', params.event_id)
+      .single()
+      .then((data) => {
+        if (data.data) {
+          setChatID(data.data?.chat as string);
+          fetch(`/api/chat/message/fetch?chat=${data.data?.chat}`, {
+            method: 'GET',
+          })
+            .then((res) => res.json())
+            .then((data) => {
+              setMessages(data.data);
+            });
+        }
+      });
+  }, []);
+
+  async function streamMessages(chat: string) {
     supabase
       .channel('schema-db-changes')
       .on(
@@ -42,18 +75,18 @@ export default function Chat({ params }: { params: { event_id: string } }) {
           event: 'INSERT',
           schema: 'connections',
           table: 'chat_messages',
-          filter: `chat=eq.${chat}`
+          filter: `chat=eq.${chat}`,
         },
         (payload) => {
-          console.log(payload.new)
           setMessages((prev) => [
             ...prev,
             {
               id: payload.new.id,
               author: payload.new.author,
-              body: payload.new.content,
+              media: [],
+              content: payload.new.content,
               chat: payload.new.chat,
-              timestamp: payload.new.created_at,
+              created_at: payload.new.created_at,
             },
           ]);
         },
@@ -61,28 +94,23 @@ export default function Chat({ params }: { params: { event_id: string } }) {
       .subscribe();
   }
 
-  streamMessages(chat);
-
+  streamMessages(chatID as string);
 
   return (
     <main className="relative lg:mx-10 mx-5 *:font-DM-Sans flex flex-col lg:h-[calc(100vh-150px)] h-[calc(100vh-110px)]">
       <ScrollArea className="flex-grow">
-        {
-          messages.map((m) => {
-            return (
-              <MessageContent
-                key={m.id}
-                id={m.id}
-                author={m.author}
-                body={m.body}
-                timestamp={m.timestamp}
-              />
-            );
-
-          })
-        }
+        {messages.map((m, i) => {
+          return (
+            <MessageContent
+              key={i}
+              author={m.author}
+              body={m.content}
+              timestamp={m.created_at}
+            />
+          );
+        })}
       </ScrollArea>
-      <MessageBox chat={chat} />
+      <MessageBox chat={chatID as string} />
     </main>
   );
 }
@@ -96,19 +124,21 @@ const MessageBox = ({ chat }: { chat: string }) => {
   });
 
   function onSubmit(fieldValues: z.infer<typeof sendMessageSchema>) {
+    sendMessageForm.setValue('message', '');
     fetch('/api/chat/message/send', {
       method: 'POST',
       body: JSON.stringify({
         chat: chat,
-        body: fieldValues.message
+        body: fieldValues.message,
       }),
     });
   }
   return (
     <Form {...sendMessageForm}>
       <form
-        // FIXME: wtf is this shit?
-        onSubmit={sendMessageForm.handleSubmit(onSubmit as SubmitHandler<FieldValues>)}
+        onSubmit={sendMessageForm.handleSubmit(
+          onSubmit as SubmitHandler<FieldValues>,
+        )}
         className="w-full mt-5 border border-opacity-10 border-[#948B96] bg-background rounded-xl"
       >
         <FormField

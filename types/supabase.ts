@@ -36,7 +36,7 @@ export type Database = {
           {
             foreignKeyName: 'connections_chat_members_member_fkey';
             columns: ['member'];
-            isOneToOne: false;
+            isOneToOne: true;
             referencedRelation: 'profiles';
             referencedColumns: ['id'];
           },
@@ -49,7 +49,7 @@ export type Database = {
           content: string;
           created_at: string;
           id: number;
-          medias: string[];
+          media: string[];
         };
         Insert: {
           author: string;
@@ -57,7 +57,7 @@ export type Database = {
           content: string;
           created_at?: string;
           id?: number;
-          medias?: string[];
+          media?: string[];
         };
         Update: {
           author?: string;
@@ -65,11 +65,11 @@ export type Database = {
           content?: string;
           created_at?: string;
           id?: number;
-          medias?: string[];
+          media?: string[];
         };
         Relationships: [
           {
-            foreignKeyName: 'connections_chat_messages_author_fkey';
+            foreignKeyName: 'chat_messages_author_fkey1';
             columns: ['author'];
             isOneToOne: false;
             referencedRelation: 'profiles';
@@ -202,7 +202,7 @@ export type Database = {
           created_at: string;
           id: number;
           likes: number;
-          medias: string[];
+          media: string[];
           space: string;
         };
         Insert: {
@@ -211,7 +211,7 @@ export type Database = {
           created_at?: string;
           id?: number;
           likes?: number;
-          medias?: string[];
+          media?: string[];
           space: string;
         };
         Update: {
@@ -220,7 +220,7 @@ export type Database = {
           created_at?: string;
           id?: number;
           likes?: number;
-          medias?: string[];
+          media?: string[];
           space?: string;
         };
         Relationships: [
@@ -525,7 +525,32 @@ export type Database = {
       };
     };
     Views: {
-      [_ in never]: never;
+      usernamemessages: {
+        Row: {
+          author: string | null;
+          chat: string | null;
+          content: string | null;
+          created_at: string | null;
+          media: string[] | null;
+          username: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'chat_messages_author_fkey1';
+            columns: ['author'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'connections_chat_messages_chat_fkey';
+            columns: ['chat'];
+            isOneToOne: false;
+            referencedRelation: 'chats';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
     };
     Functions: {
       authorize: {

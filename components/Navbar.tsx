@@ -22,7 +22,10 @@ export default function Navbar() {
     <nav className="p-5 md:p-10 flex items-center justify-between md:space-x-12 space-x-4">
       <MdiLambda className="text-5xl text-[#FB4500]" />
       <div className="font-DM-Sans text-2xl font-medium text-[#948B96] *:transition-colors flex space-x-4 flex-grow">
-        <Link href="#" className="flex items-center space-x-2 hover:text-white">
+        <Link
+          href="/@me"
+          className="flex items-center space-x-2 hover:text-white"
+        >
           <span>
             <MaterialSymbolsTipsAndUpdates />
           </span>

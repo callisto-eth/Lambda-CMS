@@ -1,31 +1,51 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+'use client';
 
-// TODO: Implement avatar and user profile caching!!!
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { createClient } from '@/utils/supabase/client';
+import { useEffect, useState } from 'react';
+import timesago from 'timesago';
+
 export default function MessageContent({
-  id,
   author,
   body,
   timestamp,
 }: {
-  id: number;
   author: string;
   body: string;
   timestamp: string;
 }) {
+  const [userName, setUserName] = useState<string>();
+  const supabase = createClient();
+  useEffect(() => {
+    supabase
+      .from('profiles')
+      .select('username')
+      .eq('id', author)
+      .single()
+      .then((data) => {
+        if (data) setUserName(data.data?.username as string);
+      });
+  }, []);
   return (
     <div className="flex space-x-4 mb-5 mr-5">
       <Avatar>
-        <AvatarImage src="http://150.230.141.111/storage/v1/object/public/user_assets/53a9627c-ddcc-49cd-a54d-a9b634aaaee7/avatar.png?t=2024-06-05T08:00:52.135Z"></AvatarImage>
-        <AvatarFallback>{author.slice(0, 3).toUpperCase()}</AvatarFallback>
+        <AvatarImage
+          src={
+            supabase.storage
+              .from('user_assets')
+              .getPublicUrl(
+                `${author}/avatar.png?t=${new Date().toISOString()}`,
+              ).data.publicUrl
+          }
+        ></AvatarImage>
+        <AvatarFallback>{userName?.slice(0, 3).toUpperCase()}</AvatarFallback>
       </Avatar>
       <div>
         <div className="flex items-center space-x-2">
-          <p className="font-semibold">{author}</p>
-          <p className="text-xs text-[#948b96]">{timestamp}</p> 
+          <p className="font-semibold">{userName}</p>
+          <p className="text-xs text-[#948b96]">{timesago(timestamp)}</p>
         </div>
-        <p className="font-light text-sm">
-          {body}
-        </p>
+        <p className="font-light text-sm">{body}</p>
       </div>
     </div>
   );

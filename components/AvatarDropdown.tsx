@@ -131,7 +131,8 @@ export function AvatarDropDown() {
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={async () => {
-                await supabaseClient.auth.signOut();
+                const { error } = await supabaseClient.auth.signOut();
+                if (!error) window.location.reload();
               }}
             >
               <PepiconsPencilLeave className="mr-2 h-4 w-4" />

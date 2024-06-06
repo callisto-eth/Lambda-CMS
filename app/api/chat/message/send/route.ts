@@ -8,7 +8,6 @@ type SendMessageSchema = {
 
 export async function POST(req: NextRequest) {
   const data: SendMessageSchema = await req.json();
-  console.log(data)
   const supabase = createClient();
   const user = await supabase.auth.getUser();
   let { data: sendMessageResponse, error: sendMessageError } = await supabase
@@ -23,7 +22,7 @@ export async function POST(req: NextRequest) {
     .select();
 
   if (sendMessageError) {
-    console.log(sendMessageError.message)
+    console.log(sendMessageError.message);
     return NextResponse.json(
       { error: sendMessageError.message },
       { status: 500 },
