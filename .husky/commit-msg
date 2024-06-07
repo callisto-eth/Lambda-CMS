@@ -1,1 +1,2 @@
 pnpx commitlint --edit $1
+pnpm run lint
