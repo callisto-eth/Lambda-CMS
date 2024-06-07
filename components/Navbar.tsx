@@ -31,7 +31,10 @@ export default function Navbar() {
           </span>
           <span className="text-base md:text-lg">Events</span>
         </Link>
-        <Link href="#" className="flex items-center space-x-2 hover:text-white">
+        <Link
+          href="/discover"
+          className="flex items-center space-x-2 hover:text-white"
+        >
           <span>
             <IconamoonDiscoverFill />
           </span>

@@ -8,8 +8,11 @@ type UpdateEventSchema = {
   entry_price?: string;
   start_time?: string;
   end_time?: string;
-  spaces_enabled?: boolean;
-  chat_enabled?: boolean;
+  spaces?: string;
+  chat?: string;
+  platform?: 'ONLINE' | 'OFFLINE' | 'HYBRID';
+  organizer?: string;
+  visibility?: 'PRIVATE' | 'PUBLIC';
 };
 
 export async function PUT(req: NextRequest) {
@@ -21,6 +24,8 @@ export async function PUT(req: NextRequest) {
     .update(data)
     .eq('id', data.id)
     .select();
+
+  console.log(error);
 
   if (error) {
     return NextResponse.json(

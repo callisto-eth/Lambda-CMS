@@ -1,9 +1,5 @@
 import DiscussionButton from '@/components/DiscussionButton';
-import {
-  MdiDotsHorizontal,
-  PepiconsPencilLeave,
-  PhChatsCircleFill,
-} from '@/components/Icons';
+import { MdiDotsHorizontal, PepiconsPencilLeave } from '@/components/Icons';
 import JoinButton from '@/components/JoinButton';
 import {
   DropdownMenu,
@@ -13,7 +9,6 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { createClient } from '@/utils/supabase/server';
-import Link from 'next/link';
 
 export default async function EventInfo({
   params,
@@ -88,7 +83,7 @@ export default async function EventInfo({
           </div>
         </div>
         <div className="lg:px-[10%] my-16">
-          <p className="text-5xl font-bold">{eventDataResponse[0].name}</p>
+          <p className="">{eventDataResponse[0].name}</p>
           <p className="text-xl mt-4 font-light">
             {eventDataResponse[0].description}
           </p>

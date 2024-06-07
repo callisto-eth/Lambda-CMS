@@ -41,6 +41,21 @@ export default function Home() {
 
   return (
     <main className="px-5 md:px-10 *:font-DM-Sans grid md:grid-cols-16 gap-x-10">
+      <div className="col-span-4 grid grid-flow-row-dense">
+        <div></div>
+      </div>
+      <div className="col-span-8">
+        <DropdownMenu>
+          <DropdownMenuTrigger className="inline-flex items-center justify-center whitespace-nowrap font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-fit py-1.5 px-2 text-[#948b96] rounded-full bg-clip-padding backdrop-filter text-base bg-white backdrop-blur-sm bg-opacity-70 border border-opacity-10 border-gray-100">
+            <MaterialSymbolsFilterVintage className="text-xl" />
+            <p className="px-1">Filter</p>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent></DropdownMenuContent>
+        </DropdownMenu>
+        <PostBox />
+        <PostBox />
+      </div>
+
       <div className="col-span-4 hidden md:flex flex-col items-center space-y-4 bg-[#2B2D2E] h-fit rounded-3xl overflow-hidden">
         <div className="bg-red-400 w-full relative h-[100px]">
           <div
@@ -56,20 +71,6 @@ export default function Home() {
           <p className="font-semibold text-4xl mt-3">{userProfile?.username}</p>
           <p className="text-[#948b96]">{userProfile?.bio}</p>
         </div>
-        <div></div>
-      </div>
-      <div className="col-span-8">
-        <DropdownMenu>
-          <DropdownMenuTrigger className="inline-flex items-center justify-center whitespace-nowrap font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-fit py-1.5 px-2 text-[#948b96] rounded-full bg-clip-padding backdrop-filter text-base bg-white backdrop-blur-sm bg-opacity-70 border border-opacity-10 border-gray-100">
-            <MaterialSymbolsFilterVintage className="text-xl" />
-            <p className="px-1">Filter</p>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent></DropdownMenuContent>
-        </DropdownMenu>
-        <PostBox />
-        <PostBox />
-      </div>
-      <div className="col-span-4 grid grid-flow-row-dense">
         <div></div>
       </div>
     </main>
