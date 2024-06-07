@@ -62,3 +62,5 @@ export const TextAreaEditUpload = React.forwardRef<
     </p>
   );
 });
+
+TextAreaEditUpload.displayName = 'TextAreaEditUpload';

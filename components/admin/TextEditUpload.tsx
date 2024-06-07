@@ -49,3 +49,5 @@ export const TextEditUpload = React.forwardRef<
     </p>
   );
 });
+
+TextEditUpload.displayName = 'TextEditUpload';
