@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
-import { error } from 'console';
 import { dataURLtoFile } from '@/utils/helpers';
 
 export type CreateEventSchema = {

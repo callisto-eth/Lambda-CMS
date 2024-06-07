@@ -45,3 +45,23 @@ export const animateCreateEventContentOut = (className: string) => {
       });
   }
 };
+
+export const animateCreateEventContentIn = (className: string) => {
+  const contentDiv = document.getElementsByClassName(className);
+
+  if (contentDiv) {
+    const contentTimeline = gsap.timeline();
+
+    contentTimeline
+      .set([contentDiv], {
+        opacity: '0',
+      })
+      .to([contentDiv], {
+        opacity: '100',
+        duration: 1,
+      })
+      .set([contentDiv], {
+        opacity: '100',
+      });
+  }
+};
