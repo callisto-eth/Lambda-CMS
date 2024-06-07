@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
 
 const razorpay = new Razorpay({
-  key_id: process.env.RAZORPAY_ID!,
+  key_id: process.env.RAZORPAY_ID as string,
   key_secret: process.env.RAZORPAY_SECRET,
 });
 
