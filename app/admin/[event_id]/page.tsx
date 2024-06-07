@@ -121,11 +121,20 @@ export default function Dashboard({
                 })`,
               }}
             >
-              <Button className="transition-colors m-6 bg-primary hover:bg-primary/90 h-fit py-1.5 px-2 text-[#212325] rounded-full bg-white bg-opacity-70">
-                <MaterialSymbolsEdit className="text-lg" />
-              </Button>
-              <div
-                className="absolute cursor-pointer md:w-[150px] md:h-[150px] w-[100px] h-[100px] rounded-full bg-cover border-[6px] bottom-[-50px] left-[10%] border-[#212325]"
+              <label htmlFor="banner_upload">
+                <div className="m-6 transition-colors bg-primary hover:bg-primary/90 h-fit py-1.5 px-2 text-[#212325] rounded-full bg-white bg-opacity-70">
+                  <MaterialSymbolsEdit className="cursor-pointer" />
+                </div>
+                <input
+                  type="file"
+                  id="banner_upload"
+                  className="transition-colors file:mr-5 bg-transparent  h-fit py-1.5 px-2 text-[#212325] rounded-full"
+                  hidden
+                />
+              </label>
+
+              <label
+                className="absolute cursor-pointer md:w-[150px] overflow-hidden md:h-[150px] w-[100px] h-[100px] rounded-full bg-cover border-[6px] bottom-[-50px] left-[10%] border-[#212325]"
                 style={{
                   backgroundImage: `url(${
                     supabase.storage
@@ -135,7 +144,10 @@ export default function Dashboard({
                       ).data.publicUrl
                   })`,
                 }}
-              ></div>
+              >
+                <div className="w-full h-full hover:bg-black/50 transition-colors duration-500" />
+                <input type="file" id="avatar_upload" hidden />
+              </label>
             </div>
             <div className="lg:px-[10%] my-16 space-y-4">
               <TextAreaEditUpload

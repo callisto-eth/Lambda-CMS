@@ -107,6 +107,7 @@ export default function CreateEventModal({
         body: JSON.stringify(uploadData),
       }).then((res) => {
         res.json().then((data) => {
+          console.log(data);
           const modalData = document.createElement('div');
           modalData.className = 'flex justify-center items-center flex-col';
           const modalText = document.createElement('p');
