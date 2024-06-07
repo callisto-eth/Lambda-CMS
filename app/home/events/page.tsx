@@ -34,7 +34,7 @@ export default function EventsPage() {
       {fetchedEvents &&
         fetchedEvents.map((fetchedEvent: any) => {
           return (
-            <Link href={`/admin/${fetchedEvent.id}`}>
+            <Link href={`/admin/${fetchedEvent.id}`} key={fetchedEvent.id}>
               <EventCard fetchedEvent={fetchedEvent} />
             </Link>
           );
