@@ -29,16 +29,13 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div className="w-full border rounded-2xl border-gray-100 border-opacity-10">
-      <Table className="*:font-DM-Sans text-base">
-        <TableHeader className="border-b">
+    <div className="w-full ">
+      <Table className="*:font-DM-Sans text-base border">
+        <TableHeader className="">
           {dataTable.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
-                <TableHead
-                  key={header.id}
-                  className="border-r-[1px] last:border-r-0 border-gray-100 border-opacity-10 border-b-0"
-                >
+                <TableHead key={header.id}>
                   {header.isPlaceholder
                     ? null
                     : flexRender(
@@ -59,10 +56,7 @@ export function DataTable<TData, TValue>({
                 data-state={row.getIsSelected() && 'selected'}
               >
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell
-                    key={cell.id}
-                    className="border-r-[1px] last:border-r-0 border-gray-100 border-opacity-10"
-                  >
+                  <TableCell key={cell.id}>
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}

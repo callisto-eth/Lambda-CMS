@@ -16,6 +16,7 @@ import { useToast } from '@/components/ui/use-toast';
 import SingleImageUpload from '@/components/admin/SingleImageUpload';
 import BannerImageUpload from '@/components/admin/BannerImageUpload';
 import Users from '@/components/admin/pages/Users';
+import Danger from '@/components/admin/pages/Danger';
 const supabase = createClient();
 
 export default function Dashboard({
@@ -281,7 +282,9 @@ export default function Dashboard({
           {activeTab === 'Users' && userProfile && (
             <Users eventID={params.event_id} />
           )}
-          {activeTab === 'Danger Area' && userProfile && <div></div>}
+          {activeTab === 'Danger Area' && userProfile && (
+            <Danger eventID={params.event_id} />
+          )}
         </div>
       </div>
     )

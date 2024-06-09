@@ -7,9 +7,6 @@ import {
   IconParkSolidCircularConnection,
   MaterialSymbolsEdit,
   MaterialSymbolsSettings,
-  DeviconGithubWordmark,
-  LogosMicrosoftAzure,
-  LogosDiscordIcon,
   PajamasGithub,
 } from '@/components/Icons';
 import { useEffect, useState, SVGProps, ReactNode } from 'react';
