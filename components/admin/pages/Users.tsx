@@ -56,7 +56,7 @@ export default function Users({ eventID }: { eventID: string }) {
       .then((response) => {
         if (response.data) setEventAttendeesResponse(response.data);
       });
-  }, []);
+  }, [supabaseClient, eventID]);
   const [eventAttendeesResponse, setEventAttendeesResponse] =
     useState<Database['connections']['Tables']['event_attendees']['Row'][]>();
 

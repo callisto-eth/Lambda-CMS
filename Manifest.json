@@ -1,0 +1,44 @@
+{
+  "name": "hackathon",
+  "description": "Hackathon Plugin for Lambda CMS",
+  "routes": {
+    "create": {
+      "route": "/hackathon/create",
+      "method": "POST",
+      "params": {
+        "id": {
+          "type": "string"
+        }
+      }
+    },
+    "update": {
+      "route": "/hackathon/update",
+      "method": "PUT",
+      "params": {
+        "id": {
+          "type": "string"
+        }
+      }
+    },
+    "delete": {
+      "route": "/hackathon/delete",
+      "method": "DELETE",
+      "params": {
+        "id": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "required_params": {
+    "rounds": {
+      "type": "number",
+      "description": "Number of rounds in the hackathon",
+      "constraint": true,
+      "sub_plugins": true,
+      "min_rounds": 1,
+      "max_rounds": 3,
+      "sub_fields": ["plugin", "plugin", "plugin"]
+    }
+  }
+}

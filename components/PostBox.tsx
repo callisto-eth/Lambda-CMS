@@ -11,7 +11,7 @@ export default function PostBox() {
             className="bg-cover rounded-full w-[50px] h-[50px]"
             style={{
               backgroundImage:
-                'url(http://150.230.141.111/storage/v1/object/public/user_assets/53a9627c-ddcc-49cd-a54d-a9b634aaaee7/avatar.png?t=2024-06-06T10:06:44.294Z)',
+                'url(http://api.lambda.events/storage/v1/object/public/user_assets/53a9627c-ddcc-49cd-a54d-a9b634aaaee7/avatar.png?t=2024-06-06T10:06:44.294Z)',
             }}
           ></div>
           <div>

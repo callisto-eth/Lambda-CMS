@@ -9,9 +9,8 @@ type createSubeventSchema = {
   start_time: string;
   end_time: string;
   entry_price: string;
-  max_attendees: number;
+  max_attendees: string;
   platform: 'ONLINE' | 'OFFLINE';
-  avatar_image?: string;
   banner_image?: string;
 };
 
@@ -22,15 +21,14 @@ export async function POST(req: NextRequest) {
   let { data: createSubeventResponse, error: subeventCreationError } =
     await supabase
       .from('sub_events')
-      // @ts-ignore - Types are not correct, pliz regenerate obsidian
       .insert({
         event: data.event,
         topic: data.topic,
         description: data.description,
         start_time: data.start_time,
         end_time: data.end_time,
-        entry_price: data.entry_price,
-        max_attendees: data.max_attendees,
+        entry_price: parseInt(data.entry_price),
+        max_attendees: parseInt(data.max_attendees),
         platform: data.platform,
       })
       .select();
@@ -42,23 +40,6 @@ export async function POST(req: NextRequest) {
     );
   }
   if (createSubeventResponse) {
-    if (data.avatar_image) {
-      let { error: uploadAvatarImageError } = await supabase.storage
-        .from('subevent_assets')
-        .upload(
-          `${createSubeventResponse[0].id}/avatar.png`,
-          dataURLtoFile(data.avatar_image, 'avatar.png'),
-        );
-
-      if (uploadAvatarImageError) {
-        console.log('Image:' + uploadAvatarImageError.cause);
-        return NextResponse.json(
-          { error: uploadAvatarImageError.message },
-          { status: 500 },
-        );
-      }
-    }
-
     if (data.banner_image) {
       let { error: uploadBannerImageError } = await supabase.storage
         .from('subevent_assets')
@@ -68,7 +49,7 @@ export async function POST(req: NextRequest) {
         );
 
       if (uploadBannerImageError) {
-        console.log(uploadBannerImageError.cause);
+        console.log(uploadBannerImageError.message);
         return NextResponse.json(
           { error: uploadBannerImageError.message },
           { status: 500 },

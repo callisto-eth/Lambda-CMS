@@ -36,7 +36,7 @@ export type Database = {
           {
             foreignKeyName: 'connections_chat_members_member_fkey';
             columns: ['member'];
-            isOneToOne: true;
+            isOneToOne: false;
             referencedRelation: 'profiles';
             referencedColumns: ['id'];
           },
@@ -49,7 +49,7 @@ export type Database = {
           content: string;
           created_at: string;
           id: number;
-          media: string[];
+          medias: string[];
         };
         Insert: {
           author: string;
@@ -57,7 +57,7 @@ export type Database = {
           content: string;
           created_at?: string;
           id?: number;
-          media?: string[];
+          medias?: string[];
         };
         Update: {
           author?: string;
@@ -65,11 +65,11 @@ export type Database = {
           content?: string;
           created_at?: string;
           id?: number;
-          media?: string[];
+          medias?: string[];
         };
         Relationships: [
           {
-            foreignKeyName: 'chat_messages_author_fkey1';
+            foreignKeyName: 'connections_chat_messages_author_fkey';
             columns: ['author'];
             isOneToOne: false;
             referencedRelation: 'profiles';
@@ -112,7 +112,7 @@ export type Database = {
             referencedColumns: ['id'];
           },
           {
-            foreignKeyName: 'connections_event_attendees_event_fkey';
+            foreignKeyName: 'event_attendees_event_fkey';
             columns: ['event'];
             isOneToOne: false;
             referencedRelation: 'events';
@@ -202,7 +202,7 @@ export type Database = {
           created_at: string;
           id: number;
           likes: number;
-          media: string[];
+          medias: string[];
           space: string;
         };
         Insert: {
@@ -211,7 +211,7 @@ export type Database = {
           created_at?: string;
           id?: number;
           likes?: number;
-          media?: string[];
+          medias?: string[];
           space: string;
         };
         Update: {
@@ -220,12 +220,12 @@ export type Database = {
           created_at?: string;
           id?: number;
           likes?: number;
-          media?: string[];
+          medias?: string[];
           space?: string;
         };
         Relationships: [
           {
-            foreignKeyName: 'connections_spaces_posts_space_fkey';
+            foreignKeyName: 'spaces_posts_space_fkey';
             columns: ['space'];
             isOneToOne: false;
             referencedRelation: 'spaces';
@@ -233,59 +233,23 @@ export type Database = {
           },
         ];
       };
-      subevents_attendees: {
-        Row: {
-          attendee: string;
-          created_at: string;
-          event: string;
-          payment_id: string;
-          subevent: string;
-        };
-        Insert: {
-          attendee: string;
-          created_at?: string;
-          event: string;
-          payment_id: string;
-          subevent: string;
-        };
-        Update: {
-          attendee?: string;
-          created_at?: string;
-          event?: string;
-          payment_id?: string;
-          subevent?: string;
-        };
-        Relationships: [
-          {
-            foreignKeyName: 'connections_subevents_attendees_attendee_fkey';
-            columns: ['attendee'];
-            isOneToOne: false;
-            referencedRelation: 'profiles';
-            referencedColumns: ['id'];
-          },
-          {
-            foreignKeyName: 'connections_subevents_attendees_event_fkey';
-            columns: ['event'];
-            isOneToOne: false;
-            referencedRelation: 'events';
-            referencedColumns: ['id'];
-          },
-          {
-            foreignKeyName: 'connections_subevents_attendees_payment_id_fkey';
-            columns: ['payment_id'];
-            isOneToOne: false;
-            referencedRelation: 'payments';
-            referencedColumns: ['id'];
-          },
-          {
-            foreignKeyName: 'connections_subevents_attendees_subevent_fkey';
-            columns: ['subevent'];
-            isOneToOne: false;
-            referencedRelation: 'sub_events';
-            referencedColumns: ['id'];
-          },
-        ];
-      };
+    };
+    Views: {
+      [_ in never]: never;
+    };
+    Functions: {
+      [_ in never]: never;
+    };
+    Enums: {
+      [_ in never]: never;
+    };
+    CompositeTypes: {
+      [_ in never]: never;
+    };
+  };
+  plugins: {
+    Tables: {
+      [_ in never]: never;
     };
     Views: {
       [_ in never]: never;
@@ -362,10 +326,17 @@ export type Database = {
         };
         Relationships: [
           {
-            foreignKeyName: 'public_events_chat_fkey';
+            foreignKeyName: 'events_chat_fkey';
             columns: ['chat'];
             isOneToOne: false;
             referencedRelation: 'chats';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'events_spaces_fkey';
+            columns: ['spaces'];
+            isOneToOne: false;
+            referencedRelation: 'spaces';
             referencedColumns: ['id'];
           },
           {
@@ -373,13 +344,6 @@ export type Database = {
             columns: ['organizer'];
             isOneToOne: false;
             referencedRelation: 'profiles';
-            referencedColumns: ['id'];
-          },
-          {
-            foreignKeyName: 'public_events_spaces_fkey';
-            columns: ['spaces'];
-            isOneToOne: false;
-            referencedRelation: 'spaces';
             referencedColumns: ['id'];
           },
         ];
@@ -390,41 +354,59 @@ export type Database = {
           created_at: string;
           id: string;
           paid: boolean;
-          payee: string;
-          payer: string;
+          subevent: string;
+          user: string;
         };
         Insert: {
           amount: number;
           created_at?: string;
           id: string;
           paid?: boolean;
-          payee: string;
-          payer: string;
+          subevent: string;
+          user: string;
         };
         Update: {
           amount?: number;
           created_at?: string;
           id?: string;
           paid?: boolean;
-          payee?: string;
-          payer?: string;
+          subevent?: string;
+          user?: string;
         };
         Relationships: [
           {
-            foreignKeyName: 'public_payments_payee_fkey';
-            columns: ['payee'];
+            foreignKeyName: 'payments_subevent_fkey';
+            columns: ['subevent'];
             isOneToOne: false;
-            referencedRelation: 'profiles';
+            referencedRelation: 'sub_events';
             referencedColumns: ['id'];
           },
           {
-            foreignKeyName: 'public_payments_payer_fkey';
-            columns: ['payer'];
+            foreignKeyName: 'payments_user_fkey';
+            columns: ['user'];
             isOneToOne: false;
             referencedRelation: 'profiles';
             referencedColumns: ['id'];
           },
         ];
+      };
+      plugins: {
+        Row: {
+          created_at: string;
+          id: string;
+          metadata: Json;
+        };
+        Insert: {
+          created_at?: string;
+          id?: string;
+          metadata: Json;
+        };
+        Update: {
+          created_at?: string;
+          id?: string;
+          metadata?: Json;
+        };
+        Relationships: [];
       };
       profiles: {
         Row: {
@@ -487,6 +469,7 @@ export type Database = {
           entry_price: number;
           event: string;
           id: string;
+          max_attendees: number;
           platform: Database['public']['Enums']['E_EVENT_PLATFORM'];
           start_time: string;
           topic: string;
@@ -498,6 +481,7 @@ export type Database = {
           entry_price: number;
           event: string;
           id?: string;
+          max_attendees: number;
           platform?: Database['public']['Enums']['E_EVENT_PLATFORM'];
           start_time: string;
           topic: string;
@@ -509,6 +493,7 @@ export type Database = {
           entry_price?: number;
           event?: string;
           id?: string;
+          max_attendees?: number;
           platform?: Database['public']['Enums']['E_EVENT_PLATFORM'];
           start_time?: string;
           topic?: string;
@@ -525,32 +510,7 @@ export type Database = {
       };
     };
     Views: {
-      usernamemessages: {
-        Row: {
-          author: string | null;
-          chat: string | null;
-          content: string | null;
-          created_at: string | null;
-          media: string[] | null;
-          username: string | null;
-        };
-        Relationships: [
-          {
-            foreignKeyName: 'chat_messages_author_fkey1';
-            columns: ['author'];
-            isOneToOne: false;
-            referencedRelation: 'profiles';
-            referencedColumns: ['id'];
-          },
-          {
-            foreignKeyName: 'connections_chat_messages_chat_fkey';
-            columns: ['chat'];
-            isOneToOne: false;
-            referencedRelation: 'chats';
-            referencedColumns: ['id'];
-          },
-        ];
-      };
+      [_ in never]: never;
     };
     Functions: {
       authorize: {

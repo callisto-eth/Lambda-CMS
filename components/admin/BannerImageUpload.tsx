@@ -14,6 +14,7 @@ export default function BannerImageUpload({
   uploadCallback: (file: File) => Promise<void>;
 }) {
   const [uploadImage, setUploadImage] = useState<File | null>();
+  const { toast } = useToast();
   const fileReaderCallback = useCallback(
     (eV: ChangeEvent<HTMLInputElement>) => {
       if (eV.target.files?.length !== 0 && eV.target.files) {
@@ -38,10 +39,9 @@ export default function BannerImageUpload({
         fileReader.readAsDataURL(eV.target.files[0]);
       }
     },
-    [],
+    [setDefaultValue, toast],
   );
 
-  const { toast } = useToast();
   return (
     <label htmlFor="banner_upload">
       <div

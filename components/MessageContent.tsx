@@ -25,7 +25,7 @@ export default function MessageContent({
       .then((data) => {
         if (data) setUserName(data.data?.username as string);
       });
-  }, []);
+  }, [author, supabase]);
   return (
     <div className="flex space-x-4 mb-5 mr-5">
       <Avatar>

@@ -44,7 +44,7 @@ export default function ProfileModal() {
           });
       }
     });
-  }, []);
+  }, [supabase]);
   const profileSchema = z.object({
     id: z.string().optional(),
     username: z.string({
