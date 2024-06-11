@@ -33,7 +33,7 @@ import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import ImageUpload from '@/components/ImageUpload';
 import { dataURLtoFile } from '@/utils/helpers';
 import { error } from 'console';
-import ConnectionButton from '@/components/ConnectionButton';
+import Connections from '@/components/settings/pages/Connections';
 
 const supabase = createClient();
 
@@ -367,62 +367,8 @@ export default function Dashboard() {
         ) : (
           <></>
         )}
-        {activeTab === 'Connections' && userProfile ? (
-          <div className="space-y-4 col-span-10">
-            <div className="space-y-[-2px]">
-              <p className="text-5xl font-semibold">Connections</p>
-              <p>Link your Lambda Identity with various other accounts</p>
-            </div>
-            <div>
-              {identities.map((identity) => (
-                <ConnectionButton
-                  IdentityIcon={identity.icon}
-                  key={identity.name}
-                />
-              ))}
-            </div>
-          </div>
-        ) : (
-          <div className="grid gap-6 col-span-10"></div>
-        )}
+        {activeTab === 'Connections' && userProfile && <Connections />}
       </div>
     </div>
   );
 }
-
-type Provider =
-  | 'apple'
-  | 'azure'
-  | 'bitbucket'
-  | 'discord'
-  | 'facebook'
-  | 'figma'
-  | 'github'
-  | 'gitlab'
-  | 'google'
-  | 'kakao'
-  | 'keycloak'
-  | 'linkedin'
-  | 'linkedin_oidc'
-  | 'notion'
-  | 'slack'
-  | 'spotify'
-  | 'twitch'
-  | 'twitter'
-  | 'workos'
-  | 'zoom'
-  | 'fly';
-
-type IdType = {
-  name: string;
-  icon: ReactNode;
-  supabaseIdentifier: Provider;
-};
-
-const identities: IdType[] = [
-  {
-    name: 'GitHub',
-    icon: <PajamasGithub className="text-5xl" />,
-    supabaseIdentifier: 'github',
-  },
-];

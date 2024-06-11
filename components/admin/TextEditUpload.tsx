@@ -9,6 +9,7 @@ export interface TextEditUploadProps
   extends InputHTMLAttributes<HTMLInputElement> {
   inputClassName?: string;
   pClassName?: string;
+  buttonVariant?: string;
 }
 
 export const TextEditUpload = React.forwardRef<
@@ -17,10 +18,18 @@ export const TextEditUpload = React.forwardRef<
 >(({ inputClassName, pClassName, ...props }, ref) => {
   const [editMode, setEditMode] = useState(false);
   return editMode ? (
-    <p className={cn('flex items-center space-x-8 w-fit', pClassName)}>
+    <p
+      className={cn(
+        'flex items-center w-fit ',
+        pClassName,
+        props.className,
+        props.buttonVariant !== 'small' ? `space-x-8` : `space-x-4`,
+      )}
+    >
       <input
         className={cn(
           inputClassName,
+          props.className,
           'outline-none focus:outline-none border-none my-[-7.5px]',
         )}
         ref={ref}
@@ -32,11 +41,15 @@ export const TextEditUpload = React.forwardRef<
         }}
         className="transition-colors bg-green-400 hover:bg-green-400/90 h-fit py-1.5 px-2 text-[#212325] rounded-full  bg-opacity-70"
       >
-        <CharmTick className="text-lg" />
+        <CharmTick
+          className={props.buttonVariant !== 'small' ? `text-lg` : `text-xs`}
+        />
       </Button>
     </p>
   ) : (
-    <p className={cn('flex items-center space-x-8', pClassName)}>
+    <p
+      className={cn('flex items-center space-x-8', pClassName, props.className)}
+    >
       <span>{props.defaultValue}</span>
       <Button
         onClick={() => {
@@ -44,7 +57,9 @@ export const TextEditUpload = React.forwardRef<
         }}
         className="transition-colors bg-primary hover:bg-primary/90 h-fit py-1.5 px-2 text-[#212325] rounded-full bg-white bg-opacity-70"
       >
-        <MaterialSymbolsEdit className="text-lg" />
+        <MaterialSymbolsEdit
+          className={props.buttonVariant !== 'small' ? `text-lg` : `text-xs`}
+        />
       </Button>
     </p>
   );

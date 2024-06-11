@@ -1,6 +1,6 @@
 'use client';
 
-import { ChangeEvent, useCallback, useState } from 'react';
+import { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { CharmTick, MaterialSymbolsEdit } from '../Icons';
 import { useToast } from '../ui/use-toast';
 
@@ -12,9 +12,10 @@ export default function SingleImageUpload({
   uploadCallback: (file: File) => Promise<void>;
 }) {
   const [uploadImage, setUploadImage] = useState<File | null>();
-  const [imageTempURL, setImageTempURL] = useState<string | ArrayBuffer | null>(
-    defaultValue,
-  );
+  const [imageTempURL, setImageTempURL] = useState<
+    string | ArrayBuffer | null
+  >();
+
   const fileReaderCallback = useCallback(
     (eV: ChangeEvent<HTMLInputElement>) => {
       if (eV.target.files?.length !== 0 && eV.target.files) {
@@ -47,7 +48,7 @@ export default function SingleImageUpload({
       className="absolute cursor-pointer md:w-[150px] overflow-hidden md:h-[150px] w-[100px] h-[100px] rounded-full bg-cover border-[6px] bottom-[-50px] left-[10%] border-[#212325]"
       htmlFor="image_upload"
       style={{
-        backgroundImage: `url(${imageTempURL})`,
+        backgroundImage: `url(${imageTempURL ? imageTempURL : defaultValue})`,
       }}
     >
       <div

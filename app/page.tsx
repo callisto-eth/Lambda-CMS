@@ -11,13 +11,13 @@ import { useEffect, useState } from 'react';
 const supabaseClient = createClient();
 
 export default function Home() {
-  const [userSession, setUserSession] = useState<any>(null);
+  const [getUser, setGetUser] = useState<any>(null);
   const [modalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
     supabaseClient.auth
-      .getSession()
-      .then(({ data: { session } }) => setUserSession(session));
+      .getUser()
+      .then(({ data: { user } }) => setGetUser(user));
   }, []);
 
   return (
@@ -43,7 +43,7 @@ export default function Home() {
               Supercharge your Socials with our Plugin-Driven Event Management
               Platform
             </p>
-            {!userSession ? (
+            {!getUser ? (
               <AuthModal setModalOpen={setModalOpen} modalOpen={modalOpen} />
             ) : (
               <div>

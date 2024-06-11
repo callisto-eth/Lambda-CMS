@@ -6,7 +6,7 @@ import React, {
   TextareaHTMLAttributes,
   useState,
 } from 'react';
-import { Button } from '../ui/button';
+import { Button, buttonVariants } from '../ui/button';
 import { CharmTick, MaterialSymbolsEdit } from '../Icons';
 import { cn } from '@/lib/utils';
 import TextareaAutosize from 'react-textarea-autosize';
@@ -15,6 +15,7 @@ export interface TextAreaEditUploadProps
   extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   inputClassName?: string;
   pClassName?: string;
+  buttonVariant?: string;
   uploadCallback: (
     value: string,
     setEditMode: Dispatch<SetStateAction<boolean>>,
@@ -29,7 +30,13 @@ export const TextAreaEditUpload = React.forwardRef<
   const [editValue, setEditValue] = useState(props.defaultValue);
   props.uploadCallback.bind(null, editValue as string, setEditMode);
   return editMode ? (
-    <p className={cn('flex space-x-8', pClassName)}>
+    <p
+      className={cn(
+        'flex',
+        pClassName,
+        props.buttonVariant !== 'small' ? `space-x-8` : `space-x-4`,
+      )}
+    >
       <TextareaAutosize
         className={cn(
           inputClassName,
@@ -45,11 +52,19 @@ export const TextAreaEditUpload = React.forwardRef<
         }}
         className="transition-colors bg-green-400 hover:bg-green-400/90 h-fit py-1.5 px-2 text-[#212325] rounded-full  bg-opacity-70"
       >
-        <CharmTick className="text-lg" />
+        <CharmTick
+          className={props.buttonVariant !== 'small' ? `text-lg` : `text-xs`}
+        />
       </Button>
     </p>
   ) : (
-    <p className={cn('flex space-x-8', pClassName)}>
+    <p
+      className={cn(
+        'flex ',
+        pClassName,
+        props.buttonVariant !== 'small' ? `space-x-8` : `space-x-4`,
+      )}
+    >
       <span>{editValue}</span>
       <Button
         onClick={() => {
@@ -57,7 +72,9 @@ export const TextAreaEditUpload = React.forwardRef<
         }}
         className="transition-colors bg-primary hover:bg-primary/90 h-fit py-1.5 px-2 text-[#212325] rounded-full bg-white bg-opacity-70"
       >
-        <MaterialSymbolsEdit className="text-lg" />
+        <MaterialSymbolsEdit
+          className={props.buttonVariant !== 'small' ? `text-lg` : `text-xs`}
+        />
       </Button>
     </p>
   );

@@ -20,6 +20,7 @@ import { useEffect, useState } from 'react';
 import { ScrollArea } from '../ui/scroll-area';
 import { Button } from '../ui/button';
 import { useToast } from '../ui/use-toast';
+import { TimePickerDemo } from '../ui/time-picker-demo';
 
 export function CreateSubEventModal({
   eventId,
@@ -45,6 +46,8 @@ export function CreateSubEventModal({
         message: 'Please enter a valid date',
       }),
     }),
+    start_time: z.date(),
+    end_time: z.date(),
     entry_price: z.string(),
     banner_image: z.string().optional(),
     max_attendees: z.string(),
@@ -56,6 +59,20 @@ export function CreateSubEventModal({
   });
 
   async function onSubmit(fieldValues: z.infer<typeof createSubEventSchema>) {
+    fieldValues.date.from.setHours(
+      fieldValues.start_time.getHours(),
+      fieldValues.start_time.getMinutes(),
+      fieldValues.start_time.getSeconds(),
+      fieldValues.start_time.getMilliseconds(),
+    );
+
+    fieldValues.date.to.setHours(
+      fieldValues.end_time.getHours(),
+      fieldValues.end_time.getMinutes(),
+      fieldValues.end_time.getSeconds(),
+      fieldValues.end_time.getMilliseconds(),
+    );
+
     const createSubeventResponse = await fetch('/api/subevent/create', {
       method: 'POST',
       headers: {
@@ -65,15 +82,14 @@ export function CreateSubEventModal({
         event: eventId,
         topic: fieldValues.topic,
         description: fieldValues.description,
-        start_time: fieldValues.date.from.toLocaleTimeString(),
-        end_time: fieldValues.date.to.toLocaleTimeString(),
+        start_time: fieldValues.date.from.toISOString(),
+        end_time: fieldValues.date.to.toISOString(),
         entry_price: fieldValues.entry_price,
         max_attendees: fieldValues.max_attendees,
         platform: fieldValues.platform,
         banner_image: fieldValues.banner_image,
       }),
     });
-
     if (createSubeventResponse.status === 201) {
       setModalState(false);
       toast({
@@ -159,6 +175,42 @@ export function CreateSubEventModal({
                 </FormItem>
               )}
             />
+            <div className="flex items-center space-x-4">
+              <FormField
+                name="start_time"
+                control={createSubEventForm.control}
+                render={({ field }) => {
+                  return (
+                    <FormItem>
+                      <FormLabel>Start Time</FormLabel>
+                      <FormControl>
+                        <TimePickerDemo
+                          date={field.value}
+                          setDate={field.onChange}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  );
+                }}
+              />
+              <FormField
+                name="end_time"
+                control={createSubEventForm.control}
+                render={({ field }) => {
+                  return (
+                    <FormItem>
+                      <FormLabel>End Time</FormLabel>
+                      <FormControl>
+                        <TimePickerDemo
+                          date={field.value}
+                          setDate={field.onChange}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  );
+                }}
+              />
+            </div>
             <FormField
               name="platform"
               control={createSubEventForm.control}
@@ -232,6 +284,7 @@ export function CreateSubEventModal({
                 </FormItem>
               )}
             />
+
             <Button
               type="submit"
               className="font-DM-Sans p-3 rounded-xl w-full bg-[#323132] text-md font-semibold text-[#b4b3b4] hover:bg-[#b4b3b4] hover:text-[#323132]"
