@@ -2,8 +2,9 @@
 
 import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
 
-export default function AuthCodeError() {
+function CodeError() {
   const searchParams = useSearchParams();
   const errorCode = searchParams.get('error_code');
 
@@ -16,5 +17,13 @@ export default function AuthCodeError() {
         </p>
       </div>
     </main>
+  );
+}
+
+export default function AuthCodeError() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <CodeError />
+    </Suspense>
   );
 }
