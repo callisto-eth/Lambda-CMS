@@ -127,7 +127,7 @@ function SendMessageBox() {
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon">
+              <Button variant="ghost">
                 <Paperclip className="size-4" />
                 <span className="sr-only">Attach file</span>
               </Button>
@@ -138,7 +138,7 @@ function SendMessageBox() {
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon">
+              <Button variant="ghost">
                 <Mic className="size-4" />
                 <span className="sr-only">Use Microphone</span>
               </Button>
