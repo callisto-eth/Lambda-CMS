@@ -89,18 +89,21 @@ export type Database = {
           attendee: string;
           created_at: string;
           event: string;
+          event_pass: string;
           role: Database['public']['Enums']['E_EVENT_ROLE'];
         };
         Insert: {
           attendee: string;
           created_at?: string;
           event: string;
+          event_pass?: string;
           role: Database['public']['Enums']['E_EVENT_ROLE'];
         };
         Update: {
           attendee?: string;
           created_at?: string;
           event?: string;
+          event_pass?: string;
           role?: Database['public']['Enums']['E_EVENT_ROLE'];
         };
         Relationships: [
@@ -146,55 +149,6 @@ export type Database = {
           },
         ];
       };
-      pass_status: {
-        Row: {
-          created_at: string;
-          event: string;
-          pass_id: number;
-          redeemed: boolean | null;
-          subevent: string | null;
-          user: string | null;
-        };
-        Insert: {
-          created_at?: string;
-          event: string;
-          pass_id?: number;
-          redeemed?: boolean | null;
-          subevent?: string | null;
-          user?: string | null;
-        };
-        Update: {
-          created_at?: string;
-          event?: string;
-          pass_id?: number;
-          redeemed?: boolean | null;
-          subevent?: string | null;
-          user?: string | null;
-        };
-        Relationships: [
-          {
-            foreignKeyName: 'connections_pass_status_event_fkey';
-            columns: ['event'];
-            isOneToOne: false;
-            referencedRelation: 'events';
-            referencedColumns: ['id'];
-          },
-          {
-            foreignKeyName: 'connections_pass_status_subevent_fkey';
-            columns: ['subevent'];
-            isOneToOne: false;
-            referencedRelation: 'sub_events';
-            referencedColumns: ['id'];
-          },
-          {
-            foreignKeyName: 'connections_pass_status_user_fkey';
-            columns: ['user'];
-            isOneToOne: false;
-            referencedRelation: 'profiles';
-            referencedColumns: ['id'];
-          },
-        ];
-      };
       spaces_posts: {
         Row: {
           author: string;
@@ -233,23 +187,6 @@ export type Database = {
           },
         ];
       };
-    };
-    Views: {
-      [_ in never]: never;
-    };
-    Functions: {
-      [_ in never]: never;
-    };
-    Enums: {
-      [_ in never]: never;
-    };
-    CompositeTypes: {
-      [_ in never]: never;
-    };
-  };
-  plugins: {
-    Tables: {
-      [_ in never]: never;
     };
     Views: {
       [_ in never]: never;
@@ -389,24 +326,6 @@ export type Database = {
             referencedColumns: ['id'];
           },
         ];
-      };
-      plugins: {
-        Row: {
-          created_at: string;
-          id: string;
-          metadata: Json;
-        };
-        Insert: {
-          created_at?: string;
-          id?: string;
-          metadata: Json;
-        };
-        Update: {
-          created_at?: string;
-          id?: string;
-          metadata?: Json;
-        };
-        Relationships: [];
       };
       profiles: {
         Row: {

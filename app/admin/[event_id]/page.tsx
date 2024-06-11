@@ -17,7 +17,7 @@ import SingleImageUpload from '@/components/admin/SingleImageUpload';
 import BannerImageUpload from '@/components/admin/BannerImageUpload';
 import Users from '@/components/admin/pages/Users';
 import Danger from '@/components/admin/pages/Danger';
-import Plugins from '@/components/admin/pages/Plugins';
+
 const supabase = createClient();
 
 export default function Dashboard({
@@ -279,9 +279,7 @@ export default function Dashboard({
               </div>
             </main>
           )}
-          {activeTab === 'Plugins' && userProfile && (
-            <Plugins event_id={params.event_id} />
-          )}
+          {activeTab === 'Plugins' && userProfile && <div></div>}
           {activeTab === 'Users' && userProfile && (
             <Users eventID={params.event_id} />
           )}
