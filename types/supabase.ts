@@ -389,6 +389,7 @@ export type Database = {
           event: string
           id: string
           max_attendees: number
+          metadata: Json | null
           platform: Database["public"]["Enums"]["E_EVENT_PLATFORM"]
           start_time: string | null
           topic: string
@@ -401,6 +402,7 @@ export type Database = {
           event: string
           id?: string
           max_attendees: number
+          metadata?: Json | null
           platform?: Database["public"]["Enums"]["E_EVENT_PLATFORM"]
           start_time?: string | null
           topic: string
@@ -413,6 +415,7 @@ export type Database = {
           event?: string
           id?: string
           max_attendees?: number
+          metadata?: Json | null
           platform?: Database["public"]["Enums"]["E_EVENT_PLATFORM"]
           start_time?: string | null
           topic?: string

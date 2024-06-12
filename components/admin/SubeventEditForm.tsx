@@ -18,6 +18,7 @@ import { createClient } from '@/utils/supabase/client';
 import { Database } from '@/types/supabase';
 import { DateTimePicker } from '../ui/date-time-picker';
 import { useToast } from '../ui/use-toast';
+import SearchAddress from '../ui/search-addresses';
 
 export default function SubeventEditForm({
   subEventId,
@@ -44,7 +45,7 @@ export default function SubeventEditForm({
           setSubEventResponse(response.data);
         }
       });
-  });
+  }, []);
 
   async function onSubmit(fieldValues: any) {
     Object.keys(fieldValues).forEach((key) =>
@@ -74,6 +75,10 @@ export default function SubeventEditForm({
   return (
     subEventResponse && (
       <DialogContent className="p-6 w-[370px] bg-black rounded-3xl text-white font-DM-Sans bg-clip-padding backdrop-filter backdrop-blur-md bg-opacity-10 border border-white border-opacity-10">
+        <div className="space-y-1">
+          <p className="text-4xl font-bold">Configuration</p>
+          <p>Update the subevent details 🎉</p>
+        </div>
         <Form {...updateSubEventForm}>
           <form
             className="space-y-4"
@@ -90,6 +95,9 @@ export default function SubeventEditForm({
                   <FormControl>
                     {
                       <DateTimePicker
+                        initialValue={
+                          new Date(subEventResponse.start_time as string)
+                        }
                         date={field.value}
                         setDate={field.onChange}
                       />
@@ -108,6 +116,9 @@ export default function SubeventEditForm({
                   <FormControl>
                     {
                       <DateTimePicker
+                        initialValue={
+                          new Date(subEventResponse.end_time as string)
+                        }
                         date={field.value}
                         setDate={field.onChange}
                       />
@@ -120,78 +131,113 @@ export default function SubeventEditForm({
             <FormField
               name="platform"
               control={updateSubEventForm.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Mode</FormLabel>
-                  <FormControl>
-                    <RadioGroup
-                      value={field.value}
-                      className="flex w-full space-x-2"
-                      onValueChange={field.onChange}
-                    >
-                      <FormItem className="flex items-center space-x-3 space-y-0">
-                        <FormControl>
-                          <RadioGroupItem value="ONLINE" id="r1" />
-                        </FormControl>
-                        <FormLabel htmlFor="r1">Online</FormLabel>
-                      </FormItem>
-                      <FormItem className="flex items-center space-x-3 space-y-0">
-                        <FormControl>
-                          <RadioGroupItem value="OFFLINE" id="r2" />
-                        </FormControl>
-                        <FormLabel htmlFor="r2">Offline</FormLabel>
-                      </FormItem>
-                      <FormItem className="flex items-center space-x-3 space-y-0">
-                        <FormControl>
-                          <RadioGroupItem value="HYBRID" id="r3" />
-                        </FormControl>
-                        <FormLabel htmlFor="r3">Hybrid</FormLabel>
-                      </FormItem>
-                    </RadioGroup>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              render={({ field }) => {
+                return (
+                  <FormItem>
+                    <FormLabel>Mode</FormLabel>
+                    <FormControl>
+                      <RadioGroup
+                        value={field.value || subEventResponse.platform}
+                        className="flex w-full space-x-2"
+                        onValueChange={field.onChange}
+                      >
+                        <FormItem className="flex items-center space-x-3 space-y-0">
+                          <FormControl>
+                            <RadioGroupItem value="ONLINE" id="r1" />
+                          </FormControl>
+                          <FormLabel htmlFor="r1">Online</FormLabel>
+                        </FormItem>
+                        <FormItem className="flex items-center space-x-3 space-y-0">
+                          <FormControl>
+                            <RadioGroupItem value="OFFLINE" id="r2" />
+                          </FormControl>
+                          <FormLabel htmlFor="r2">Offline</FormLabel>
+                        </FormItem>
+                        <FormItem className="flex items-center space-x-3 space-y-0">
+                          <FormControl>
+                            <RadioGroupItem value="HYBRID" id="r3" />
+                          </FormControl>
+                          <FormLabel htmlFor="r3">Hybrid</FormLabel>
+                        </FormItem>
+                      </RadioGroup>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                );
+              }}
             />
+            <div className="flex items-center space-x-4">
+              <FormField
+                name="max_attendees"
+                control={updateSubEventForm.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Max Attendees</FormLabel>
+                    <FormControl>
+                      <Input
+                        min={1}
+                        defaultValue={subEventResponse.max_attendees}
+                        placeholder="Max Attendees"
+                        type="number"
+                        {...field}
+                        className="bg-transparent outline-none py-2.5 border border-white border-opacity-10 rounded-xl"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                name="entry_price"
+                control={updateSubEventForm.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Entry Price</FormLabel>
+                    <FormControl>
+                      <Input
+                        min={0}
+                        defaultValue={subEventResponse.entry_price}
+                        placeholder="Entry Price"
+                        type="number"
+                        {...field}
+                        className="bg-transparent outline-none py-2.5 border border-white border-opacity-10 rounded-xl"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
             <FormField
-              name="max_attendees"
+              name="metadata"
               control={updateSubEventForm.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Max Attendees</FormLabel>
-                  <FormControl>
-                    <Input
-                      min={1}
-                      defaultValue={subEventResponse.max_attendees}
-                      placeholder="Max Attendees"
-                      type="number"
-                      {...field}
-                      className="bg-transparent outline-none py-2.5 border border-white border-opacity-10 rounded-xl"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              name="entry_price"
-              control={updateSubEventForm.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Entry Price</FormLabel>
-                  <FormControl>
-                    <Input
-                      min={0}
-                      defaultValue={subEventResponse.entry_price}
-                      placeholder="Entry Price"
-                      type="number"
-                      {...field}
-                      className="bg-transparent outline-none py-2.5 border border-white border-opacity-10 rounded-xl"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              render={({ field }) => {
+                return (
+                  updateSubEventForm.watch('platform') &&
+                  (updateSubEventForm.watch('platform') === 'ONLINE' ? (
+                    <FormItem>
+                      <FormLabel>Redirect Link</FormLabel>
+                      <FormControl>
+                        <Input
+                          required
+                          {...field}
+                          className="bg-transparent outline-none py-2.5 border border-white border-opacity-10 rounded-xl"
+                          placeholder="Enter a link to redirect to"
+                        />
+                      </FormControl>
+                    </FormItem>
+                  ) : updateSubEventForm.watch('platform') === 'OFFLINE' ? (
+                    <FormItem>
+                      <FormLabel>Location</FormLabel>
+                      <FormControl>
+                        <SearchAddress onSelectLocation={field.onChange} />
+                      </FormControl>
+                    </FormItem>
+                  ) : (
+                    <p>Feature not Available</p>
+                  ))
+                );
+              }}
             />
             <Button
               type="submit"

@@ -30,6 +30,8 @@ export default function Subevents({ eventId }: { eventId: string }) {
       .eq('event', eventId)
       .then((response) => {
         if (response.data) {
+          console.log(response.data);
+
           setSubEventResponse(response.data);
         }
       });
@@ -47,14 +49,8 @@ export default function Subevents({ eventId }: { eventId: string }) {
           </p>
         </div>
         <Dialog open={modalState} onOpenChange={setModalState}>
-          <DialogTrigger asChild>
-            <Button
-              onClick={() => {}}
-              type="button"
-              className="hover:text-white hover:bg-red-500 bg-transparent text-red-500 border border-red-500 p-4 rounded-full text-base"
-            >
-              Create a Subevent
-            </Button>
+          <DialogTrigger className="py-2 hover:text-white hover:bg-red-500 bg-transparent text-red-500 border border-red-500 p-4 rounded-full text-base">
+            Create a Subevent
           </DialogTrigger>
           <CreateSubEventModal
             setModalState={setModalState}
@@ -69,7 +65,7 @@ export default function Subevents({ eventId }: { eventId: string }) {
               key={subEvent.id}
               className="p-4 bg-[#2B2D2E] rounded-3xl space-y-2"
             >
-              <p className="text-base font-semibold text-[#c0c0c1]">
+              <p className="text-base font-medium text-[#c0c0c1] tracking-wide">
                 SUBEVENT #{`${index + 1}`}
               </p>
               <Accordion type="single" collapsible>
@@ -131,7 +127,7 @@ export default function Subevents({ eventId }: { eventId: string }) {
                       open={editModalState}
                       onOpenChange={setEditModalState}
                     >
-                      <DialogTrigger className="hidden md:inline-flex items-center justify-center whitespace-nowrap font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-fit py-1.5 px-2 text-[#948b96] rounded-full bg-clip-padding backdrop-filter text-base bg-white backdrop-blur-sm bg-opacity-70 border border-opacity-10 border-gray-100">
+                      <DialogTrigger className="inline-flex items-center justify-center whitespace-nowrap font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-fit py-1.5 px-2 text-[#948b96] rounded-full bg-clip-padding backdrop-filter text-base bg-white backdrop-blur-sm bg-opacity-70 border border-opacity-10 border-gray-100">
                         <MaterialSymbolsEdit className="text-xl" />
                         <p className="px-1">Edit</p>
                       </DialogTrigger>

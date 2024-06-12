@@ -15,16 +15,20 @@ import {
 import { TimePickerDemo } from './time-picker-demo';
 
 export function DateTimePicker({
+  initialValue,
   date,
   setDate,
 }: {
-  date?: Date;
+  initialValue: Date;
+  date: Date;
   setDate: (...event: any[]) => void;
 }) {
-  /**
-   * carry over the current time when a user clicks a new day
-   * instead of resetting to 00:00
-   */
+  React.useEffect(() => {
+    console.log(initialValue);
+
+    handleSelect(initialValue);
+  }, []);
+
   const handleSelect = (newDay: Date | undefined) => {
     if (!newDay) return;
     if (!date) {
