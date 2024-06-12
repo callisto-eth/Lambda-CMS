@@ -1,6 +1,7 @@
 import DiscussionButton from '@/components/DiscussionButton';
 import { MdiDotsHorizontal, PepiconsPencilLeave } from '@/components/Icons';
 import JoinButton from '@/components/JoinButton';
+import Timeline from '@/components/event/pages/Timeline';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -83,7 +84,7 @@ export default async function EventInfo({
           </div>
         </div>
         <div className="lg:px-[10%] my-16">
-          <p className="">{eventDataResponse[0].name}</p>
+          <p className="font-bold text-5xl">{eventDataResponse[0].name}</p>
           <p className="text-xl mt-4 font-light">
             {eventDataResponse[0].description}
           </p>
@@ -111,7 +112,9 @@ export default async function EventInfo({
                 </TabsTrigger>
               </TabsList>
             </div>
-            <TabsContent value="timeline">Timeline</TabsContent>
+            <TabsContent value="timeline">
+              <Timeline eventId={params.event_id} />
+            </TabsContent>
             <TabsContent value="spaces">Space</TabsContent>
             <TabsContent value="contact">Contact</TabsContent>
           </Tabs>

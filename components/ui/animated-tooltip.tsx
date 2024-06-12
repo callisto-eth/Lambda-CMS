@@ -8,10 +8,13 @@ import {
   useMotionValue,
   useSpring,
 } from 'framer-motion';
+import { cn } from '@/lib/utils';
 
 export const AnimatedTooltip = ({
+  className,
   items,
 }: {
+  className?: string;
   items: {
     id: number;
     name: string;
@@ -66,7 +69,10 @@ export const AnimatedTooltip = ({
                   rotate: rotate,
                   whiteSpace: 'nowrap',
                 }}
-                className="absolute -top-16 -left-1/2 translate-x-1/2 flex text-xs  flex-col items-center justify-center rounded-md bg-black z-50 shadow-xl px-4 py-2"
+                className={cn(
+                  'absolute -top-16 -left-1/2 translate-x-1/2 flex text-xs  flex-col items-center justify-center rounded-md bg-black z-50 shadow-xl px-4 py-2',
+                  className,
+                )}
               >
                 <div className="absolute inset-x-10 z-30 w-[20%] -bottom-px bg-gradient-to-r from-transparent via-emerald-500 to-transparent h-px " />
                 <div className="absolute left-10 w-[40%] z-30 -bottom-px bg-gradient-to-r from-transparent via-sky-500 to-transparent h-px " />

@@ -21,6 +21,9 @@ const config = {
       gridTemplateColumns: {
         16: 'repeat(16, minmax(0, 1fr))',
       },
+      gridColumn: {
+        'span-15': 'span 15 / span 15',
+      },
       fontFamily: {
         DGrotesque: 'Darker Grotesque, sans-serif',
         Roboto: 'Roboto, sans-serif',
