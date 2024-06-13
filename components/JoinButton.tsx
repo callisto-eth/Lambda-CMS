@@ -21,6 +21,10 @@ export default function JoinButton({ eventID }: { eventID: string }) {
             title: '✅ Joined event',
             description: 'You have successfully joined the event',
           });
+
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
         }
 
         if (joinEventResponse.status === 401) {

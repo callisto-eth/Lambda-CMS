@@ -1,11 +1,11 @@
 import DiscussionButton from '@/components/DiscussionButton';
-import { MdiDotsHorizontal, PepiconsPencilLeave } from '@/components/Icons';
+import { MdiDotsHorizontal } from '@/components/Icons';
 import JoinButton from '@/components/JoinButton';
+import LeaveEventButton from '@/components/event/LeaveEventButton';
 import Timeline from '@/components/event/pages/Timeline';
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -67,10 +67,10 @@ export default async function EventInfo({
                     <MdiDotsHorizontal className="text-2xl" />
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="m-3 rounded-xl *:rounded-lg *:cursor-pointer">
-                    <DropdownMenuItem>
-                      <PepiconsPencilLeave className="mr-2 h-4 w-4" />
-                      <span>Leave</span>
-                    </DropdownMenuItem>
+                    <LeaveEventButton
+                      eventID={params.event_id}
+                      userID={userData.data.user?.id as string}
+                    />
                   </DropdownMenuContent>
                 </DropdownMenu>
                 <DiscussionButton

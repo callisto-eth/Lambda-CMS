@@ -29,6 +29,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(
       {
+        revalidated: true,
         data: joinEventResponse,
       },
       {
@@ -57,3 +58,5 @@ export async function POST(req: NextRequest) {
     },
   );
 }
+
+export const revalidate = 0;

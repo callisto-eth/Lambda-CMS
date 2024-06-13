@@ -26,24 +26,24 @@ export async function POST(request: NextRequest) {
 
   const order = await razorpay.orders.create(orderOptions);
 
-  let { data: createInvoiceResponse, error: createInvoiceError } =
-    await supabase
-      .from('payments')
-      // @ts-ignore - fix types
-      .insert({
-        id: order.id,
-        user: user.data.user?.id,
-        subevent: data.subevent,
-        amount: parseFloat(data.amount) * 100,
-      })
-      .select();
+  if (user.data.user) {
+    let { data: createInvoiceResponse, error: createInvoiceError } =
+      await supabase
+        .from('payments')
+        .insert({
+          id: order.id,
+          user: user.data.user.id,
+          subevent: data.subevent,
+          amount: parseFloat(data.amount) * 100,
+        })
+        .select();
 
-  if (createInvoiceError) {
-    console.log(createInvoiceError);
-    return NextResponse.json(
-      { error: createInvoiceError.message },
-      { status: 500 },
-    );
+    if (createInvoiceError) {
+      return NextResponse.json(
+        { error: createInvoiceError.message },
+        { status: 500 },
+      );
+    }
   }
 
   return NextResponse.json({ orderId: order.id }, { status: 200 });

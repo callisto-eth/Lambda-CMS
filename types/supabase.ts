@@ -9,6 +9,42 @@ export type Json =
 export type Database = {
   connections: {
     Tables: {
+      admissions: {
+        Row: {
+          admitted: boolean
+          created_at: string
+          pass: string
+          subevent: string
+        }
+        Insert: {
+          admitted: boolean
+          created_at?: string
+          pass: string
+          subevent: string
+        }
+        Update: {
+          admitted?: boolean
+          created_at?: string
+          pass?: string
+          subevent?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "admissions_pass_fkey"
+            columns: ["pass"]
+            isOneToOne: false
+            referencedRelation: "subevent_attendees"
+            referencedColumns: ["subevent_pass"]
+          },
+          {
+            foreignKeyName: "pass_redemptions_subevent_fkey"
+            columns: ["subevent"]
+            isOneToOne: false
+            referencedRelation: "sub_events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       chat_members: {
         Row: {
           chat: string
@@ -89,21 +125,21 @@ export type Database = {
           attendee: string
           created_at: string
           event: string
-          event_pass: string
+          id: string
           role: Database["public"]["Enums"]["E_EVENT_ROLE"]
         }
         Insert: {
           attendee: string
           created_at?: string
           event: string
-          event_pass?: string
+          id?: string
           role: Database["public"]["Enums"]["E_EVENT_ROLE"]
         }
         Update: {
           attendee?: string
           created_at?: string
           event?: string
-          event_pass?: string
+          id?: string
           role?: Database["public"]["Enums"]["E_EVENT_ROLE"]
         }
         Relationships: [
@@ -183,6 +219,52 @@ export type Database = {
             columns: ["space"]
             isOneToOne: false
             referencedRelation: "spaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      subevent_attendees: {
+        Row: {
+          attendee: string
+          created_at: string
+          id: number
+          subevent: string | null
+          subevent_pass: string
+        }
+        Insert: {
+          attendee: string
+          created_at?: string
+          id?: number
+          subevent?: string | null
+          subevent_pass?: string
+        }
+        Update: {
+          attendee?: string
+          created_at?: string
+          id?: number
+          subevent?: string | null
+          subevent_pass?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "subevent_attendees_attendee_fkey"
+            columns: ["attendee"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "subevent_attendees_attendee_fkey1"
+            columns: ["attendee"]
+            isOneToOne: false
+            referencedRelation: "event_attendees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "subevent_attendees_subevent_fkey"
+            columns: ["subevent"]
+            isOneToOne: false
+            referencedRelation: "sub_events"
             referencedColumns: ["id"]
           },
         ]
@@ -270,17 +352,17 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "events_organizer_fkey"
+            columns: ["organizer"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "events_spaces_fkey"
             columns: ["spaces"]
             isOneToOne: false
             referencedRelation: "spaces"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "public_events_organizer_fkey"
-            columns: ["organizer"]
-            isOneToOne: false
-            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]

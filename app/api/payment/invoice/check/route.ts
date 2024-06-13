@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
-import { createClient } from '@supabase/supabase-js';
-import { cookies } from 'next/headers';
+import { createClient } from '@/utils/supabase/server';
 
 const generatedSignature = (
   razorpayOrderId: string,
@@ -26,10 +25,7 @@ export async function POST(request: NextRequest) {
 
   const signature = generatedSignature(orderCreationId, razorpayPaymentId);
 
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL || '',
-    process.env.SUPABASE_SERVICE_KEY || '',
-  );
+  const supabase = createClient();
 
   if (signature !== razorpaySignature) {
     return NextResponse.json(
@@ -44,7 +40,6 @@ export async function POST(request: NextRequest) {
     .match({ rzp_order_id: orderCreationId })
     .single();
 
-  console.log(cookies().getAll());
   return NextResponse.json(
     { message: 'payment verified successfully', isOk: true },
     { status: 200 },

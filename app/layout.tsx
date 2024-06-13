@@ -7,6 +7,7 @@ import { Toaster } from '@/components/ui/toaster';
 export const metadata: Metadata = {
   title: 'Lambda | Supercharge your Socials',
   description: 'Supercharge your Socials',
+
   icons: [
     {
       url: '/Lambda.png',

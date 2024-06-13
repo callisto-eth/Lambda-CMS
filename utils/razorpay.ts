@@ -1,9 +1,15 @@
+import { createClient } from './supabase/client';
+
 export const processPayment = async (
   order_id: string,
   name: string,
   email: string,
   amount: string,
+  subevent: string,
+  event: string,
 ) => {
+  const supabase = createClient();
+
   try {
     const options = {
       key: process.env.key_id,
@@ -20,16 +26,48 @@ export const processPayment = async (
           razorpaySignature: response.razorpay_signature,
         };
 
-        const result = await fetch('/api/payment/verify', {
+        const result = await fetch('/api/payment/invoice/check', {
           method: 'POST',
           body: JSON.stringify(data),
           headers: { 'Content-Type': 'application/json' },
         });
-        const res = await result.json();
 
-        if (res.isOk) alert('payment succeed');
-        else {
-          alert(res.message);
+        const res: {
+          isOk: boolean;
+          message: string;
+        } = await result.json();
+
+        if (res.isOk) {
+          const { data: paymentResponse, error: paymentError } = await supabase
+            .from('payments')
+            .update({ paid: true })
+            .eq('id', order_id);
+
+          if (!paymentError) {
+            const userData = await supabase.auth.getUser();
+
+            if (userData.data.user) {
+              const { data: attendeeResponse, error: attendeeError } =
+                await supabase
+                  .schema('connections')
+                  .from('event_attendees')
+                  .select('id')
+                  .eq('attendee', userData.data.user.id)
+                  .eq('event', event)
+                  .single();
+
+              if (!attendeeError) {
+                const { data: createPassResponse, error: createPassError } =
+                  await supabase
+                    .schema('connections')
+                    .from('subevent_attendees')
+                    .insert({
+                      subevent: subevent,
+                      attendee: attendeeResponse.id,
+                    });
+              }
+            }
+          }
         }
       },
       prefill: {
