@@ -6,13 +6,18 @@ import { createClient } from '@/utils/supabase/server';
 export default async function Timeline({ eventId }: { eventId: string }) {
   const supabaseClient = createClient();
   const subeventResponse: z.infer<typeof subEventMetadata>[] = await (
-    await fetch('http://localhost:3000/api/subevent/fetch', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
+    await fetch(
+      process.env.NODE_ENV === 'production'
+        ? 'https://lambda.events/api/subevent/fetch'
+        : 'http://localhost:3000/api/subevent/fetch',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ eventId }),
       },
-      body: JSON.stringify({ eventId }),
-    })
+    )
   ).json();
 
   const userData = await supabaseClient.auth.getUser();
