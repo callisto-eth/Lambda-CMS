@@ -4,16 +4,18 @@ import { subEventMetadata } from '@/types/subevent';
 import { z } from 'zod';
 import { Dialog, DialogContent, DialogTrigger } from '../ui/dialog';
 import JoinSubEventButton from './JoinSubEventButton';
+import Razorpay from 'razorpay';
 
 import { processPayment } from '@/utils/razorpay';
 import Script from 'next/script';
 import { useToast } from '../ui/use-toast';
 import { Checkbox } from '../ui/checkbox';
 import { Button } from '../ui/button';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { CheckedState } from '@radix-ui/react-checkbox';
 import { Database } from '@/types/supabase';
-import { createClient } from '@/utils/supabase/client';
+import useRazorpay, { RazorpayOptions } from 'react-razorpay';
+import Rzp from 'razorpay';
 
 export default function JoinSubEventFlow({
   subEventResponse,
@@ -28,6 +30,11 @@ export default function JoinSubEventFlow({
 }) {
   const { toast } = useToast();
 
+  const [Razorpay] = useRazorpay();
+
+  const instance = new Rzp({
+    key_id: 'rzp_test_20EGtnaYDSgrAM',
+  });
   const [checkBox, setCheckBox] = useState<CheckedState | undefined>(false);
 
   async function createOrder(amount: string, event: string, subevent: string) {
