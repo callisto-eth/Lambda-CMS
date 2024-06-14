@@ -30,11 +30,14 @@ export default function EventsPage() {
   }, [organizerID]);
 
   return (
-    <main className="grid gap-5 md:gap-0 md:grid-cols-3 w-fit mx-auto md:w-full px-0 md:px-10">
+    <main className="grid gap-y-10 md:grid-cols-2 lg:grid-cols-3 w-fit mx-auto md:w-full px-0 md:px-10">
       {fetchedEvents &&
         fetchedEvents.map((fetchedEvent: any) => {
           return (
-            <Link href={`/admin/${fetchedEvent.id}`} key={fetchedEvent.id}>
+            <Link
+              href={`/admin/${fetchedEvent.id}?tabOption=General`}
+              key={fetchedEvent.id}
+            >
               <EventCard fetchedEvent={fetchedEvent} />
             </Link>
           );

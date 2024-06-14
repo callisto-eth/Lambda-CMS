@@ -2,45 +2,67 @@
 
 import { Database } from '@/types/supabase';
 import { SolarTicketBold } from '../Icons';
-import { Button } from '../ui/button';
-import { Dialog, DialogContent, DialogTrigger } from '../ui/dialog';
+import { Dialog, DialogTrigger } from '../ui/dialog';
 import QRCode from 'react-qr-code';
+import { useEffect, useState } from 'react';
+import { createClient } from '@/utils/supabase/client';
+import { UserResponse } from '@supabase/supabase-js';
+import CTAButton from '../CTAButton';
+import { GlassDialogContent } from '../GlassModalContent';
+import { handleErrors } from '@/utils/helpers';
 
 export default function TicketModal({
-  passStatus,
+  eventId,
+  userData,
 }: {
-  passStatus:
-    | Database['connections']['Tables']['subevent_attendees']['Row']
-    | null;
+  eventId: string;
+  userData: UserResponse['data']['user'];
 }) {
+  const [eventAttendeeResponse, setEventAttendeeResponse] =
+    useState<Database['connections']['Tables']['event_attendees']['Row']>();
+  const supabaseClient = createClient();
+  useEffect(() => {
+    supabaseClient
+      .schema('connections')
+      .from('event_attendees')
+      .select('*')
+      .eq('event', eventId)
+      .eq('attendee', userData!.id)
+      .single()
+      .then(({ data, error }: { data: any; error: any }) => {
+        if (error) handleErrors(error.message, 500);
+        if (data) setEventAttendeeResponse(data);
+      });
+  }, []);
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button className="inline-flex items-center py-2 px-3 space-x-2  justify-center whitespace-nowrap font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-fit transition-shadow hover:shadow-[0_0_2px_#fb4500,inset_0_0_2px_#fb4500,0_0_2px_#fb4500,0_0_10px_#fb4500,0_0_10px_#fb4500] hover:bg-[#FB4500] rounded-full text-base bg-[#FB4500] text-[#212325]">
-          <SolarTicketBold className="text-2xl" />
-          <p>Ticket</p>
-        </Button>
-      </DialogTrigger>
-      <DialogContent className="p-6 w-[370px] bg-black rounded-3xl text-white font-DM-Sans bg-clip-padding backdrop-filter backdrop-blur-md bg-opacity-10 border border-white border-opacity-10">
-        <div className="leading-tight space-y-2">
-          <p className="text-3xl font-semibold">Ticket</p>
-          <p>
-            Your ticket for this event. Make sure you dont share it with anyone
-            🤫
-          </p>
-        </div>
-        <div className="flex justify-center p-5">
-          <QRCode
-            size={200}
-            bgColor="transparent"
-            fgColor="#FB4500"
-            value={JSON.stringify({
-              pass_id: passStatus?.subevent_pass,
-              event_id: passStatus?.subevent,
-            })}
-          />
-        </div>
-      </DialogContent>
-    </Dialog>
+    eventAttendeeResponse && (
+      <Dialog>
+        <DialogTrigger asChild>
+          <CTAButton variant="lambdaGlow">
+            <SolarTicketBold className="text-2xl" />
+            <p>Ticket</p>
+          </CTAButton>
+        </DialogTrigger>
+        <GlassDialogContent>
+          <div className="leading-tight space-y-2">
+            <p className="text-3xl font-semibold">Ticket</p>
+            <p>
+              Your ticket for this event. Make sure you dont share it with
+              anyone 🤫
+            </p>
+          </div>
+          <div className="flex justify-center p-5">
+            <QRCode
+              value={JSON.stringify({
+                pass_id: eventAttendeeResponse?.pass_id,
+              })}
+              bgColor="transparent"
+              fgColor="#fb4500"
+              size={200}
+            />
+          </div>
+        </GlassDialogContent>
+      </Dialog>
+    )
   );
 }

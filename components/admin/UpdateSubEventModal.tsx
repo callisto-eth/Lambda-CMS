@@ -20,7 +20,7 @@ import { DateTimePicker } from '../ui/date-time-picker';
 import { useToast } from '../ui/use-toast';
 import SearchAddress from '../ui/search-addresses';
 
-export default function SubeventEditForm({
+export default function UpdateSubEventModal({
   subEventId,
   setEditModalState,
 }: {
@@ -63,10 +63,12 @@ export default function SubeventEditForm({
         description: error.message,
       });
     } else {
-      toast({
-        title: '✅ Success',
-        description: 'Subevent updated successfully',
-      });
+      if (data) {
+        toast({
+          title: '✅ Success',
+          description: 'Subevent updated successfully',
+        });
+      }
     }
 
     setEditModalState(false);
@@ -95,9 +97,7 @@ export default function SubeventEditForm({
                   <FormControl>
                     {
                       <DateTimePicker
-                        initialValue={
-                          new Date(subEventResponse.start_time as string)
-                        }
+                        initialValue={new Date(Date.now())}
                         date={field.value}
                         setDate={field.onChange}
                       />
@@ -117,7 +117,7 @@ export default function SubeventEditForm({
                     {
                       <DateTimePicker
                         initialValue={
-                          new Date(subEventResponse.end_time as string)
+                          new Date(updateSubEventForm.watch('start_time'))
                         }
                         date={field.value}
                         setDate={field.onChange}
@@ -137,7 +137,7 @@ export default function SubeventEditForm({
                     <FormLabel>Mode</FormLabel>
                     <FormControl>
                       <RadioGroup
-                        value={field.value || subEventResponse.platform}
+                        value={field.value}
                         className="flex w-full space-x-2"
                         onValueChange={field.onChange}
                       >
@@ -152,12 +152,6 @@ export default function SubeventEditForm({
                             <RadioGroupItem value="OFFLINE" id="r2" />
                           </FormControl>
                           <FormLabel htmlFor="r2">Offline</FormLabel>
-                        </FormItem>
-                        <FormItem className="flex items-center space-x-3 space-y-0">
-                          <FormControl>
-                            <RadioGroupItem value="HYBRID" id="r3" />
-                          </FormControl>
-                          <FormLabel htmlFor="r3">Hybrid</FormLabel>
                         </FormItem>
                       </RadioGroup>
                     </FormControl>
@@ -220,7 +214,12 @@ export default function SubeventEditForm({
                       <FormControl>
                         <Input
                           required
-                          {...field}
+                          value={field.value?.link}
+                          onChange={(eV) => {
+                            field.onChange({
+                              link: eV.target.value,
+                            });
+                          }}
                           className="bg-transparent outline-none py-2.5 border border-white border-opacity-10 rounded-xl"
                           placeholder="Enter a link to redirect to"
                         />

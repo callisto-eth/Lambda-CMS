@@ -47,7 +47,7 @@ export function DateTimePicker({
         <Button
           variant={'outline'}
           className={cn(
-            'w-[280px] justify-start text-left font-normal bg-[#212325] rounded-xl',
+            'bg-transparent outline-none py-2.5 border border-white border-opacity-10 rounded-xl w-full justify-start',
             !date && 'text-muted-foreground',
           )}
         >
@@ -59,6 +59,7 @@ export function DateTimePicker({
         <Calendar
           mode="single"
           className="bg-[#212325]"
+          fromDate={initialValue}
           selected={date}
           onSelect={(d) => handleSelect(d)}
           initialFocus

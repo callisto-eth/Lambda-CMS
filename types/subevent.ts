@@ -51,3 +51,77 @@ export interface Raw {
   boundingbox: string[];
   display_name: string;
 }
+
+export const createEventSchema = z.object({
+  event_name: z.string({
+    message: 'Please enter a valid name',
+  }),
+  event_desc: z.string({
+    message: 'Please enter a valid description',
+  }),
+  date: z.object({
+    from: z.date({
+      message: 'Please enter a valid date',
+    }),
+    to: z.date({
+      message: 'Please enter a valid date',
+    }),
+  }),
+  event_mode: z.string({
+    message: 'Please select a valid mode',
+  }),
+  spaces_enabled: z.boolean().optional(),
+  event_visibility: z.string({
+    message: 'Please select a valid visibility',
+  }),
+  chat_enabled: z.boolean().optional(),
+  banner_image: z.string().optional(),
+  profile_image: z.string().optional(),
+});
+
+export const profileSchema = z.object({
+  id: z.string().optional(),
+  username: z.string({
+    required_error: "Username can't be empty",
+  }),
+  bio: z.string({
+    required_error: "Bio can't be empty",
+  }),
+  profile_image: z.string({
+    required_error: 'Please upload an Avatar',
+  }),
+});
+
+export const createSubEventSchema = z.object({
+  topic: z.string({
+    message: 'Please enter a valid topic',
+  }),
+  description: z.string({
+    message: 'Please enter a valid description',
+  }),
+  date: z.object({
+    from: z.date({
+      message: 'Please enter a valid date',
+    }),
+    to: z.date({
+      message: 'Please enter a valid date',
+    }),
+  }),
+  start_time: z.date(),
+  end_time: z.date(),
+  entry_price: z.string(),
+  banner_image: z.string().optional(),
+  max_attendees: z.string(),
+  platform: z.enum(['ONLINE', 'OFFLINE']),
+  metadata: z.custom<
+    | {
+        link: string;
+      }
+    | Root
+  >((value) => {
+    return value
+      ? Object.keys(value).includes('link') ||
+          Object.keys(value).includes('raw')
+      : false;
+  }),
+});

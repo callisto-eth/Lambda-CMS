@@ -4,7 +4,6 @@ import { subEventMetadata } from '@/types/subevent';
 import { z } from 'zod';
 import { Dialog, DialogContent, DialogTrigger } from '../ui/dialog';
 import JoinSubEventButton from './JoinSubEventButton';
-import Razorpay from 'razorpay';
 
 import { processPayment } from '@/utils/razorpay';
 import Script from 'next/script';
@@ -14,19 +13,23 @@ import { Button } from '../ui/button';
 import { useState } from 'react';
 import { CheckedState } from '@radix-ui/react-checkbox';
 import { Database } from '@/types/supabase';
-import useRazorpay, { RazorpayOptions } from 'react-razorpay';
+import useRazorpay from 'react-razorpay';
 import Rzp from 'razorpay';
+import { handleErrors } from '@/utils/helpers';
+import { createClient } from '@/utils/supabase/client';
 
 export default function JoinSubEventFlow({
   subEventResponse,
   eventId,
-  userStatus,
+  passStatus,
+  attendeeID,
 }: {
   subEventResponse: z.infer<typeof subEventMetadata>;
   eventId: string;
-  userStatus:
-    | Database['connections']['Tables']['event_attendees']['Row']
+  passStatus:
+    | Database['connections']['Tables']['subevent_attendees']['Row']
     | null;
+  attendeeID: string;
 }) {
   const { toast } = useToast();
 
@@ -64,7 +67,7 @@ export default function JoinSubEventFlow({
   return subEventResponse.entry_price > 0 ? (
     <Dialog>
       <DialogTrigger asChild>
-        <JoinSubEventButton userStatus={userStatus} onClick={async () => {}} />
+        <JoinSubEventButton passStatus={passStatus} onClick={async () => {}} />
       </DialogTrigger>
       <DialogContent className="p-6 w-[370px] bg-black rounded-3xl text-white font-DM-Sans bg-clip-padding backdrop-filter backdrop-blur-md bg-opacity-10 border border-white border-opacity-10">
         <div className="leading-tight">
@@ -103,30 +106,32 @@ export default function JoinSubEventFlow({
     </Dialog>
   ) : (
     <JoinSubEventButton
-      userStatus={userStatus}
+      passStatus={passStatus}
       onClick={async () => {
-        const joinEventResponse = await fetch('/api/subevent/join', {
-          method: 'POST',
-          body: JSON.stringify({
-            id: subEventResponse.id,
-          }),
-        });
+        const supabase = createClient();
+        const { error: createSubEventAttendeeError } = await supabase
+          .schema('connections')
+          .from('subevent_attendees')
+          .insert({
+            subevent: subEventResponse.id,
+            event_attendee: attendeeID,
+          });
 
-        if (joinEventResponse.status === 200) {
+        if (createSubEventAttendeeError)
+          handleErrors(createSubEventAttendeeError.message, 500);
+
+        if (!createSubEventAttendeeError) {
           toast({
             title: '✅ Joined Subevent',
             description: 'You have successfully joined the subevent',
           });
+
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
         }
 
-        if (joinEventResponse.status === 401) {
-          toast({
-            title: '❌ Unauthorized',
-            description: 'You must be logged in to join the subevent',
-          });
-        }
-
-        if (joinEventResponse.status === 500) {
+        if (createSubEventAttendeeError) {
           toast({
             title: '❌ Something went Wrong',
             description: 'Please try again later',

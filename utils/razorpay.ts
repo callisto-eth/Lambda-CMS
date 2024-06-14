@@ -1,4 +1,6 @@
+import { Database } from '@/types/supabase';
 import { createClient } from './supabase/client';
+import { handleErrors } from './helpers';
 
 export const processPayment = async (
   order_id: string,
@@ -15,8 +17,8 @@ export const processPayment = async (
       key: process.env.key_id,
       amount: parseFloat(amount) * 100,
       currency: 'INR',
-      name: name,
-      description: 'Test Transaction',
+      name: subevent,
+      description: 'Transcation for Subevent Registration',
       order_id: order_id,
       handler: async function (response: any) {
         const data = {
@@ -38,7 +40,7 @@ export const processPayment = async (
         } = await result.json();
 
         if (res.isOk) {
-          const { data: paymentResponse, error: paymentError } = await supabase
+          const { error: paymentError } = await supabase
             .from('payments')
             .update({ paid: true })
             .eq('id', order_id);
@@ -47,24 +49,57 @@ export const processPayment = async (
             const userData = await supabase.auth.getUser();
 
             if (userData.data.user) {
-              const { data: attendeeResponse, error: attendeeError } =
-                await supabase
-                  .schema('connections')
-                  .from('event_attendees')
-                  .select('id')
-                  .eq('attendee', userData.data.user.id)
-                  .eq('event', event)
-                  .single();
+              const {
+                data: eventAttendeesResponse,
+                error: eventAttendeesError,
+                status: eventAttendeesStatus,
+              }: {
+                data:
+                  | Database['connections']['Tables']['event_attendees']['Row'][]
+                  | null;
+                error: string | null;
+                status: number;
+              } = await (
+                await fetch(
+                  process.env.NODE_ENV === 'production'
+                    ? 'https://lambda.event/api/event/attendee/fetch'
+                    : `http://localhost:3000/api/event/attendee/fetch`,
+                  {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ eventId: event }),
+                  },
+                )
+              ).json();
 
-              if (!attendeeError) {
-                const { data: createPassResponse, error: createPassError } =
-                  await supabase
+              if (eventAttendeesError)
+                handleErrors(eventAttendeesError, eventAttendeesStatus);
+
+              if (
+                eventAttendeesResponse &&
+                userData.data.user &&
+                eventAttendeesResponse.length > 0
+              ) {
+                const attendeeID = eventAttendeesResponse.find(
+                  (eventAttendee) => {
+                    return eventAttendee.attendee === userData.data.user!.id;
+                  },
+                );
+
+                if (attendeeID && attendeeID.id) {
+                  const { error: createSubEventAttendeeError } = await supabase
                     .schema('connections')
                     .from('subevent_attendees')
                     .insert({
                       subevent: subevent,
-                      attendee: attendeeResponse.id,
+                      event_attendee: attendeeID.id,
                     });
+
+                  if (createSubEventAttendeeError)
+                    handleErrors(createSubEventAttendeeError.message, 500);
+                }
               }
             }
           }
@@ -75,7 +110,7 @@ export const processPayment = async (
         email: email,
       },
       theme: {
-        color: '#3399cc',
+        color: '#FB4500',
       },
     };
 

@@ -45,7 +45,7 @@ const SearchAddress: React.FC<SearchAddressProps> = ({ onSelectLocation }) => {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-80 justify-between truncate rounded-xl"
+          className="w-[300px] justify-between truncate bg-transparent outline-none border border-white border-opacity-10 rounded-xl"
         >
           <p className="truncate">
             {selectedItem
@@ -56,7 +56,7 @@ const SearchAddress: React.FC<SearchAddressProps> = ({ onSelectLocation }) => {
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-80 p-0 bg-[#212325] rounded-xl overflow-hidden">
+      <PopoverContent className="w-[200px] p-0 bg-[#212325] rounded-xl overflow-hidden">
         <Command>
           <CommandInput
             placeholder="Search the place..."

@@ -21,38 +21,22 @@ import { ScrollArea } from '../ui/scroll-area';
 import { Button } from '../ui/button';
 import { useToast } from '../ui/use-toast';
 import { TimePickerDemo } from '../ui/time-picker-demo';
+import SearchAddress from '../ui/search-addresses';
+import { Root, createSubEventSchema } from '@/types/subevent';
 
 export function CreateSubEventModal({
   eventId,
   setModalState,
+  setSubEventResponse,
+  subEventResponse,
 }: {
+  subEventResponse: any;
+  setSubEventResponse: CallableFunction;
   eventId: string;
   setModalState: (field: boolean) => void;
 }) {
   const { toast } = useToast();
   useEffect(() => {}, []);
-  const createSubEventSchema = z.object({
-    topic: z.string({
-      message: 'Please enter a valid topic',
-    }),
-    description: z.string({
-      message: 'Please enter a valid description',
-    }),
-    date: z.object({
-      from: z.date({
-        message: 'Please enter a valid date',
-      }),
-      to: z.date({
-        message: 'Please enter a valid date',
-      }),
-    }),
-    start_time: z.date(),
-    end_time: z.date(),
-    entry_price: z.string(),
-    banner_image: z.string().optional(),
-    max_attendees: z.string(),
-    platform: z.enum(['ONLINE', 'OFFLINE', 'HYBRID']),
-  });
 
   const createSubEventForm = useForm({
     resolver: zodResolver(createSubEventSchema),
@@ -92,6 +76,10 @@ export function CreateSubEventModal({
     });
     if (createSubeventResponse.status === 201) {
       setModalState(false);
+      setSubEventResponse([
+        ...subEventResponse,
+        await createSubeventResponse.json(),
+      ]);
       toast({
         title: '✅ Subevent Created',
         description: 'Subevent has been created successfully',
@@ -104,7 +92,7 @@ export function CreateSubEventModal({
   >();
 
   return (
-    <DialogContent className="p-6 w-[370px] bg-black rounded-3xl text-white font-DM-Sans bg-clip-padding backdrop-filter backdrop-blur-md bg-opacity-10 border border-white border-opacity-10">
+    <DialogContent className=" p-6 w-[370px] bg-black rounded-3xl text-white font-DM-Sans bg-clip-padding backdrop-filter backdrop-blur-md bg-opacity-10 border border-white border-opacity-10">
       <div>
         <p className="text-3xl font-bold text-white">Create</p>
         <p className="text-lg">Create a sub-event for this event 🎉</p>
@@ -112,7 +100,7 @@ export function CreateSubEventModal({
       <ScrollArea className="h-[400px]">
         <Form {...createSubEventForm}>
           <form
-            className="space-y-4 mr-6"
+            className="space-y-4 mr-5"
             onSubmit={createSubEventForm.handleSubmit(
               onSubmit as SubmitHandler<FieldValues>,
             )}
@@ -234,12 +222,6 @@ export function CreateSubEventModal({
                         </FormControl>
                         <FormLabel htmlFor="r2">Offline</FormLabel>
                       </FormItem>
-                      <FormItem className="flex items-center space-x-3 space-y-0">
-                        <FormControl>
-                          <RadioGroupItem value="HYBRID" id="r3" />
-                        </FormControl>
-                        <FormLabel htmlFor="r3">Hybrid</FormLabel>
-                      </FormItem>
                     </RadioGroup>
                   </FormControl>
                   <FormMessage />
@@ -283,6 +265,40 @@ export function CreateSubEventModal({
                   <FormMessage />
                 </FormItem>
               )}
+            />
+            <FormField
+              name="metadata"
+              control={createSubEventForm.control}
+              render={({ field }) => {
+                return (
+                  createSubEventForm.watch('platform') &&
+                  (createSubEventForm.watch('platform') === 'ONLINE' ? (
+                    <FormItem>
+                      <FormLabel>Redirect Link</FormLabel>
+                      <FormControl>
+                        <Input
+                          required
+                          value={field.value?.link}
+                          onChange={(eV) => {
+                            field.onChange({
+                              link: eV.target.value,
+                            });
+                          }}
+                          className="bg-transparent outline-none py-2.5 border border-white border-opacity-10 rounded-xl"
+                          placeholder="Enter a link to redirect to"
+                        />
+                      </FormControl>
+                    </FormItem>
+                  ) : (
+                    <FormItem>
+                      <FormLabel>Location</FormLabel>
+                      <FormControl>
+                        <SearchAddress onSelectLocation={field.onChange} />
+                      </FormControl>
+                    </FormItem>
+                  ))
+                );
+              }}
             />
 
             <Button

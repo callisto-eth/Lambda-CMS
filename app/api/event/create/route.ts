@@ -9,7 +9,7 @@ export type CreateEventSchema = {
   end_time: string;
   spaces_enabled: boolean;
   chat_enabled: boolean;
-  platform: 'ONLINE' | 'OFFLINE' | 'HYBRID';
+  platform: 'ONLINE' | 'OFFLINE';
   visibility: 'PRIVATE' | 'PUBLIC';
   avatar_image?: string;
   banner_image?: string;
@@ -38,6 +38,8 @@ export async function POST(req: NextRequest) {
           .select();
 
       if (createSpacesError) {
+        if (process.env.NODE_ENV === 'development')
+          console.log(createSpacesError);
         return NextResponse.json(
           { error: createSpacesError.message },
           { status: 500 },
@@ -56,6 +58,8 @@ export async function POST(req: NextRequest) {
         .select();
 
       if (createChatError) {
+        if (process.env.NODE_ENV === 'development')
+          console.log(createChatError);
         return NextResponse.json(
           { error: createChatError.message },
           { status: 500 },
@@ -80,6 +84,7 @@ export async function POST(req: NextRequest) {
       })
       .select();
     if (createEventError) {
+      if (process.env.NODE_ENV === 'development') console.log(createEventError);
       return NextResponse.json(
         { error: createEventError.message },
         { status: 500 },
@@ -96,6 +101,8 @@ export async function POST(req: NextRequest) {
           );
 
         if (uploadAvatarImageError) {
+          if (process.env.NODE_ENV === 'development')
+            console.log(uploadAvatarImageError);
           console.log('Image:' + uploadAvatarImageError.cause);
           return NextResponse.json(
             { error: uploadAvatarImageError.message },
@@ -113,6 +120,8 @@ export async function POST(req: NextRequest) {
           );
 
         if (uploadBannerImageError) {
+          if (process.env.NODE_ENV === 'development')
+            console.log(uploadBannerImageError);
           console.log(uploadBannerImageError.cause);
           return NextResponse.json(
             { error: uploadBannerImageError.message },
@@ -132,7 +141,8 @@ export async function POST(req: NextRequest) {
           });
 
         if (adminJoinError && createEventResponse) {
-          console.log(adminJoinError);
+          if (process.env.NODE_ENV === 'development')
+            console.log(adminJoinError);
 
           await supabase
             .from('events')

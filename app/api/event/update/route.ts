@@ -1,45 +1,57 @@
+import { Database } from '@/types/supabase';
 import { createClient } from '@/utils/supabase/server';
 import { NextRequest, NextResponse } from 'next/server';
 
-type UpdateEventSchema = {
-  id: string;
-  name?: string;
-  description?: string;
-  entry_price?: string;
-  start_time?: string;
-  end_time?: string;
-  spaces?: string;
-  chat?: string;
-  platform?: 'ONLINE' | 'OFFLINE' | 'HYBRID';
-  organizer?: string;
-  visibility?: 'PRIVATE' | 'PUBLIC';
-};
-
 export async function PUT(req: NextRequest) {
-  const data: UpdateEventSchema = await req.json();
+  const eventData: Database['public']['Tables']['events']['Update'] =
+    await req.json();
   const supabase = createClient();
+  const user = await supabase.auth.getUser();
 
-  let { data: updateEventResponse, error } = await supabase
-    .from('events')
-    .update(data)
-    .eq('id', data.id)
-    .select();
+  if (user.data.user && eventData.id) {
+    const { data: updateEventResponse, error: updateEventError } =
+      await supabase
+        .from('events')
+        .update(eventData)
+        .eq('id', eventData.id)
+        .select();
 
-  console.log(error);
+    if (updateEventError) {
+      if (process.env.NODE_ENV === 'development')
+        console.log(updateEventError.message);
+      return NextResponse.json(
+        { error: updateEventError.message },
+        { status: 500 },
+      );
+    }
 
-  if (error) {
     return NextResponse.json(
-      { error: error.message },
-      { status: Number(error.code) },
+      {
+        data: updateEventResponse,
+      },
+      {
+        status: 200,
+      },
+    );
+  }
+
+  if (!user.data.user) {
+    return NextResponse.json(
+      {
+        error: 'Unauthorized',
+      },
+      {
+        status: 401,
+      },
     );
   }
 
   return NextResponse.json(
     {
-      data: updateEventResponse,
+      error: 'Bad Request',
     },
     {
-      status: 200,
+      status: 400,
     },
   );
 }

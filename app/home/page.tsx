@@ -18,7 +18,6 @@ export default function Home() {
     id: string;
     metadata: Json;
     username: string;
-    visibility: 'PRIVATE' | 'PUBLIC';
   } | null>();
 
   const supabaseClient = createClient();

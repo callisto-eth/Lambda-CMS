@@ -1,79 +1,54 @@
-import {
-  ColumnDef,
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
-} from '@tanstack/react-table';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '../ui/table';
+'use client';
 
-interface DataTableProps<TData, TValue> {
-  tableColumns: ColumnDef<TData, TValue>[];
-  tableData: TData[];
-}
+import { Database } from '@/types/supabase';
 
-export function DataTable<TData, TValue>({
-  tableColumns,
-  tableData,
-}: DataTableProps<TData, TValue>) {
-  const dataTable = useReactTable({
-    data: tableData,
-    columns: tableColumns,
-    getCoreRowModel: getCoreRowModel(),
-  });
+import { FlowbiteCaretSortSolid } from '../Icons';
+import { Badge } from '../ui/badge';
+import DataRow from './DataRow';
+import { useState } from 'react';
 
+export default function DataTable({
+  eventAttendeesResponse,
+}: {
+  eventAttendeesResponse: Database['public']['Views']['profile_attendees']['Row'][];
+}) {
+  const [eventAttendees, setEventAttendees] = useState<
+    Database['public']['Views']['profile_attendees']['Row'][]
+  >(eventAttendeesResponse);
   return (
-    <div className="w-full ">
-      <Table className="*:font-DM-Sans text-base border">
-        <TableHeader className="">
-          {dataTable.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <TableHead key={header.id}>
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext(),
-                      )}
-                </TableHead>
-              ))}
-            </TableRow>
-          ))}
-        </TableHeader>
-        <TableBody>
-          {dataTable.getRowModel().rows?.length ? (
-            dataTable.getRowModel().rows.map((row) => (
-              <TableRow
-                className="border-gray-100 border-opacity-10"
-                key={row.id}
-                data-state={row.getIsSelected() && 'selected'}
+    <main className="font-DM-Sans">
+      <div className="rounded-2xl border border-white border-opacity-10">
+        <div className="px-5 py-3 font-semibold text-2xl border-b border-white border-opacity-10 flex items-center space-x-3">
+          <p>Your Attendees</p>
+          <Badge>Beta</Badge>
+        </div>
+
+        <table className="w-full">
+          <thead className="bg-[#b4b3b4] w-full">
+            <tr className="*:font-semibold *:px-5 *:py-2.5 *:text-[#212325] *:cursor-pointer *:text-left w-full">
+              <th
+                className="flex items-center space-x-2"
+                onClick={() => {
+                  const arrayRev = [...eventAttendees].reverse();
+                  setEventAttendees(arrayRev);
+                }}
               >
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell
-                colSpan={tableColumns.length}
-                className="h-24 text-center"
-              >
-                No results.
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-    </div>
+                <span>Name</span>
+                <FlowbiteCaretSortSolid />
+              </th>
+              <th>Role</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {eventAttendees.map((eventAttendee) => {
+              return (
+                <DataRow eventAttendee={eventAttendee} key={eventAttendee.id} />
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    </main>
   );
 }

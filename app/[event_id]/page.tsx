@@ -2,6 +2,7 @@ import DiscussionButton from '@/components/DiscussionButton';
 import { MdiDotsHorizontal } from '@/components/Icons';
 import JoinButton from '@/components/JoinButton';
 import LeaveEventButton from '@/components/event/LeaveEventButton';
+import TicketModal from '@/components/event/TicketModal';
 import Timeline from '@/components/event/pages/Timeline';
 import {
   DropdownMenu,
@@ -9,6 +10,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Database } from '@/types/supabase';
+import { handleErrors } from '@/utils/helpers';
 import { createClient } from '@/utils/supabase/server';
 
 export default async function EventInfo({
@@ -18,21 +21,61 @@ export default async function EventInfo({
 }) {
   const supabase = createClient();
 
-  const { data: eventDataResponse, error: eventDataError } = await supabase
-    .from('events')
-    .select('*')
-    .eq('id', params.event_id);
+  const {
+    data: fetchEventResponseData,
+    error: fetchedEventResponseError,
+    status: fetchedEventStatus,
+  }: {
+    data: Database['public']['Tables']['events']['Row'] | null;
+    error: string | null;
+    status: number;
+  } = await (
+    await fetch(
+      process.env.NODE_ENV === 'production'
+        ? 'https://lambda.event/api/event/fetch'
+        : `http://localhost:3000/api/event/fetch`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ eventId: params.event_id }),
+      },
+    )
+  ).json();
+
+  if (fetchedEventResponseError)
+    handleErrors(fetchedEventResponseError, fetchedEventStatus);
 
   const userData = await supabase.auth.getUser();
 
-  const { data: eventAttendeesResponse, error: eventAttendeesError } =
-    await supabase
-      .schema('connections')
-      .from('event_attendees')
-      .select('attendee')
-      .eq('event', params.event_id);
+  const {
+    data: eventAttendeesResponse,
+    error: eventAttendeesError,
+    status: eventAttendeesStatus,
+  }: {
+    data: Database['connections']['Tables']['event_attendees']['Row'][] | null;
+    error: string | null;
+    status: number;
+  } = await (
+    await fetch(
+      process.env.NODE_ENV === 'production'
+        ? 'https://lambda.event/api/event/attendee/fetch'
+        : `http://localhost:3000/api/event/attendee/fetch`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ eventId: params.event_id }),
+      },
+    )
+  ).json();
 
-  if (!eventDataError) {
+  if (eventAttendeesError)
+    handleErrors(eventAttendeesError, eventAttendeesStatus);
+
+  if (fetchEventResponseData && eventAttendeesResponse) {
     return (
       <main className="px-10 *:font-DM-Sans">
         <div
@@ -41,8 +84,9 @@ export default async function EventInfo({
             backgroundImage: `url(${
               supabase.storage
                 .from('event_assets')
-                .getPublicUrl(`${eventDataResponse[0].id}/banner.png`).data
-                .publicUrl
+                .getPublicUrl(
+                  `${params.event_id}/banner.png?time=${new Date().toISOString()}`,
+                ).data.publicUrl
             })`,
           }}
         >
@@ -52,13 +96,14 @@ export default async function EventInfo({
               backgroundImage: `url(${
                 supabase.storage
                   .from('event_assets')
-                  .getPublicUrl(`${eventDataResponse[0].id}/avatar.png`).data
-                  .publicUrl
+                  .getPublicUrl(
+                    `${params.event_id}/avatar.png?time=${new Date().toISOString()}`,
+                  ).data.publicUrl
               })`,
             }}
           ></div>
-          <div className="absolute space-x-4 bottom-[-20px] right-[5%] ">
-            {eventAttendeesResponse!.some(
+          <div className="absolute space-x-2 bottom-[135px] md:bottom-[-20px] right-[5%] flex ">
+            {eventAttendeesResponse.some(
               (attendee) => attendee.attendee === userData.data.user?.id,
             ) ? (
               <>
@@ -68,25 +113,26 @@ export default async function EventInfo({
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="m-3 rounded-xl *:rounded-lg *:cursor-pointer">
                     <LeaveEventButton
-                      eventID={params.event_id}
+                      eventID={fetchEventResponseData.id}
                       userID={userData.data.user?.id as string}
                     />
                   </DropdownMenuContent>
                 </DropdownMenu>
-                <DiscussionButton
-                  chat_id={eventDataResponse[0].chat as string}
-                  event_id={params.event_id}
+                <DiscussionButton event_id={fetchEventResponseData.id} />
+                <TicketModal
+                  eventId={fetchEventResponseData.id}
+                  userData={userData.data.user}
                 />
               </>
             ) : (
-              <JoinButton eventID={eventDataResponse[0].id} />
+              <JoinButton eventID={fetchEventResponseData.id} />
             )}
           </div>
         </div>
         <div className="lg:px-[10%] my-16">
-          <p className="font-bold text-5xl">{eventDataResponse[0].name}</p>
+          <p className="font-bold text-5xl">{fetchEventResponseData.name}</p>
           <p className="text-xl mt-4 font-light">
-            {eventDataResponse[0].description}
+            {fetchEventResponseData.description}
           </p>
           <hr className="my-5 border-[#544f55]" />
           <Tabs defaultValue="timeline">
@@ -113,7 +159,14 @@ export default async function EventInfo({
               </TabsList>
             </div>
             <TabsContent value="timeline">
-              <Timeline eventId={params.event_id} />
+              <Timeline
+                eventId={params.event_id}
+                eventAttendeeResponse={
+                  eventAttendeesResponse.filter((eventAttendee) => {
+                    return eventAttendee.attendee === userData.data.user?.id;
+                  })[0]
+                }
+              />
             </TabsContent>
             <TabsContent value="spaces">Space</TabsContent>
             <TabsContent value="contact">Contact</TabsContent>

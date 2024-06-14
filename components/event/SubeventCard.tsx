@@ -13,16 +13,15 @@ import SubeventDetails from './SubeventDetails';
 import JoinSubEventFlow from './JoinSubEventFlow';
 import { Database } from '@/types/supabase';
 import { createClient } from '@/utils/supabase/server';
-import TicketModal from './TicketModal';
 
 export default async function SubeventCard({
   subEventResponse,
   eventID,
-  userStatus,
+  eventAttendeeResponse,
 }: {
   subEventResponse: z.infer<typeof subEventMetadata>;
   eventID: string;
-  userStatus:
+  eventAttendeeResponse?:
     | Database['connections']['Tables']['event_attendees']['Row']
     | null;
 }) {
@@ -31,13 +30,13 @@ export default async function SubeventCard({
     | Database['connections']['Tables']['subevent_attendees']['Row']
     | null = null;
 
-  if (userStatus) {
+  if (eventAttendeeResponse) {
     passStatus = (
       await supabase
         .schema('connections')
         .from('subevent_attendees')
         .select('*')
-        .eq('attendee', userStatus.id)
+        .eq('event_attendee', eventAttendeeResponse.id)
         .eq('subevent', subEventResponse.id)
         .single()
     ).data;
@@ -95,14 +94,15 @@ export default async function SubeventCard({
             </p>
           </div>
           <div className="mt-4 flex space-x-3">
-            {!passStatus ? (
+            {eventAttendeeResponse ? (
               <JoinSubEventFlow
+                attendeeID={eventAttendeeResponse.id}
                 subEventResponse={subEventResponse}
                 eventId={eventID}
-                userStatus={userStatus}
+                passStatus={passStatus}
               />
             ) : (
-              <TicketModal passStatus={passStatus} />
+              <></>
             )}
             <Sheet>
               <SheetTrigger asChild>

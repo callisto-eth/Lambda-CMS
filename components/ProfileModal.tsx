@@ -12,7 +12,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { profileSchema } from '@/types/subevent';
 import { animatePageIn } from '@/utils/animation';
 import { createClient } from '@/utils/supabase/client';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -20,6 +20,7 @@ import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { GlassDialogContent } from './GlassModalContent';
 
 const Dialog = dynamic(
   () => import('@/components/ui/dialog').then((mod) => mod.Dialog),
@@ -45,21 +46,6 @@ export default function ProfileModal() {
       }
     });
   }, [supabase]);
-  const profileSchema = z.object({
-    id: z.string().optional(),
-    username: z.string({
-      required_error: "Username can't be empty",
-    }),
-    bio: z.string({
-      required_error: "Bio can't be empty",
-    }),
-    profile_image: z.string({
-      required_error: 'Please upload an Avatar',
-    }),
-    visibility: z.enum(['PUBLIC', 'PRIVATE'], {
-      required_error: 'Please select a visibility option',
-    }),
-  });
 
   const profileForm = useForm({ resolver: zodResolver(profileSchema) });
 
@@ -93,9 +79,8 @@ export default function ProfileModal() {
   return (
     <div>
       <Dialog open={modalState} onOpenChange={setModalState} modal>
-        <DialogContent
+        <GlassDialogContent
           title="Profile"
-          className="p-6 w-[370px] outline-none focus:outline-none focus:ring-0 bg-black rounded-3xl text-white *:font-DM-Sans bg-clip-padding backdrop-filter backdrop-blur-md bg-opacity-10 border border-white border-opacity-10"
           onInteractOutside={(eV) => {
             eV.preventDefault();
           }}
@@ -172,35 +157,7 @@ export default function ProfileModal() {
                   </FormItem>
                 )}
               />
-              <FormField
-                name="visibility"
-                control={profileForm.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Profile Visibility</FormLabel>
-                    <FormControl>
-                      <RadioGroup
-                        className="flex w-full space-x-2"
-                        onValueChange={field.onChange}
-                      >
-                        <FormItem className="flex items-center space-x-3 space-y-0">
-                          <FormControl>
-                            <RadioGroupItem value="PUBLIC" id="r1" />
-                          </FormControl>
-                          <FormLabel htmlFor="r1">Public</FormLabel>
-                        </FormItem>
-                        <FormItem className="flex items-center space-x-3 space-y-0">
-                          <FormControl>
-                            <RadioGroupItem value="PRIVATE" id="r2" />
-                          </FormControl>
-                          <FormLabel htmlFor="r2">Private</FormLabel>
-                        </FormItem>
-                      </RadioGroup>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+
               <Button
                 type="submit"
                 disabled={!profileForm.formState.isValid}
@@ -210,7 +167,7 @@ export default function ProfileModal() {
               </Button>
             </form>
           </Form>
-        </DialogContent>
+        </GlassDialogContent>
       </Dialog>
     </div>
   );

@@ -52,6 +52,7 @@ export function DatePickerWithRange({
             className="dark:bg-[#212325]"
             initialFocus
             mode="range"
+            fromDate={new Date(Date.now())}
             defaultMonth={field?.from}
             selected={field.value}
             onSelect={field.onChange}

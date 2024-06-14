@@ -1,21 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
 import { dataURLtoFile } from '@/utils/helpers';
-
-type createSubeventSchema = {
-  event: string;
-  topic: string;
-  description: string;
-  start_time: string;
-  end_time: string;
-  entry_price: string;
-  max_attendees: string;
-  platform: 'ONLINE' | 'OFFLINE';
-  banner_image?: string;
-};
+import { Database } from '@/types/supabase';
 
 export async function POST(req: NextRequest) {
-  const data: createSubeventSchema = await req.json();
+  const data: Database['public']['Tables']['sub_events']['Row'] & {
+    banner_image: string;
+  } = await req.json();
   const supabase = createClient();
 
   let { data: createSubeventResponse, error: subeventCreationError } =
@@ -27,8 +18,8 @@ export async function POST(req: NextRequest) {
         description: data.description,
         start_time: data.start_time,
         end_time: data.end_time,
-        entry_price: parseInt(data.entry_price),
-        max_attendees: parseInt(data.max_attendees),
+        entry_price: data.entry_price,
+        max_attendees: data.max_attendees,
         platform: data.platform,
       })
       .select();
@@ -56,7 +47,6 @@ export async function POST(req: NextRequest) {
         );
       }
     }
+    return NextResponse.json({ data: createSubeventResponse }, { status: 201 });
   }
-
-  return NextResponse.json({ data: createSubeventResponse }, { status: 201 });
 }

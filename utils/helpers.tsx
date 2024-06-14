@@ -31,3 +31,7 @@ export function stringToDate(
   );
   return formatedDate;
 }
+
+export function handleErrors(fetchResponseError: string, status: number) {
+  throw new Error(status + ' ' + fetchResponseError);
+}

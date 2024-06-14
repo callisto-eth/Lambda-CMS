@@ -10,12 +10,13 @@ import {
 } from '@/components/Icons';
 import { useEffect, useState } from 'react';
 import { createClient } from '@/utils/supabase/client';
-import { Json } from '@/types/supabase';
+import { Database, Json } from '@/types/supabase';
 import { useToast } from '@/components/ui/use-toast';
 import Users from '@/components/admin/pages/Users';
 import Danger from '@/components/admin/pages/Danger';
 import General from '@/components/settings/pages/General';
 import Subevents from '@/components/admin/pages/Subevents';
+import { useSearchParams } from 'next/navigation';
 
 const supabase = createClient();
 
@@ -24,32 +25,14 @@ export default function Dashboard({
 }: {
   params: { event_id: string };
 }) {
-  const [activeTab, setActiveTab] = useState<
-    'General' | 'Subevents' | 'Users' | 'Danger Area'
-  >('General');
+  const [userProfile, setUserProfile] =
+    useState<Database['public']['Tables']['profiles']['Row']>();
 
-  const [userProfile, setUserProfile] = useState<{
-    bio: string;
-    created_at: string;
-    id: string;
-    metadata: Json;
-    username: string;
-    visibility: 'PRIVATE' | 'PUBLIC';
-  }>();
+  const [eventDataResponse, setEventDataResponseData] =
+    useState<Database['public']['Tables']['events']['Row']>();
 
-  const [eventDataResponse, setEventDataResponseData] = useState<{
-    chat: string | null;
-    created_at: string;
-    description: string;
-    end_time: string;
-    id: string;
-    name: string;
-    organizer: string;
-    platform: 'ONLINE' | 'OFFLINE' | 'HYBRID';
-    spaces: string | null;
-    start_time: string;
-    visibility: 'PRIVATE' | 'PUBLIC';
-  }>();
+  const searchParams = useSearchParams();
+  const tabOption: string = searchParams.get('tabOption') as string;
 
   useEffect(() => {
     supabase.auth.getUser().then((userData) => {
@@ -79,20 +62,15 @@ export default function Dashboard({
       });
   }, []);
 
-  const { toast } = useToast();
-
   return (
     eventDataResponse && (
       <div className="*:font-DM-Sans px-8 md:px-12">
         <div className="grid items-start lg:grid-cols-12 gap-y-10">
           <nav className="grid gap-4 text-sm text-muted-foreground *:text-xl col-span-2">
             <Link
-              href="#"
+              href="?tabOption=General"
               style={{
-                color: activeTab === 'General' ? 'white' : '#b4b3b4',
-              }}
-              onClick={() => {
-                setActiveTab('General');
+                color: tabOption === 'General' ? 'white' : '#b4b3b4',
               }}
               className="transition-colors flex items-center gap-x-2 outline-none"
             >
@@ -100,12 +78,9 @@ export default function Dashboard({
               <span>General</span>
             </Link>
             <Link
-              href="#"
+              href="?tabOption=Subevents"
               style={{
-                color: activeTab === 'Subevents' ? 'white' : '#b4b3b4',
-              }}
-              onClick={() => {
-                setActiveTab('Subevents');
+                color: tabOption === 'Subevents' ? 'white' : '#b4b3b4',
               }}
               className="transition-colors flex items-center gap-x-2 outline-none"
             >
@@ -113,12 +88,9 @@ export default function Dashboard({
               <span>Subevents</span>
             </Link>
             <Link
-              href="#"
+              href="?tabOption=Users"
               style={{
-                color: activeTab === 'Users' ? 'white' : '#b4b3b4',
-              }}
-              onClick={() => {
-                setActiveTab('Users');
+                color: tabOption === 'Users' ? 'white' : '#b4b3b4',
               }}
               className="transition-colors flex items-center gap-x-2 outline-none"
             >
@@ -126,12 +98,9 @@ export default function Dashboard({
               <span>Users</span>
             </Link>
             <Link
-              href="#"
+              href="?tabOption=Danger%20Area"
               style={{
-                color: activeTab === 'Danger Area' ? 'white' : '#b4b3b4',
-              }}
-              onClick={() => {
-                setActiveTab('Danger Area');
+                color: tabOption === 'Danger Area' ? 'white' : '#b4b3b4',
               }}
               className="transition-colors flex items-center gap-x-2 outline-none"
             >
@@ -139,16 +108,16 @@ export default function Dashboard({
               <span>Danger Area</span>
             </Link>
           </nav>
-          {activeTab === 'General' && userProfile && (
+          {tabOption === 'General' && userProfile && (
             <General eventDataResponse={eventDataResponse} />
           )}
-          {activeTab === 'Subevents' && userProfile && (
+          {tabOption === 'Subevents' && userProfile && (
             <Subevents eventId={params.event_id} />
           )}
-          {activeTab === 'Users' && userProfile && (
+          {tabOption === 'Users' && userProfile && (
             <Users eventID={params.event_id} />
           )}
-          {activeTab === 'Danger Area' && userProfile && (
+          {tabOption === 'Danger Area' && userProfile && (
             <Danger eventID={params.event_id} />
           )}
         </div>

@@ -50,7 +50,6 @@ export default function Dashboard() {
     id: string;
     metadata: Json;
     username: string;
-    visibility: 'PRIVATE' | 'PUBLIC';
   }>();
 
   useEffect(() => {
@@ -314,40 +313,6 @@ export default function Dashboard() {
                         <FormDescription>
                           Tell us about yourself. This will be displayed on your
                           profile.
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    name="visibility"
-                    control={updateProfileForm.control}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Profile Visibility</FormLabel>
-                        <FormControl>
-                          <RadioGroup
-                            defaultValue={userProfile?.visibility}
-                            className="flex w-full space-x-2"
-                            value={field.value}
-                            onValueChange={field.onChange}
-                          >
-                            <FormItem className="flex items-center space-x-3 space-y-0">
-                              <FormControl>
-                                <RadioGroupItem value="PUBLIC" id="r1" />
-                              </FormControl>
-                              <FormLabel htmlFor="r1">Public</FormLabel>
-                            </FormItem>
-                            <FormItem className="flex items-center space-x-3 space-y-0">
-                              <FormControl>
-                                <RadioGroupItem value="PRIVATE" id="r2" />
-                              </FormControl>
-                              <FormLabel htmlFor="r2">Private</FormLabel>
-                            </FormItem>
-                          </RadioGroup>
-                        </FormControl>
-                        <FormDescription>
-                          You can be Sneaky Beaky or completely Visible 🤣
                         </FormDescription>
                         <FormMessage />
                       </FormItem>

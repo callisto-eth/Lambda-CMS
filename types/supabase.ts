@@ -14,33 +14,33 @@ export type Database = {
           admitted: boolean
           created_at: string
           pass: string
-          subevent: string
+          subevent_attendee: string
         }
         Insert: {
           admitted: boolean
           created_at?: string
           pass: string
-          subevent: string
+          subevent_attendee: string
         }
         Update: {
           admitted?: boolean
           created_at?: string
           pass?: string
-          subevent?: string
+          subevent_attendee?: string
         }
         Relationships: [
           {
-            foreignKeyName: "admissions_pass_fkey"
+            foreignKeyName: "connections_admissions_pass_fkey"
             columns: ["pass"]
-            isOneToOne: false
-            referencedRelation: "subevent_attendees"
-            referencedColumns: ["subevent_pass"]
+            isOneToOne: true
+            referencedRelation: "event_attendees"
+            referencedColumns: ["pass_id"]
           },
           {
-            foreignKeyName: "pass_redemptions_subevent_fkey"
-            columns: ["subevent"]
+            foreignKeyName: "connections_admissions_subevent_attendee_fkey"
+            columns: ["subevent_attendee"]
             isOneToOne: false
-            referencedRelation: "sub_events"
+            referencedRelation: "subevent_attendees"
             referencedColumns: ["id"]
           },
         ]
@@ -49,16 +49,19 @@ export type Database = {
         Row: {
           chat: string
           created_at: string
+          event_attendee_id: string | null
           member: string
         }
         Insert: {
           chat: string
-          created_at: string
+          created_at?: string
+          event_attendee_id?: string | null
           member: string
         }
         Update: {
           chat?: string
           created_at?: string
+          event_attendee_id?: string | null
           member?: string
         }
         Relationships: [
@@ -67,6 +70,20 @@ export type Database = {
             columns: ["chat"]
             isOneToOne: false
             referencedRelation: "chats"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "connections_chat_members_event_attendee_id_fkey"
+            columns: ["event_attendee_id"]
+            isOneToOne: false
+            referencedRelation: "event_attendees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "connections_chat_members_event_attendee_id_fkey"
+            columns: ["event_attendee_id"]
+            isOneToOne: false
+            referencedRelation: "profile_attendees"
             referencedColumns: ["id"]
           },
           {
@@ -93,7 +110,7 @@ export type Database = {
           content: string
           created_at?: string
           id?: number
-          medias?: string[]
+          medias: string[]
         }
         Update: {
           author?: string
@@ -126,6 +143,7 @@ export type Database = {
           created_at: string
           event: string
           id: string
+          pass_id: string
           role: Database["public"]["Enums"]["E_EVENT_ROLE"]
         }
         Insert: {
@@ -133,13 +151,15 @@ export type Database = {
           created_at?: string
           event: string
           id?: string
-          role: Database["public"]["Enums"]["E_EVENT_ROLE"]
+          pass_id?: string
+          role?: Database["public"]["Enums"]["E_EVENT_ROLE"]
         }
         Update: {
           attendee?: string
           created_at?: string
           event?: string
           id?: string
+          pass_id?: string
           role?: Database["public"]["Enums"]["E_EVENT_ROLE"]
         }
         Relationships: [
@@ -151,7 +171,7 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "event_attendees_event_fkey"
+            foreignKeyName: "connections_event_attendees_event_fkey"
             columns: ["event"]
             isOneToOne: false
             referencedRelation: "events"
@@ -215,7 +235,14 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "spaces_posts_space_fkey"
+            foreignKeyName: "connections_spaces_posts_author_fkey"
+            columns: ["author"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "connections_spaces_posts_space_fkey"
             columns: ["space"]
             isOneToOne: false
             referencedRelation: "spaces"
@@ -225,43 +252,40 @@ export type Database = {
       }
       subevent_attendees: {
         Row: {
-          attendee: string
           created_at: string
-          id: number
-          subevent: string | null
-          subevent_pass: string
+          event_attendee: string
+          id: string
+          subevent: string
         }
         Insert: {
-          attendee: string
           created_at?: string
-          id?: number
-          subevent?: string | null
-          subevent_pass?: string
+          event_attendee: string
+          id?: string
+          subevent: string
         }
         Update: {
-          attendee?: string
           created_at?: string
-          id?: number
-          subevent?: string | null
-          subevent_pass?: string
+          event_attendee?: string
+          id?: string
+          subevent?: string
         }
         Relationships: [
           {
-            foreignKeyName: "subevent_attendees_attendee_fkey"
-            columns: ["attendee"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "subevent_attendees_attendee_fkey1"
-            columns: ["attendee"]
+            foreignKeyName: "connections_subevent_attendees_event_attendee_fkey"
+            columns: ["event_attendee"]
             isOneToOne: false
             referencedRelation: "event_attendees"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "subevent_attendees_subevent_fkey"
+            foreignKeyName: "connections_subevent_attendees_event_attendee_fkey"
+            columns: ["event_attendee"]
+            isOneToOne: false
+            referencedRelation: "profile_attendees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "connections_subevent_attendees_subevent_fkey"
             columns: ["subevent"]
             isOneToOne: false
             referencedRelation: "sub_events"
@@ -307,7 +331,7 @@ export type Database = {
         Row: {
           chat: string | null
           created_at: string
-          description: string
+          description: string | null
           end_time: string
           id: string
           name: string
@@ -315,12 +339,12 @@ export type Database = {
           platform: Database["public"]["Enums"]["E_EVENT_PLATFORM"]
           spaces: string | null
           start_time: string
-          visibility: Database["public"]["Enums"]["E_EVENT_TYPE"]
+          visibility: Database["public"]["Enums"]["E_EVENT_VISIBILITY"]
         }
         Insert: {
           chat?: string | null
           created_at?: string
-          description: string
+          description?: string | null
           end_time: string
           id?: string
           name: string
@@ -328,12 +352,12 @@ export type Database = {
           platform: Database["public"]["Enums"]["E_EVENT_PLATFORM"]
           spaces?: string | null
           start_time: string
-          visibility?: Database["public"]["Enums"]["E_EVENT_TYPE"]
+          visibility: Database["public"]["Enums"]["E_EVENT_VISIBILITY"]
         }
         Update: {
           chat?: string | null
           created_at?: string
-          description?: string
+          description?: string | null
           end_time?: string
           id?: string
           name?: string
@@ -341,25 +365,25 @@ export type Database = {
           platform?: Database["public"]["Enums"]["E_EVENT_PLATFORM"]
           spaces?: string | null
           start_time?: string
-          visibility?: Database["public"]["Enums"]["E_EVENT_TYPE"]
+          visibility?: Database["public"]["Enums"]["E_EVENT_VISIBILITY"]
         }
         Relationships: [
           {
-            foreignKeyName: "events_chat_fkey"
+            foreignKeyName: "public_events_chat_fkey"
             columns: ["chat"]
             isOneToOne: false
             referencedRelation: "chats"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "events_organizer_fkey"
+            foreignKeyName: "public_events_organizer_fkey"
             columns: ["organizer"]
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "events_spaces_fkey"
+            foreignKeyName: "public_events_spaces_fkey"
             columns: ["spaces"]
             isOneToOne: false
             referencedRelation: "spaces"
@@ -380,7 +404,7 @@ export type Database = {
           amount: number
           created_at?: string
           id: string
-          paid?: boolean
+          paid: boolean
           subevent: string
           user: string
         }
@@ -394,14 +418,14 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "payments_subevent_fkey"
+            foreignKeyName: "public_payments_subevent_fkey"
             columns: ["subevent"]
             isOneToOne: false
             referencedRelation: "sub_events"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "payments_user_fkey"
+            foreignKeyName: "public_payments_user_fkey"
             columns: ["user"]
             isOneToOne: false
             referencedRelation: "profiles"
@@ -416,15 +440,13 @@ export type Database = {
           id: string
           metadata: Json | null
           username: string
-          visibility: Database["public"]["Enums"]["E_PROFILE_VISIBILITY"]
         }
         Insert: {
           bio: string
           created_at?: string
-          id?: string
+          id: string
           metadata?: Json | null
           username: string
-          visibility?: Database["public"]["Enums"]["E_PROFILE_VISIBILITY"]
         }
         Update: {
           bio?: string
@@ -432,7 +454,6 @@ export type Database = {
           id?: string
           metadata?: Json | null
           username?: string
-          visibility?: Database["public"]["Enums"]["E_PROFILE_VISIBILITY"]
         }
         Relationships: [
           {
@@ -446,17 +467,17 @@ export type Database = {
       }
       spaces: {
         Row: {
-          allow_participants: boolean
+          allow_participants: boolean | null
           created_at: string
           id: string
         }
         Insert: {
-          allow_participants?: boolean
+          allow_participants?: boolean | null
           created_at?: string
           id?: string
         }
         Update: {
-          allow_participants?: boolean
+          allow_participants?: boolean | null
           created_at?: string
           id?: string
         }
@@ -466,40 +487,40 @@ export type Database = {
         Row: {
           created_at: string
           description: string
-          end_time: string | null
+          end_time: string
           entry_price: number
           event: string
           id: string
           max_attendees: number
           metadata: Json | null
           platform: Database["public"]["Enums"]["E_EVENT_PLATFORM"]
-          start_time: string | null
+          start_time: string
           topic: string
         }
         Insert: {
           created_at?: string
           description: string
-          end_time?: string | null
+          end_time: string
           entry_price: number
           event: string
           id?: string
           max_attendees: number
           metadata?: Json | null
-          platform?: Database["public"]["Enums"]["E_EVENT_PLATFORM"]
-          start_time?: string | null
+          platform: Database["public"]["Enums"]["E_EVENT_PLATFORM"]
+          start_time: string
           topic: string
         }
         Update: {
           created_at?: string
           description?: string
-          end_time?: string | null
+          end_time?: string
           entry_price?: number
           event?: string
           id?: string
           max_attendees?: number
           metadata?: Json | null
           platform?: Database["public"]["Enums"]["E_EVENT_PLATFORM"]
-          start_time?: string | null
+          start_time?: string
           topic?: string
         }
         Relationships: [
@@ -514,34 +535,77 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      profile_attendees: {
+        Row: {
+          attendee: string | null
+          event: string | null
+          id: string | null
+          role: Database["public"]["Enums"]["E_EVENT_ROLE"] | null
+          username: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "connections_event_attendees_attendee_fkey"
+            columns: ["attendee"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "connections_event_attendees_event_fkey"
+            columns: ["event"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
-      authorize: {
+      delete_claim: {
         Args: {
-          event: string
+          uid: string
+          claim: string
         }
-        Returns: boolean
+        Returns: string
       }
-      event_role_based_acess: {
+      get_claim: {
         Args: {
-          event: Json
+          uid: string
+          claim: string
         }
         Returns: Json
       }
-      get_role_by_event: {
+      get_my_claim: {
         Args: {
-          event: string
+          claim: string
         }
-        Returns: Database["public"]["Enums"]["E_EVENT_ROLE"]
+        Returns: Json
+      }
+      get_my_claims: {
+        Args: Record<PropertyKey, never>
+        Returns: Json
+      }
+      is_claims_admin: {
+        Args: {
+          claim: string
+        }
+        Returns: boolean
+      }
+      set_claim: {
+        Args: {
+          uid: string
+          claim: string
+          value: Json
+        }
+        Returns: string
       }
     }
     Enums: {
       E_CHAT_TYPE: "PRIVATE" | "GROUP"
-      E_EVENT_PLATFORM: "ONLINE" | "OFFLINE" | "HYBRID"
+      E_EVENT_PLATFORM: "ONLINE" | "OFFLINE"
       E_EVENT_ROLE: "ORGANIZER" | "ADMIN" | "PARTICIPANT"
-      E_EVENT_TYPE: "PRIVATE" | "PUBLIC"
-      E_PROFILE_VISIBILITY: "PUBLIC" | "PRIVATE"
+      E_EVENT_VISIBILITY: "PUBLIC" | "PRIVATE"
     }
     CompositeTypes: {
       [_ in never]: never

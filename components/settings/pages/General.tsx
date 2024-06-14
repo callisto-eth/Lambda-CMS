@@ -20,14 +20,14 @@ export default function General({
       supabase.storage
         .from('event_assets')
         .getPublicUrl(
-          `${eventDataResponse?.id}/avatar.png?time=${new Date().toISOString()}`,
+          `${eventDataResponse.id}/avatar.png?time=${new Date().toISOString()}`,
         ).data.publicUrl,
     );
     setEventBanner(
       supabase.storage
         .from('event_assets')
         .getPublicUrl(
-          `${eventDataResponse?.id}/banner.png?time=${new Date().toISOString()}`,
+          `${eventDataResponse.id}/banner.png?time=${new Date().toISOString()}`,
         ).data.publicUrl,
     );
   }, []);
@@ -69,7 +69,7 @@ export default function General({
           uploadCallback={async (uploadImage) => {
             const { error } = await supabase.storage
               .from('event_assets')
-              .update(`${eventDataResponse?.id}/avatar.png`, uploadImage);
+              .update(`${eventDataResponse.id}/avatar.png`, uploadImage);
 
             if (error) {
               toast({
@@ -113,7 +113,7 @@ export default function General({
         />
         <TextAreaEditUpload
           autoFocus
-          defaultValue={eventDataResponse?.description}
+          defaultValue={eventDataResponse.description || ''}
           pClassName="text-xl mt-4 font-light"
           inputClassName="w-full"
           uploadCallback={async (editValue, setEditMode) => {

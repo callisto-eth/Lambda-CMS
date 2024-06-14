@@ -1,9 +1,8 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
 import { CreateSubEventModal } from '../CreateSubEventModal';
 import { useEffect, useState } from 'react';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 import { createClient } from '@/utils/supabase/client';
 import { Database } from '@/types/supabase';
 import { TextAreaEditUpload } from '../TextAreaEditUpload';
@@ -15,7 +14,7 @@ import {
   AccordionItem,
 } from '@/components/ui/accordion';
 import { MaterialSymbolsEdit } from '@/components/Icons';
-import SubeventEditForm from '../SubeventEditForm';
+import UpdateSubEventModal from '../UpdateSubEventModal';
 
 export default function Subevents({ eventId }: { eventId: string }) {
   const [modalState, setModalState] = useState(false);
@@ -30,8 +29,6 @@ export default function Subevents({ eventId }: { eventId: string }) {
       .eq('event', eventId)
       .then((response) => {
         if (response.data) {
-          console.log(response.data);
-
           setSubEventResponse(response.data);
         }
       });
@@ -53,6 +50,8 @@ export default function Subevents({ eventId }: { eventId: string }) {
             Create a Subevent
           </DialogTrigger>
           <CreateSubEventModal
+            subEventResponse={subEventResponse}
+            setSubEventResponse={setSubEventResponse}
             setModalState={setModalState}
             eventId={eventId}
           />
@@ -131,7 +130,7 @@ export default function Subevents({ eventId }: { eventId: string }) {
                         <MaterialSymbolsEdit className="text-xl" />
                         <p className="px-1">Edit</p>
                       </DialogTrigger>
-                      <SubeventEditForm
+                      <UpdateSubEventModal
                         subEventId={subEvent.id}
                         setEditModalState={setEditModalState}
                       />

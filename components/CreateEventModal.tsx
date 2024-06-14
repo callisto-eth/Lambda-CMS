@@ -26,38 +26,14 @@ import { DatePickerWithRange } from './CalenderRange';
 import { Checkbox } from './ui/checkbox';
 import { CreateEventSchema } from '@/app/api/event/create/route';
 import { animatePageIn } from '@/utils/animation';
+import { useToast } from './ui/use-toast';
+import { createEventSchema } from '@/types/subevent';
 
 export default function CreateEventModal({
   setModalState,
 }: {
   setModalState: (val: boolean) => void;
 }) {
-  const createEventSchema = z.object({
-    event_name: z.string({
-      message: 'Please enter a valid name',
-    }),
-    event_desc: z.string({
-      message: 'Please enter a valid description',
-    }),
-    date: z.object({
-      from: z.date({
-        message: 'Please enter a valid date',
-      }),
-      to: z.date({
-        message: 'Please enter a valid date',
-      }),
-    }),
-    event_mode: z.string({
-      message: 'Please select a valid mode',
-    }),
-    spaces_enabled: z.boolean().optional(),
-    event_visibility: z.string({
-      message: 'Please select a valid visibility',
-    }),
-    chat_enabled: z.boolean().optional(),
-    banner_image: z.string().optional(),
-    profile_image: z.string().optional(),
-  });
   const createEventForm = useForm({
     resolver: zodResolver(createEventSchema),
   });
@@ -80,6 +56,8 @@ export default function CreateEventModal({
 
   const [createdEvent, setCreatedEvent] = useState<CreateEventSchema | null>();
 
+  const { toast } = useToast();
+
   function onSubmit(values: z.infer<typeof createEventSchema>) {
     if (isPublished) {
       const uploadData: CreateEventSchema = {
@@ -89,10 +67,7 @@ export default function CreateEventModal({
         end_time: values.date.to.toISOString(),
         spaces_enabled: values.spaces_enabled || false,
         chat_enabled: values.chat_enabled || false,
-        platform: values.event_mode.toUpperCase() as
-          | 'ONLINE'
-          | 'OFFLINE'
-          | 'HYBRID',
+        platform: values.event_mode.toUpperCase() as 'ONLINE' | 'OFFLINE',
         visibility: values.event_visibility.toUpperCase() as
           | 'PRIVATE'
           | 'PUBLIC',
@@ -107,16 +82,25 @@ export default function CreateEventModal({
         body: JSON.stringify(uploadData),
       }).then((res) => {
         res.json().then((data) => {
-          console.log(data);
-          const modalData = document.createElement('div');
-          modalData.className = 'flex justify-center items-center flex-col';
-          const modalText = document.createElement('p');
-          modalText.innerText = `🎉 Your event was successfully created`;
-          modalText.className = 'font-DM-Sans text-4xl font-medium text-white';
-          modalData.appendChild(modalText);
-          setCreatedEvent(data.data[0]);
-          setModalState(false);
-          animatePageIn(() => {}, modalData);
+          if (data.data) {
+            console.log('Hello');
+
+            const modalData = document.createElement('div');
+            modalData.className = 'flex justify-center items-center flex-col';
+            const modalText = document.createElement('p');
+            modalText.innerText = `🎉 Your event was successfully created`;
+            modalText.className =
+              'font-DM-Sans text-4xl font-medium text-white';
+            modalData.appendChild(modalText);
+            setCreatedEvent(data.data);
+            setModalState(false);
+            animatePageIn(() => {}, modalData);
+          } else {
+            toast({
+              title: '❌ Error',
+              description: 'There was an error creating your event',
+            });
+          }
         });
       });
     }
@@ -231,12 +215,6 @@ export default function CreateEventModal({
                           <RadioGroupItem value="OFFLINE" id="r2" />
                         </FormControl>
                         <FormLabel htmlFor="r2">Offline</FormLabel>
-                      </FormItem>
-                      <FormItem className="flex items-center space-x-3 space-y-0">
-                        <FormControl>
-                          <RadioGroupItem value="HYBRID" id="r3" />
-                        </FormControl>
-                        <FormLabel htmlFor="r3">Hybrid</FormLabel>
                       </FormItem>
                     </RadioGroup>
                   </FormControl>

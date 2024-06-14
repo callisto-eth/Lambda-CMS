@@ -27,16 +27,13 @@ export async function POST(request: NextRequest) {
   const order = await razorpay.orders.create(orderOptions);
 
   if (user.data.user) {
-    let { data: createInvoiceResponse, error: createInvoiceError } =
-      await supabase
-        .from('payments')
-        .insert({
-          id: order.id,
-          user: user.data.user.id,
-          subevent: data.subevent,
-          amount: parseFloat(data.amount) * 100,
-        })
-        .select();
+    let { error: createInvoiceError } = await supabase.from('payments').insert({
+      id: order.id,
+      user: user.data.user.id,
+      subevent: data.subevent,
+      amount: parseFloat(data.amount) * 100,
+      paid: false,
+    });
 
     if (createInvoiceError) {
       return NextResponse.json(
