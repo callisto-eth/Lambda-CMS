@@ -71,15 +71,13 @@ export function AvatarDropDown() {
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-[200px] m-5 rounded-xl dark:bg-[#2b2d2e]">
+        <DropdownMenuContent className="w-[200px] m-5 rounded-xl bg-black text-white font-DM-Sans bg-clip-padding backdrop-filter backdrop-blur-md bg-opacity-10 border border-white border-opacity-10">
           <DropdownMenuGroup className="*:rounded-lg">
             <DropdownMenuItem>
-              <User className="mr-2 h-4 w-4" />
-              <span>Profile</span>
-              <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Link href="/@me/events" className="flex items-center">
+              <Link
+                href="/@me/events"
+                className="flex items-center hover:bg-transparent"
+              >
                 <MaterialSymbolsCalendarMonthRounded className="mr-2 h-4 w-4" />
                 <span>My Events</span>
               </Link>
@@ -91,28 +89,7 @@ export function AvatarDropDown() {
               <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
             </DropdownMenuItem>
           </DropdownMenuGroup>
-          <DropdownMenuSeparator />
           <DropdownMenuGroup className="*:rounded-lg *:cursor-pointer">
-            <DropdownMenuSub>
-              <DropdownMenuSubTrigger>
-                <UserPlus className="mr-2 h-4 w-4" />
-                <span>Invite friends</span>
-              </DropdownMenuSubTrigger>
-              <DropdownMenuPortal>
-                <DropdownMenuSubContent>
-                  <DropdownMenuItem>
-                    <Mail className="mr-2 h-4 w-4" />
-                    <span>Email</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <MessageSquare className="mr-2 h-4 w-4" />
-                    <span>Username</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem></DropdownMenuItem>
-                </DropdownMenuSubContent>
-              </DropdownMenuPortal>
-            </DropdownMenuSub>
             <DropdownMenuItem
               onClick={() => {
                 setIsCreateEventDialogOpen(true);

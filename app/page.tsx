@@ -187,14 +187,6 @@ export default function Home() {
           <div className="col-span-1 h-full w-full bg-white rounded-[60px] bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-10 border border-white border-opacity-10" />
         </div>
       </section>
-      <footer className="my-20 px-20 font-DM-Sans">
-        <div className="flex justify-between items-center">
-          <MdiLambda className="text-6xl text-[#FB4500]" />
-          <p className="text-3xl font-medium text-white">
-            Supercharge your Socials.
-          </p>
-        </div>
-      </footer>
     </main>
   );
 }

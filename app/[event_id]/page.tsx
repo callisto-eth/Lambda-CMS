@@ -3,6 +3,7 @@ import { MdiDotsHorizontal } from '@/components/Icons';
 import JoinButton from '@/components/JoinButton';
 import LeaveEventButton from '@/components/event/LeaveEventButton';
 import TicketModal from '@/components/event/TicketModal';
+import Space from '@/components/event/pages/Space';
 import Timeline from '@/components/event/pages/Timeline';
 import {
   DropdownMenu,
@@ -137,7 +138,7 @@ export default async function EventInfo({
           <hr className="my-5 border-[#544f55]" />
           <Tabs defaultValue="timeline">
             <div className="flex justify-center">
-              <TabsList className="grid w-fit grid-cols-3 gap-2  bg-[#2B2D2E] rounded-2xl *:p-3 h-fit *:rounded-xl *:text-base">
+              <TabsList className="grid w-fit grid-cols-2 gap-2  bg-[#2B2D2E] rounded-2xl *:p-3 h-fit *:rounded-xl *:text-base">
                 <TabsTrigger
                   value="timeline"
                   className="data-[state=active]:bg-[#FB4500] "
@@ -149,12 +150,6 @@ export default async function EventInfo({
                   className="data-[state=active]:bg-[#FB4500]"
                 >
                   Space
-                </TabsTrigger>
-                <TabsTrigger
-                  value="contact"
-                  className="data-[state=active]:bg-[#FB4500]"
-                >
-                  Contact
                 </TabsTrigger>
               </TabsList>
             </div>
@@ -168,8 +163,12 @@ export default async function EventInfo({
                 }
               />
             </TabsContent>
-            <TabsContent value="spaces">Space</TabsContent>
-            <TabsContent value="contact">Contact</TabsContent>
+            <TabsContent value="spaces">
+              <Space
+                spaceId={fetchEventResponseData.spaces as string}
+                eventName={fetchEventResponseData.name}
+              />
+            </TabsContent>
           </Tabs>
         </div>
       </main>

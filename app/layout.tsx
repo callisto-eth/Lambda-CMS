@@ -3,6 +3,7 @@ import './globals.css';
 import React from 'react';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Toaster } from '@/components/ui/toaster';
+import { MdiLambda } from '@/components/Icons';
 
 export const metadata: Metadata = {
   title: 'Lambda | Supercharge your Socials',
@@ -31,6 +32,14 @@ export default async function RootLayout({
           disableTransitionOnChange
         >
           {children}
+          <footer className="my-20 px-20 font-DM-Sans">
+            <div className="flex justify-between items-center ">
+              <MdiLambda className="text-6xl text-[#FB4500] " />
+              <p className="text-3xl font-medium text-white">
+                Supercharge your Socials.
+              </p>
+            </div>
+          </footer>
           <Toaster />
         </ThemeProvider>
       </body>

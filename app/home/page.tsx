@@ -1,24 +1,21 @@
 'use client';
 
-import { MaterialSymbolsFilterVintage } from '@/components/Icons';
-import PostBox from '@/components/PostBox';
+import EventCard from '@/components/EventCard';
+import { MaterialSymbolsFilterVintage, PhGearFill } from '@/components/Icons';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Json } from '@/types/supabase';
+import { Database } from '@/types/supabase';
 import { createClient } from '@/utils/supabase/client';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 export default function Home() {
-  const [userProfile, setUserProfile] = useState<{
-    bio: string;
-    created_at: string;
-    id: string;
-    metadata: Json;
-    username: string;
-  } | null>();
+  const [userProfile, setUserProfile] = useState<
+    Database['public']['Tables']['profiles']['Row'] | null
+  >();
 
   const supabaseClient = createClient();
   useEffect(() => {
@@ -38,40 +35,126 @@ export default function Home() {
     });
   }, []);
 
-  return (
-    <main className="px-5 md:px-10 *:font-DM-Sans grid md:grid-cols-16 gap-x-10">
-      <div className="col-span-4 grid grid-flow-row-dense">
-        <div></div>
-      </div>
-      <div className="col-span-8">
-        <DropdownMenu>
-          <DropdownMenuTrigger className="inline-flex items-center justify-center whitespace-nowrap font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-fit py-1.5 px-2 text-[#948b96] rounded-full bg-clip-padding backdrop-filter text-base bg-white backdrop-blur-sm bg-opacity-70 border border-opacity-10 border-gray-100">
-            <MaterialSymbolsFilterVintage className="text-xl" />
-            <p className="px-1">Filter</p>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent></DropdownMenuContent>
-        </DropdownMenu>
-        <PostBox />
-        <PostBox />
-      </div>
+  const [userImage, setUserImage] = useState<string | null>();
+  const [userEvents, setUserEvents] = useState<
+    Database['public']['Tables']['events']['Row'][] | null
+  >();
 
-      <div className="col-span-4 hidden md:flex flex-col items-center space-y-4 bg-[#2B2D2E] h-fit rounded-3xl overflow-hidden">
-        <div className="bg-red-400 w-full relative h-[100px]">
-          <div
-            className="absolute bottom-[-30px] left-[30px] w-[70px] h-[70px] bg-cover rounded-full flex justify-end"
-            style={{
-              backgroundImage: `url(${supabaseClient.storage.from('user_assets').getPublicUrl(`${userProfile?.id}/avatar.png?t=${new Date().toISOString()}`).data.publicUrl})`,
-            }}
-          >
-            <div className="w-[20px] h-[20px] bg-green-400 rounded-full border-transparent"></div>
+  useEffect(() => {
+    if (userProfile) {
+      setUserImage(
+        supabaseClient.storage
+          .from('user_assets')
+          .getPublicUrl(
+            `${userProfile.id}/avatar.png?t=${new Date().toISOString()}`,
+          ).data.publicUrl,
+      );
+
+      supabaseClient
+        .schema('connections')
+        .from('event_attendees')
+        .select()
+        .eq('attendee', userProfile.id)
+        .then((data) => {
+          if (data.data)
+            data.data.map((event) => {
+              supabaseClient
+                .from('events')
+                .select()
+                .eq('id', event.event)
+                .single()
+                .then((eventData) => {
+                  if (!userEvents && eventData.data) {
+                    setUserEvents([eventData.data]);
+                  } else {
+                    if (userEvents)
+                      setUserEvents([...userEvents, eventData.data!]);
+                  }
+                });
+            });
+        });
+    }
+  }, [userProfile]);
+
+  return (
+    <main className="md:px-12 px-10 *:font-DM-Sans grid md:grid-cols-16 gap-x-10">
+      <div className="md:col-span-12 space-y-5">
+        <div>
+          <p className="text-4xl font-medium tracking-tight">
+            Upcoming <span className="text-[#fb4500] ">Events</span>
+          </p>
+          <div className="grid md:grid-cols-2 mt-5">
+            {userEvents
+              ?.filter((event) => {
+                return event.start_time > new Date().toISOString();
+              })
+              .map((event) => (
+                <EventCard fetchedEvent={event} key={event.id} />
+              ))}
           </div>
         </div>
-        <div className="w-full p-4">
-          <p className="font-semibold text-4xl mt-3">{userProfile?.username}</p>
-          <p className="text-[#948b96]">{userProfile?.bio}</p>
+        <div>
+          <p className="text-4xl font-medium tracking-tight">
+            Past <span className="text-[#fb4500] ">Events</span>
+          </p>
+          <div className="grid md:grid-cols-2 mt-5">
+            {userEvents
+              ?.filter((event) => {
+                return event.start_time > new Date().toISOString();
+              })
+              .map((event) => (
+                <EventCard fetchedEvent={event} key={event.id} />
+              ))}
+          </div>
         </div>
-        <div></div>
       </div>
+
+      {userProfile && (
+        <div className="h-fit col-span-4 hidden md:flex flex-col items-center space-y-4 overflow-hidden bg-black rounded-3xl text-white font-DM-Sans bg-clip-padding backdrop-filter backdrop-blur-md bg-opacity-10 border border-white border-opacity-10">
+          <div
+            className=" w-full relative h-[100px] bg-cover"
+            style={{
+              backgroundImage: `url(https://lh3.googleusercontent.com/blogger_img_proxy/AEn0k_uLyfLM67vyCg6g2be6u6dUiifpf3AY0tcaE_FlKcMFi4pl4N1k4HzYqP2h7Xu945HEIdV96Ps7eSMF_GWpGTLbj2W0nxg5yhzP31jUwdtlKN71lcKL0jAceVGTv_5Hv2tm5mChtMDdVk6yak3dgbME3xe4r9b_yokZRekuoFGzNA=s0-d)`,
+            }}
+          >
+            <div
+              className="absolute bottom-[-30px] left-[30px] w-[70px] h-[70px] bg-cover rounded-full flex justify-end"
+              style={{
+                backgroundImage: `url(${userImage})`,
+              }}
+            >
+              <div className="w-[20px] h-[20px] bg-green-400 rounded-full border-transparent"></div>
+            </div>
+          </div>
+          <div className="w-full flex justify-end px-4">
+            <Link href="/@me/settings">
+              <PhGearFill className="text-2xl" />
+            </Link>
+          </div>
+          <div className="w-full px-4">
+            <p className="font-semibold text-4xl ">{userProfile?.username}</p>
+            <p className="text-[#948b96]">{userProfile?.bio}</p>
+          </div>
+          <div className="flex w-full pb-2 ">
+            <div className="w-full px-4">
+              <div>
+                <p className="text-xs font-bold text-[#938a95]">
+                  EVENTS JOINED
+                </p>
+                <p className="text-4xl">69</p>
+              </div>
+            </div>
+            <div className="w-full px-3 ">
+              <div>
+                <p className="text-xs font-bold text-[#938a95]">
+                  UPCOMING EVENTS
+                </p>
+                <p className="text-4xl">None</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }

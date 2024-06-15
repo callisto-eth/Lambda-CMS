@@ -210,28 +210,28 @@ export type Database = {
           author: string
           content: string
           created_at: string
-          id: number
-          likes: number
-          medias: string[]
+          id: string
+          likes: string[] | null
           space: string
+          title: string
         }
         Insert: {
-          author: string
+          author?: string
           content: string
           created_at?: string
-          id?: number
-          likes?: number
-          medias?: string[]
+          id: string
+          likes?: string[] | null
           space: string
+          title: string
         }
         Update: {
           author?: string
           content?: string
           created_at?: string
-          id?: number
-          likes?: number
-          medias?: string[]
+          id?: string
+          likes?: string[] | null
           space?: string
+          title?: string
         }
         Relationships: [
           {
@@ -556,6 +556,34 @@ export type Database = {
             columns: ["event"]
             isOneToOne: false
             referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profile_posts: {
+        Row: {
+          author: string | null
+          content: string | null
+          created_at: string | null
+          id: string | null
+          likes: string[] | null
+          space: string | null
+          title: string | null
+          username: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "connections_spaces_posts_author_fkey"
+            columns: ["author"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "connections_spaces_posts_space_fkey"
+            columns: ["space"]
+            isOneToOne: false
+            referencedRelation: "spaces"
             referencedColumns: ["id"]
           },
         ]
