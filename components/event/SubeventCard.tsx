@@ -1,6 +1,7 @@
 import {
   MajesticonsStatusOnline,
   MaterialSymbolsInfo,
+  PhHandPalmFill,
   PhUsersFourDuotone,
   SolarTicketBold,
 } from '../Icons';
@@ -13,6 +14,7 @@ import SubeventDetails from './SubeventDetails';
 import JoinSubEventFlow from './JoinSubEventFlow';
 import { Database } from '@/types/supabase';
 import { createClient } from '@/utils/supabase/server';
+import QRScanner from './QRScanner';
 
 export default async function SubeventCard({
   subEventResponse,
@@ -94,21 +96,25 @@ export default async function SubeventCard({
             </p>
           </div>
           <div className="mt-4 flex space-x-3">
-            {eventAttendeeResponse ? (
+            {eventAttendeeResponse && (
               <JoinSubEventFlow
                 attendeeID={eventAttendeeResponse.id}
                 subEventResponse={subEventResponse}
                 eventId={eventID}
                 passStatus={passStatus}
               />
-            ) : (
-              <></>
+            )}
+            {eventAttendeeResponse && (
+              <QRScanner
+                eventAttendeeResponse={eventAttendeeResponse}
+                eventId={eventID}
+                subEventId={subEventResponse.id}
+              />
             )}
             <Sheet>
               <SheetTrigger asChild>
-                <Button className="inline-flex items-center justify-center whitespace-nowrap font-medium ring-offset-background transition-colors py-2 px-3 text-[#212325] rounded-full bg-white backdrop-blur-sm bg-opacity-70 border border-opacity-10 border-gray-100">
+                <Button className="inline-flex items-center justify-center whitespace-nowrap font-medium ring-offset-background transition-colors p-2 text-[#212325] rounded-full bg-white backdrop-blur-sm bg-opacity-70 border border-opacity-10 border-gray-100">
                   <MaterialSymbolsInfo className="text-2xl" />
-                  <p className="px-1 text-base">Details</p>
                 </Button>
               </SheetTrigger>
               <SubeventDetails subEventResponse={subEventResponse} />

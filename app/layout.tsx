@@ -32,10 +32,10 @@ export default async function RootLayout({
           disableTransitionOnChange
         >
           {children}
-          <footer className="my-20 px-20 font-DM-Sans">
+          <footer className="md:my-20 md:px-20 px-10 my-10 font-DM-Sans">
             <div className="flex justify-between items-center ">
-              <MdiLambda className="text-6xl text-[#FB4500] " />
-              <p className="text-3xl font-medium text-white">
+              <MdiLambda className="md:text-6xl text-4xl text-[#FB4500] " />
+              <p className="md:text-3xl text-xl font-medium text-white">
                 Supercharge your Socials.
               </p>
             </div>

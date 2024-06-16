@@ -33,6 +33,7 @@
     "@supabase/ssr": "^0.3.0",
     "@supabase/supabase-js": "^2.43.4",
     "@tanstack/react-table": "^8.17.3",
+    "@yudiel/react-qr-scanner": "^2.0.4",
     "ansi-truncate": "^1.1.2",
     "axios": "^1.7.2",
     "class-variance-authority": "^0.7.0",
