@@ -33,7 +33,7 @@ export default async function EventInfo({
   } = await (
     await fetch(
       process.env.NODE_ENV === 'production'
-        ? 'https://lambda.event/api/event/fetch'
+        ? 'https://lambda.events/api/event/fetch'
         : `http://localhost:3000/api/event/fetch`,
       {
         method: 'POST',
