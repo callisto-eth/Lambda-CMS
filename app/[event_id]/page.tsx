@@ -34,7 +34,7 @@ export default async function EventInfo({
     await fetch(
       process.env.NODE_ENV === 'production'
         ? 'https://lambda.events/api/event/fetch'
-        : `http://localhost:3000/api/event/fetch`,
+        : `https://lambda.events/api/event/fetch`,
       {
         method: 'POST',
         headers: {
@@ -45,8 +45,8 @@ export default async function EventInfo({
     )
   ).json();
 
-  if (fetchedEventResponseError)
-    handleErrors(fetchedEventResponseError, fetchedEventStatus);
+  // if (fetchedEventResponseError)
+  //   handleErrors(fetchedEventResponseError, fetchedEventStatus);
 
   const userData = await supabase.auth.getUser();
 
@@ -73,8 +73,8 @@ export default async function EventInfo({
     )
   ).json();
 
-  if (eventAttendeesError)
-    handleErrors(eventAttendeesError, eventAttendeesStatus);
+  // if (eventAttendeesError)
+  //   handleErrors(eventAttendeesError, eventAttendeesStatus);
 
   if (fetchEventResponseData && eventAttendeesResponse) {
     return (
