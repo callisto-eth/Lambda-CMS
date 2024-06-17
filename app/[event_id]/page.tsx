@@ -14,6 +14,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Database } from '@/types/supabase';
 import { handleErrors } from '@/utils/helpers';
 import { createClient } from '@/utils/supabase/server';
+import randomColor from 'randomcolor';
 
 export default async function EventInfo({
   params,
@@ -39,6 +40,9 @@ export default async function EventInfo({
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+        },
+        next: {
+          revalidate: 300,
         },
         body: JSON.stringify({ eventId: params.event_id }),
       },
@@ -73,6 +77,21 @@ export default async function EventInfo({
     )
   ).json();
 
+  const bannerImage = supabase.storage
+    .from('event_assets')
+    .getPublicUrl(
+      `${params.event_id}/banner.png?time=${new Date().toISOString()}`,
+    ).data.publicUrl;
+
+  const avatarImage = supabase.storage
+    .from('event_assets')
+    .getPublicUrl(
+      `${params.event_id}/avatar.png?time=${new Date().toISOString()}`,
+    ).data.publicUrl;
+
+  const bannerAvailabilty = await fetch(bannerImage);
+  const avatarAvailabilty = await fetch(avatarImage);
+
   if (eventAttendeesError)
     handleErrors(eventAttendeesError, eventAttendeesStatus);
 
@@ -82,27 +101,36 @@ export default async function EventInfo({
         <div
           className="w-[calc(100vh - 5rem)] md:h-[250px] h-[200px] bg-cover bg-center rounded-[40px] relative"
           style={{
-            backgroundImage: `url(${
-              supabase.storage
-                .from('event_assets')
-                .getPublicUrl(
-                  `${params.event_id}/banner.png?time=${new Date().toISOString()}`,
-                ).data.publicUrl
-            })`,
+            backgroundImage:
+              bannerAvailabilty.status !== 400
+                ? `url(${bannerImage})`
+                : undefined,
+            backgroundColor:
+              bannerAvailabilty.status === 400
+                ? randomColor({ luminosity: 'dark', format: 'rgb' })
+                : undefined,
           }}
         >
           <div
-            className="absolute md:w-[150px] md:h-[150px] w-[100px] h-[100px] rounded-full bg-cover border-[6px] bottom-[-50px] left-[10%] border-[#212325]"
+            className="absolute md:w-[150px] flex justify-center items-center md:h-[150px] w-[100px] h-[100px] rounded-full bg-cover border-[6px] bottom-[-50px] left-[10%] border-[#212325]"
             style={{
-              backgroundImage: `url(${
-                supabase.storage
-                  .from('event_assets')
-                  .getPublicUrl(
-                    `${params.event_id}/avatar.png?time=${new Date().toISOString()}`,
-                  ).data.publicUrl
-              })`,
+              backgroundImage:
+                avatarAvailabilty.status !== 400
+                  ? `url(${avatarImage})`
+                  : undefined,
+              backgroundColor:
+                avatarAvailabilty.status === 400
+                  ? randomColor({ luminosity: 'dark', format: 'rgb' })
+                  : undefined,
             }}
-          ></div>
+          >
+            {avatarAvailabilty.status === 400 && (
+              <p className="text-6xl font-bold">
+                {fetchEventResponseData.name.charAt(0).toUpperCase() +
+                  fetchEventResponseData.name.slice(-1).toUpperCase()}
+              </p>
+            )}
+          </div>
           <div className="absolute space-x-2 bottom-[135px] md:bottom-[-20px] right-[5%] flex ">
             {eventAttendeesResponse.some(
               (attendee) => attendee.attendee === userData.data.user?.id,
@@ -132,42 +160,46 @@ export default async function EventInfo({
         </div>
         <div className="lg:px-[10%] my-16">
           <p className="font-bold text-5xl">{fetchEventResponseData.name}</p>
-          <p className="text-xl mt-4 font-light">
+          <p className="text-xl my-5 font-light">
             {fetchEventResponseData.description}
           </p>
-          <hr className="my-5 border-[#544f55]" />
+
           <Tabs defaultValue="timeline">
-            <div className="flex justify-center">
-              <TabsList className="grid w-fit grid-cols-2 gap-2  bg-[#2B2D2E] rounded-2xl *:p-3 h-fit *:rounded-xl *:text-base">
+            <div className="w-fit mx-auto">
+              <TabsList className="grid w-fit grid-flow-col gap-2 bg-[#2B2D2E] rounded-2xl *:p-3 h-fit *:rounded-xl *:text-base">
                 <TabsTrigger
                   value="timeline"
                   className="data-[state=active]:bg-[#FB4500] "
                 >
                   Timeline
                 </TabsTrigger>
-                <TabsTrigger
-                  value="spaces"
-                  className="data-[state=active]:bg-[#FB4500]"
-                >
-                  Space
-                </TabsTrigger>
+                {fetchEventResponseData.spaces && (
+                  <TabsTrigger
+                    value="spaces"
+                    className="data-[state=active]:bg-[#FB4500] w-[90px]"
+                  >
+                    Space
+                  </TabsTrigger>
+                )}
               </TabsList>
             </div>
             <TabsContent value="timeline">
               <Timeline
                 eventId={params.event_id}
-                eventAttendeeResponse={
-                  eventAttendeesResponse.filter((eventAttendee) => {
+                eventAttendeeResponse={eventAttendeesResponse.find(
+                  (eventAttendee) => {
                     return eventAttendee.attendee === userData.data.user?.id;
-                  })[0]
-                }
+                  },
+                )}
               />
             </TabsContent>
             <TabsContent value="spaces">
-              <Space
-                spaceId={fetchEventResponseData.spaces as string}
-                eventName={fetchEventResponseData.name}
-              />
+              {fetchEventResponseData.spaces && (
+                <Space
+                  spaceId={fetchEventResponseData.spaces as string}
+                  eventName={fetchEventResponseData.name}
+                />
+              )}
             </TabsContent>
           </Tabs>
         </div>

@@ -2,6 +2,8 @@ import SubeventCard from '../SubeventCard';
 import { z } from 'zod';
 import { subEventMetadata } from '@/types/subevent';
 import { Database } from '@/types/supabase';
+import { Suspense } from 'react';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default async function Timeline({
   eventId,
@@ -27,18 +29,25 @@ export default async function Timeline({
     )
   ).json();
 
-  return (
-    subeventResponse && (
-      <main className="my-10">
-        {subeventResponse.map((subEvent) => (
+  return subeventResponse.length !== 0 ? (
+    <main className="my-10 relative">
+      {subeventResponse.map((subEvent) => (
+        <Suspense
+          key={subEvent.id}
+          fallback={<Skeleton className="w-full h-[200px]" key={subEvent.id} />}
+        >
           <SubeventCard
             eventAttendeeResponse={eventAttendeeResponse}
             key={subEvent.id}
             subEventResponse={subEvent}
             eventID={eventId}
           />
-        ))}
-      </main>
-    )
+        </Suspense>
+      ))}
+    </main>
+  ) : (
+    <main className="text-center text-4xl font-medium my-20">
+      Umm! No Subevents 😔
+    </main>
   );
 }

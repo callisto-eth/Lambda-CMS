@@ -23,7 +23,7 @@ export default async function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning={true}>
-      <body className="bg-[#212325]">
+      <body className="bg-[#212325] *:font-DM-Sans">
         <div className="fixed h-screen animateModal w-screen z-[-1] opacity-0 flex justify-center items-center flex-col"></div>
         <ThemeProvider
           attribute="class"

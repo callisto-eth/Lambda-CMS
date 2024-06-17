@@ -122,6 +122,9 @@ importers:
       next-themes:
         specifier: ^0.3.0
         version: 0.3.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      randomcolor:
+        specifier: ^0.6.2
+        version: 0.6.2
       razorpay:
         specifier: ^2.9.4
         version: 2.9.4
@@ -192,6 +195,9 @@ importers:
       '@types/node':
         specifier: ^20.12.12
         version: 20.12.12
+      '@types/randomcolor':
+        specifier: ^0.5.9
+        version: 0.5.9
       '@types/react':
         specifier: ^18.3.2
         version: 18.3.2
@@ -1548,6 +1554,9 @@ packages:
 
   '@types/prop-types@15.7.12':
     resolution: {integrity: sha512-5zvhXYtRNRluoE/jAp4GVsSduVUzNWKkOZrCDBWYtE7biZywwdC2AcEzg+cSMLFRfVgeAFqpfNabiPjxFddV1Q==}
+
+  '@types/randomcolor@0.5.9':
+    resolution: {integrity: sha512-k58cfpkK15AKn1m+oRd9nh5BnuiowhbyvBBdAzcddtARMr3xRzP0VlFaAKovSG6N6Knx08EicjPlOMzDejerrQ==}
 
   '@types/react-dom@18.3.0':
     resolution: {integrity: sha512-EhwApuTmMBmXuFOikhQLIBUn6uFg81SwLMOAUgodJF14SOBOCMdU04gDoYi0WOJJHD144TL32z4yDqCW3dnkQg==}
@@ -3174,6 +3183,9 @@ packages:
 
   ramda@0.29.1:
     resolution: {integrity: sha512-OfxIeWzd4xdUNxlWhgFazxsA/nl3mS4/jGZI5n00uWOoSSFRhC1b6gl6xvmzUamgmqELraWp0J/qqVlXYPDPyA==}
+
+  randomcolor@0.6.2:
+    resolution: {integrity: sha512-Mn6TbyYpFgwFuQ8KJKqf3bqqY9O1y37/0jgSK/61PUxV4QfIMv0+K2ioq8DfOjkBslcjwSzRfIDEXfzA9aCx7A==}
 
   razorpay@2.9.4:
     resolution: {integrity: sha512-CvOitdgM5HNr+zl174fHpZoJKVFYEfPoGx798kX+kg3haGDD3xinzxTzRUIOzLnL1/F4e7mUoIaGNn0h1E929Q==}
@@ -5619,6 +5631,8 @@ snapshots:
 
   '@types/prop-types@15.7.12': {}
 
+  '@types/randomcolor@0.5.9': {}
+
   '@types/react-dom@18.3.0':
     dependencies:
       '@types/react': 18.3.2
@@ -7525,6 +7539,8 @@ snapshots:
   queue-microtask@1.2.3: {}
 
   ramda@0.29.1: {}
+
+  randomcolor@0.6.2: {}
 
   razorpay@2.9.4:
     dependencies:

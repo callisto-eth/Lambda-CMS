@@ -12,7 +12,7 @@ export default function EventCard({
   const supabase = createClient();
 
   return (
-    <div className="w-full bg-black rounded-3xl text-white font-DM-Sans bg-clip-padding backdrop-filter backdrop-blur-md bg-opacity-10 border border-white border-opacity-10 grid grid-rows-12 overflow-hidden">
+    <div className="w-full bg-black rounded-3xl h-full text-white font-DM-Sans bg-clip-padding backdrop-filter backdrop-blur-md bg-opacity-10 border border-white border-opacity-10 grid grid-rows-12 overflow-hidden">
       <div
         className="bg-cover row-span-6 border-b-4 border-[#fb4500]"
         style={{

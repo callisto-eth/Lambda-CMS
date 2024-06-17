@@ -6,7 +6,7 @@ import {
   MaterialSymbolsCancel,
   MaterialSymbolsLightAttachment,
 } from '@/components/Icons';
-import PostBox from '@/components/PostBox';
+const PostBox = lazy(() => import('@/components/PostBox'));
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 
@@ -18,13 +18,20 @@ import {
   FormLabel,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/components/ui/use-toast';
 import { Database } from '@/types/supabase';
 import { handleErrors } from '@/utils/helpers';
 import { zodResolver } from '@hookform/resolvers/zod';
-import Image from 'next/image';
-import { ChangeEvent, useCallback, useEffect, useState } from 'react';
+import {
+  ChangeEvent,
+  Suspense,
+  lazy,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -264,11 +271,18 @@ export default function Space({
         {spacePosts &&
           spacePosts.map((spacePost) => {
             return (
-              <PostBox
-                postResponse={spacePost}
+              <Suspense
                 key={spacePost.id}
-                eventName={eventName}
-              />
+                fallback={
+                  <Skeleton className="w-full h-[200px] rounded-3xl my-5" />
+                }
+              >
+                <PostBox
+                  postResponse={spacePost}
+                  key={spacePost.id}
+                  eventName={eventName}
+                />
+              </Suspense>
             );
           })}
       </div>

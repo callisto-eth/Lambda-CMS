@@ -1,7 +1,6 @@
 import {
   MajesticonsStatusOnline,
   MaterialSymbolsInfo,
-  PhHandPalmFill,
   PhUsersFourDuotone,
   SolarTicketBold,
 } from '../Icons';
@@ -45,8 +44,9 @@ export default async function SubeventCard({
   }
 
   return (
-    <div className="grid grid-cols-16 *:font-DM-Sans">
-      <div className="w-[1px] bg-[#fb4500] h-full col-span-1">
+    <div className="grid grid-cols-16 *:font-DM-Sans group">
+      <div className="w-[1px] bg-[#fb4500] h-full col-span-1 relative">
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b group-last:block hidden from-transparent from-10% via-transparent via-[55%] to-[#212325] to-100%"></div>
         <div className="w-[15px] h-[15px] bg-[#fb4500] rounded-full ml-[-7.5px]"></div>
       </div>
       <div className="col-span-15 lg:col-span-10 space-y-5 mt-[-8px] pb-8">
