@@ -23,6 +23,8 @@ import { useToast } from '../ui/use-toast';
 import { TimePickerDemo } from '../ui/time-picker-demo';
 import SearchAddress from '../ui/search-addresses';
 import { Root, createSubEventSchema } from '@/types/subevent';
+import { Database } from '@/types/supabase';
+import { createClient } from '@/utils/supabase/client';
 
 export function CreateSubEventModal({
   eventId,
@@ -36,7 +38,21 @@ export function CreateSubEventModal({
   setModalState: (field: boolean) => void;
 }) {
   const { toast } = useToast();
-  useEffect(() => {}, []);
+  const supabase = createClient();
+  const [eventData, setEventData] =
+    useState<Database['public']['Tables']['events']['Row']>();
+  useEffect(() => {
+    supabase
+      .from('events')
+      .select()
+      .eq('id', eventId)
+      .single()
+      .then((response) => {
+        if (response.data) {
+          setEventData(response.data);
+        }
+      });
+  }, []);
 
   const createSubEventForm = useForm({
     resolver: zodResolver(createSubEventSchema),
