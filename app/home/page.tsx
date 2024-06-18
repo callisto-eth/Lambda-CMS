@@ -3,6 +3,7 @@ import { PhGearFill } from '@/components/common/Icons';
 import { handleErrors } from '@/utils/helpers';
 import { createClient } from '@/utils/supabase/server';
 import Link from 'next/link';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 
 export default async function Home() {
   const supabase = createClient();
@@ -43,8 +44,11 @@ export default async function Home() {
             <p className="text-4xl font-semibold align-middle tracking-tight">
               Your <span className="text-[#FB4500] ">Events</span>
             </p>
-            <div className="grid md:grid-cols-3 lg:grid-cols-2 gap-5">
+            <Carousel className="grid md:grid-cols-3 lg:grid-cols-2 gap-5">
+              <CarouselPrevious />
+              <CarouselContent>
               {userEventResponse?.map(async (userEvent) => {
+              
                 const { data, error } = await supabase
                   .from('events')
                   .select()
@@ -55,13 +59,17 @@ export default async function Home() {
 
                 return (
                   data && (
-                    <Link href={`/${data.id}`}>
-                      <EventCard key={userEvent.id} fetchedEvent={data} />
-                    </Link>
+                    <CarouselItem className='basis-1/2 md:basis-1/3'>
+                      <Link href={`/${data.id}`}>
+                        <EventCard key={userEvent.id} fetchedEvent={data} />
+                      </Link>
+                    </CarouselItem>
                   )
                 );
               })}
-            </div>
+              </CarouselContent>
+              <CarouselNext />
+            </Carousel>
           </div>
           <div className="space-y-5">
             <p className="text-4xl font-semibold align-middle tracking-tight">
