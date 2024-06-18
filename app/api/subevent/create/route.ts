@@ -21,6 +21,7 @@ export async function POST(req: NextRequest) {
         entry_price: data.entry_price,
         max_attendees: data.max_attendees,
         platform: data.platform,
+        metadata: data.metadata,
       })
       .select();
 

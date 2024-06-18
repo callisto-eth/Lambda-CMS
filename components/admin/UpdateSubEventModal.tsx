@@ -45,7 +45,7 @@ export default function UpdateSubEventModal({
           setSubEventResponse(response.data);
         }
       });
-  }, [subEventId, supabaseClient]);
+  }, []);
 
   async function onSubmit(fieldValues: any) {
     Object.keys(fieldValues).forEach((key) =>
@@ -116,9 +116,7 @@ export default function UpdateSubEventModal({
                   <FormControl>
                     {
                       <DateTimePicker
-                        initialValue={
-                          new Date(updateSubEventForm.watch('start_time'))
-                        }
+                        initialValue={new Date(Date.now())}
                         date={field.value}
                         setDate={field.onChange}
                       />

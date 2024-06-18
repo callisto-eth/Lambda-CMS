@@ -36,7 +36,7 @@ export default function Subevents({ eventId }: { eventId: string }) {
 
   const { toast } = useToast();
   return (
-    <main className="col-span-10 space-y-4">
+    <main className="col-span-10 space-y-4 mb-5">
       <div className="sm:flex  space-x-0 sm:space-x-4 space-y-4 md:space-y-0 justify-between items-center p-5  border border-white border-opacity-10 rounded-3xl">
         <div>
           <p className="text-lg font-semibold">Create a Subevent</p>

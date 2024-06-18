@@ -23,24 +23,21 @@ export function DateTimePicker({
   date: Date;
   setDate: (...event: any[]) => void;
 }) {
-  const handleSelect = React.useCallback(
-    (newDay: Date | undefined) => {
-      if (!newDay) return;
-      if (!date) {
-        setDate(newDay);
-        return;
-      }
-      const diff = newDay.getTime() - date.getTime();
-      const diffInDays = diff / (1000 * 60 * 60 * 24);
-      const newDateFull = add(date, { days: Math.ceil(diffInDays) });
-      setDate(newDateFull);
-    },
-    [date, setDate],
-  );
+  const handleSelect = React.useCallback((newDay: Date | undefined) => {
+    if (!newDay) return;
+    if (!date) {
+      setDate(newDay);
+      return;
+    }
+    const diff = newDay.getTime() - date.getTime();
+    const diffInDays = diff / (1000 * 60 * 60 * 24);
+    const newDateFull = add(date, { days: Math.ceil(diffInDays) });
+    setDate(newDateFull);
+  }, []);
 
   React.useEffect(() => {
     handleSelect(initialValue);
-  }, [handleSelect, initialValue]);
+  }, []);
 
   return (
     <Popover>

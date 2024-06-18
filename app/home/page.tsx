@@ -29,15 +29,11 @@ export default async function Home() {
       .eq('id', userData.data.user.id)
       .single();
 
-    console.log(data);
-
     const { data: userEventResponse, error: userEventError } = await supabase
       .schema('connections')
       .from('event_attendees')
       .select()
       .eq('attendee', userData.data.user.id);
-
-    if (!userEventResponse) handleErrors(userEventError.message, 500);
 
     return (
       <main className="p-[0_2rem_0_2.5rem] grid lg:grid-cols-16 gap-x-10 mb-10">
