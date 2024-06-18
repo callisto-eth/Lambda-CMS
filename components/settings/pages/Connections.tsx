@@ -80,7 +80,10 @@ export default function Connections() {
                   onClick={async () => {
                     await supabase.auth.linkIdentity({
                       options: {
-                        redirectTo: 'http://localhost:3000/auth/callback',
+                        redirectTo:
+                          process.env.NODE_ENV === 'production'
+                            ? 'http://localhost:3000/auth/callback'
+                            : 'https://lambda.events/auth/callback',
                       },
                       provider: lambdaIdentity.supabaseIdentifier,
                     });
