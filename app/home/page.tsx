@@ -44,8 +44,8 @@ export default async function Home() {
             <p className="text-4xl font-semibold align-middle tracking-tight">
               Your <span className="text-[#FB4500] ">Events</span>
             </p>
-            <Carousel className="grid md:grid-cols-3 lg:grid-cols-2 gap-5">
-              <CarouselPrevious />
+            <Carousel className="mx-8">
+              <CarouselPrevious className='' />
               <CarouselContent>
               {userEventResponse?.map(async (userEvent) => {
               
@@ -59,7 +59,7 @@ export default async function Home() {
 
                 return (
                   data && (
-                    <CarouselItem className='basis-1/2 md:basis-1/3'>
+                    <CarouselItem className='sm:basis-1/2 lg:basis-1/3'>
                       <Link href={`/${data.id}`}>
                         <EventCard key={userEvent.id} fetchedEvent={data} />
                       </Link>
