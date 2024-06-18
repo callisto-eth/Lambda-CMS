@@ -173,7 +173,12 @@ export function CreateSubEventModal({
                 <FormItem className="">
                   <FormLabel>Date</FormLabel>
                   <FormControl>
-                    {DatePickerWithRange({ field, className: 'w-full' })}
+                    {DatePickerWithRange({
+                      field,
+                      className: 'w-full',
+                      fromDate: new Date(eventData?.start_time as string),
+                      toDate: new Date(eventData?.end_time as string),
+                    })}
                   </FormControl>
                   <FormMessage />
                 </FormItem>

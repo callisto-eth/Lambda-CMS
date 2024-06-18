@@ -3,7 +3,13 @@ import { PhGearFill } from '@/components/common/Icons';
 import { handleErrors } from '@/utils/helpers';
 import { createClient } from '@/utils/supabase/server';
 import Link from 'next/link';
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from '@/components/ui/carousel';
 
 export default async function Home() {
   const supabase = createClient();
@@ -44,31 +50,28 @@ export default async function Home() {
             <p className="text-4xl font-semibold align-middle tracking-tight">
               Your <span className="text-[#FB4500] ">Events</span>
             </p>
-            <Carousel className="mx-8">
-              <CarouselPrevious className='' />
-              <CarouselContent>
-              {userEventResponse?.map(async (userEvent) => {
-              
-                const { data, error } = await supabase
-                  .from('events')
-                  .select()
-                  .eq('id', userEvent.event)
-                  .single();
+            <Carousel className="max-w-[calc(100vw-5rem)] sm:max-w-full ">
+              <CarouselContent className="">
+                {userEventResponse?.map(async (userEvent) => {
+                  const { data, error } = await supabase
+                    .from('events')
+                    .select()
+                    .eq('id', userEvent.event)
+                    .single();
 
-                if (error) handleErrors(error.message, 500);
+                  if (error) handleErrors(error.message, 500);
 
-                return (
-                  data && (
-                    <CarouselItem className='sm:basis-1/2 lg:basis-1/3'>
-                      <Link href={`/${data.id}`}>
-                        <EventCard key={userEvent.id} fetchedEvent={data} />
-                      </Link>
-                    </CarouselItem>
-                  )
-                );
-              })}
+                  return (
+                    data && (
+                      <CarouselItem key={data.id} className="sm:basis-1/2">
+                        <Link href={`/${data.id}`}>
+                          <EventCard key={userEvent.id} fetchedEvent={data} />
+                        </Link>
+                      </CarouselItem>
+                    )
+                  );
+                })}
               </CarouselContent>
-              <CarouselNext />
             </Carousel>
           </div>
           <div className="space-y-5">

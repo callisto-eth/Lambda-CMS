@@ -17,7 +17,7 @@ export const processPayment = async (
       key: process.env.key_id,
       amount: parseFloat(amount) * 100,
       currency: 'INR',
-      name: subevent,
+      name: name,
       description: 'Transcation for Subevent Registration',
       order_id: order_id,
       handler: async function (response: any) {

@@ -56,7 +56,14 @@ export default function JoinSubEventFlow({
     const { orderId } = await resp.json();
 
     if (orderId)
-      processPayment(orderId, 'test', 'test@test.com', amount, subevent, event);
+      processPayment(
+        orderId,
+        subEventResponse.topic,
+        'test@test.com',
+        amount,
+        subevent,
+        event,
+      );
   }
 
   <Script

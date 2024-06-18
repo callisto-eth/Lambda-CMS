@@ -17,7 +17,13 @@ import { CalendarIcon } from 'lucide-react';
 export function DatePickerWithRange({
   className,
   field,
-}: React.HTMLAttributes<HTMLDivElement> & { field: any }) {
+  fromDate,
+  toDate,
+}: React.HTMLAttributes<HTMLDivElement> & {
+  field: any;
+  fromDate?: Date;
+  toDate?: Date;
+}) {
   return (
     <div className={cn('grid gap-2', className)}>
       <Popover>
@@ -52,11 +58,12 @@ export function DatePickerWithRange({
             className="dark:bg-[#212325]"
             initialFocus
             mode="range"
-            fromDate={new Date(Date.now())}
+            fromDate={fromDate}
             defaultMonth={field?.from}
             selected={field.value}
             onSelect={field.onChange}
             numberOfMonths={1}
+            toDate={toDate}
           />
         </PopoverContent>
       </Popover>
