@@ -1,4 +1,4 @@
-import { Button } from './ui/button';
+import { Button } from '../ui/button';
 import { IconParkSolidLike, MingcuteComment2Fill } from './Icons';
 import { Database } from '@/types/supabase';
 import timesago from 'timesago';
@@ -27,7 +27,7 @@ export default function PostBox({
           `/${postResponse.author}/avatar.png?time=${new Date().toISOString()}`,
         ).data.publicUrl,
     );
-  }, [postResponse.author]);
+  }, [postResponse.author, supabaseClient.storage]);
   const [isLiked, setIsLiked] = useState(false);
 
   useEffect(() => {
@@ -36,7 +36,7 @@ export default function PostBox({
         setIsLiked(postLikes.includes(userData.data.user.id));
       }
     });
-  }, []);
+  }, [postLikes, supabaseClient.auth]);
 
   return (
     <div className="space-y-4 border-t-[1px] border-[#948b96] border-opacity-30 mt-4 pt-4">

@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 
-import { MdiLambda, SolarLogin3BoldDuotone } from '@/components/Icons';
+import { MdiLambda, SolarLogin3BoldDuotone } from '@/components/common/Icons';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import Image from 'next/image';
 import { useState, ChangeEvent } from 'react';

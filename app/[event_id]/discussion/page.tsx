@@ -3,7 +3,7 @@
 import { Textarea } from '@/components/ui/textarea';
 
 import { Button } from '@/components/ui/button';
-import { MingcuteSendFill } from '@/components/Icons';
+import { MingcuteSendFill } from '@/components/common/Icons';
 import {
   Form,
   FormControl,
@@ -15,7 +15,7 @@ import { z } from 'zod';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import MessageContent from '@/components/MessageContent';
+import MessageContent from '@/components/event/MessageContent';
 import { createClient } from '@/utils/supabase/client';
 import { useEffect, useState } from 'react';
 
@@ -64,7 +64,7 @@ export default function Chat({ params }: { params: { event_id: string } }) {
             });
         }
       });
-  }, []);
+  }, [params.event_id, supabase]);
 
   async function streamMessages(chat: string) {
     supabase

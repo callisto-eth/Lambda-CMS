@@ -4,7 +4,7 @@ import { ReactNode } from 'react';
 
 export default async function Wrapper({ children }: { children: ReactNode }) {
   const supabase = createClient();
-  const { data, error } = await supabase.auth.getUser();
+  const { data } = await supabase.auth.getUser();
   if (!data.user) {
     redirect('/');
   }

@@ -3,7 +3,7 @@ import {
   MaterialSymbolsInfo,
   PhUsersFourDuotone,
   SolarTicketBold,
-} from '../Icons';
+} from '../common/Icons';
 import { Button } from '../ui/button';
 import { Sheet, SheetTrigger } from '../ui/sheet';
 

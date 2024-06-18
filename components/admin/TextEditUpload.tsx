@@ -2,7 +2,7 @@
 
 import React, { InputHTMLAttributes, useState } from 'react';
 import { Button } from '../ui/button';
-import { CharmTick, MaterialSymbolsEdit } from '../Icons';
+import { CharmTick, MaterialSymbolsEdit } from '../common/Icons';
 import { cn } from '@/lib/utils';
 
 export interface TextEditUploadProps

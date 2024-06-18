@@ -1,8 +1,8 @@
 'use client';
 
 import { MaterialSymbolsJoin } from './Icons';
-import { Button } from './ui/button';
-import { useToast } from './ui/use-toast';
+import { Button } from '../ui/button';
+import { useToast } from '../ui/use-toast';
 
 export default function JoinButton({ eventID }: { eventID: string }) {
   const { toast } = useToast();

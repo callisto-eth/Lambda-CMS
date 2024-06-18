@@ -2,9 +2,9 @@
 
 import { Dispatch, SetStateAction, useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { Input } from './ui/input';
+import { Input } from '../ui/input';
 import { SolarCloudUploadBoldDuotone } from './Icons';
-import { toast } from './ui/use-toast';
+import { toast } from '../ui/use-toast';
 
 export default function ImageUpload({
   size,
@@ -47,7 +47,7 @@ export default function ImageUpload({
         fileReader.readAsDataURL(acceptedFile);
       });
     },
-    [setUploadedFile],
+    [setUploadedFile, avatarImage, formField],
   );
 
   const { getRootProps, getInputProps } = useDropzone({ onDrop });

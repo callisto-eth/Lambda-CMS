@@ -7,7 +7,7 @@ import React, {
   useState,
 } from 'react';
 import { Button, buttonVariants } from '../ui/button';
-import { CharmTick, MaterialSymbolsEdit } from '../Icons';
+import { CharmTick, MaterialSymbolsEdit } from '../common/Icons';
 import { cn } from '@/lib/utils';
 import TextareaAutosize from 'react-textarea-autosize';
 

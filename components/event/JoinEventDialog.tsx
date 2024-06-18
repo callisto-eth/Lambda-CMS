@@ -7,12 +7,12 @@ import {
   InputOTPSlot,
 } from '@/components/ui/input-otp';
 
-import { MaterialSymbolsJoin } from '@/components/Icons';
+import { MaterialSymbolsJoin } from '@/components/common/Icons';
 
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { REGEXP_ONLY_DIGITS_AND_CHARS } from 'input-otp';
-import { Input } from './ui/input';
-import { Button } from './ui/button';
+import { Input } from '../ui/input';
+import { Button } from '../ui/button';
 
 export default function JoinEventDialog() {
   return (

@@ -1,7 +1,7 @@
 'use client';
 
 import { ChangeEvent, useCallback, useState } from 'react';
-import { CharmTick, MaterialSymbolsEdit } from '../Icons';
+import { CharmTick, MaterialSymbolsEdit } from '../common/Icons';
 import { useToast } from '../ui/use-toast';
 
 export default function BannerImageUpload({

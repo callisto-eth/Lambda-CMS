@@ -45,7 +45,7 @@ export default function UpdateSubEventModal({
           setSubEventResponse(response.data);
         }
       });
-  }, []);
+  }, [subEventId, supabaseClient]);
 
   async function onSubmit(fieldValues: any) {
     Object.keys(fieldValues).forEach((key) =>

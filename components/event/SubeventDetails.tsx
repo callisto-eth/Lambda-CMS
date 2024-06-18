@@ -1,8 +1,8 @@
 import { subEventMetadata } from '@/types/subevent';
 import { SheetContent } from '../ui/sheet';
 
-import Map from '../Map';
-import { MaterialSymbolsLightMap, PhLinkDuotone } from '../Icons';
+import Map from '../common/Map';
+import { MaterialSymbolsLightMap, PhLinkDuotone } from '../common/Icons';
 import Link from 'next/link';
 import { z } from 'zod';
 

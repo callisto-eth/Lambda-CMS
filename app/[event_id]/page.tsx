@@ -1,6 +1,8 @@
-import DiscussionButton from '@/components/DiscussionButton';
-import { MdiDotsHorizontal } from '@/components/Icons';
-import JoinButton from '@/components/JoinButton';
+import {
+  MdiDotsHorizontal,
+  PhChatsCircleFill,
+} from '@/components/common/Icons';
+import JoinButton from '@/components/common/JoinButton';
 import LeaveEventButton from '@/components/event/LeaveEventButton';
 import TicketModal from '@/components/event/TicketModal';
 import Space from '@/components/event/pages/Space';
@@ -14,6 +16,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Database } from '@/types/supabase';
 import { handleErrors } from '@/utils/helpers';
 import { createClient } from '@/utils/supabase/server';
+import Link from 'next/link';
 import randomColor from 'randomcolor';
 
 export default async function EventInfo({
@@ -147,7 +150,13 @@ export default async function EventInfo({
                     />
                   </DropdownMenuContent>
                 </DropdownMenu>
-                <DiscussionButton event_id={fetchEventResponseData.id} />
+                <Link
+                  href={`/${fetchEventResponseData.id}/discussion `}
+                  className="inline-flex items-center p-2 space-x-2  justify-center whitespace-nowrap font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-fit transition-shadow hover:shadow-[0_0_2px_#fb4500,inset_0_0_2px_#fb4500,0_0_2px_#fb4500,0_0_10px_#fb4500,0_0_10px_#fb4500] hover:bg-[#FB4500] rounded-full text-base bg-[#FB4500] text-[#212325]"
+                >
+                  <PhChatsCircleFill className="text-2xl" />
+                  <p className="hidden lg:block">Discussion</p>
+                </Link>
                 <TicketModal
                   eventId={fetchEventResponseData.id}
                   userData={userData.data.user}

@@ -1,13 +1,13 @@
 'use client';
 
-import { AvatarDropDown } from '@/components/AvatarDropdown';
-import CreateEventModal from '@/components/CreateEventModal';
+import { AvatarDropDown } from '@/components/common/AvatarDropdown';
+import CreateEventModal from '@/components/event/CreateEventModal';
 import {
   MaterialSymbolsAddCircle,
   MaterialSymbolsJoin,
   MdiLambda,
-} from '@/components/Icons';
-import JoinEventDialog from '@/components/JoinEventDialog';
+} from '@/components/common/Icons';
+import JoinEventDialog from '@/components/event/JoinEventDialog';
 
 import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 import { useState } from 'react';

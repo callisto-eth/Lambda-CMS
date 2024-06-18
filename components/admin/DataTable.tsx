@@ -2,7 +2,7 @@
 
 import { Database } from '@/types/supabase';
 
-import { FlowbiteCaretSortSolid } from '../Icons';
+import { FlowbiteCaretSortSolid } from '../common/Icons';
 import { Badge } from '../ui/badge';
 import DataRow from './DataRow';
 import { useState } from 'react';

@@ -5,8 +5,8 @@ import {
   MajesticonsStatusOnline,
   PhCaretLeft,
   SolarCalendarAddBoldDuotone,
-} from './Icons';
-import { DialogContent } from './ui/dialog';
+} from '../common/Icons';
+import { DialogContent } from '../ui/dialog';
 import {
   Form,
   FormControl,
@@ -14,19 +14,19 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from './ui/form';
-import { Input } from './ui/input';
+} from '../ui/form';
+import { Input } from '../ui/input';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Button } from './ui/button';
+import { Button } from '../ui/button';
 import { useEffect, useState } from 'react';
-import ImageUpload from './ImageUpload';
-import { DatePickerWithRange } from './CalenderRange';
-import { Checkbox } from './ui/checkbox';
+import ImageUpload from '../common/ImageUpload';
+import { DatePickerWithRange } from '../common/CalenderRange';
+import { Checkbox } from '../ui/checkbox';
 import { CreateEventSchema } from '@/app/api/event/create/route';
 import { animatePageIn } from '@/utils/animation';
-import { useToast } from './ui/use-toast';
+import { useToast } from '../ui/use-toast';
 import { createEventSchema } from '@/types/subevent';
 
 export default function CreateEventModal({

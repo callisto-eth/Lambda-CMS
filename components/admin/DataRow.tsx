@@ -11,8 +11,8 @@ import {
   FluentOrganizationHorizontal24Filled,
   MaterialSymbolsAddModerator,
   MaterialSymbolsPersonOutline,
-} from '../Icons';
-import CTAButton from '../CTAButton';
+} from '../common/Icons';
+import CTAButton from '../common/CTAButton';
 import { Database } from '@/types/supabase';
 import { createClient } from '@/utils/supabase/client';
 import { useToast } from '../ui/use-toast';

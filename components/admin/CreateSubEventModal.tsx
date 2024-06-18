@@ -13,9 +13,9 @@ import {
   FormMessage,
 } from '../ui/form';
 import { Input } from '../ui/input';
-import { DatePickerWithRange } from '../CalenderRange';
+import { DatePickerWithRange } from '../common/CalenderRange';
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
-import ImageUpload from '../ImageUpload';
+import ImageUpload from '../common/ImageUpload';
 import { useEffect, useState } from 'react';
 import { ScrollArea } from '../ui/scroll-area';
 import { Button } from '../ui/button';

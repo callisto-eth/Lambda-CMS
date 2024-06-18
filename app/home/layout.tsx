@@ -1,5 +1,5 @@
-import Navbar from '@/components/Navbar';
-import ProfileModal from '@/components/ProfileModal';
+import Navbar from '@/components/common/Navbar';
+import ProfileModal from '@/components/common/ProfileModal';
 import { createClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
 

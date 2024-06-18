@@ -1,8 +1,8 @@
 import { Database } from '@/types/supabase';
 import { createClient } from '@/utils/supabase/client';
 import truncate from 'ansi-truncate';
-import { Button } from './ui/button';
-import { PhCaretRightBold } from './Icons';
+import { Button } from '../ui/button';
+import { PhCaretRightBold } from '../common/Icons';
 
 export default function EventCard({
   fetchedEvent,

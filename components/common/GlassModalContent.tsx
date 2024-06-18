@@ -1,6 +1,6 @@
 import { X } from 'lucide-react';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
-import { DialogOverlay, DialogPortal } from './ui/dialog';
+import { DialogOverlay, DialogPortal } from '../ui/dialog';
 import React from 'react';
 import { cn } from '@/lib/utils';
 

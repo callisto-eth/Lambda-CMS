@@ -1,6 +1,6 @@
 'use client';
 
-import ImageUpload from '@/components/ImageUpload';
+import ImageUpload from '@/components/common/ImageUpload';
 import { Button } from '@/components/ui/button';
 import { DialogContent } from '@/components/ui/dialog';
 import {

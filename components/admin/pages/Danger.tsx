@@ -1,6 +1,6 @@
 'use client';
 
-import { SolarDangerBold } from '@/components/Icons';
+import { SolarDangerBold } from '@/components/common/Icons';
 import { Button } from '@/components/ui/button';
 import DangerZoneCard from '../DangerZoneCard';
 import { createClient } from '@/utils/supabase/client';

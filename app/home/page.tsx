@@ -1,5 +1,5 @@
-import EventCard from '@/components/EventCard';
-import { PhGearFill } from '@/components/Icons';
+import EventCard from '@/components/event/EventCard';
+import { PhGearFill } from '@/components/common/Icons';
 import { handleErrors } from '@/utils/helpers';
 import { createClient } from '@/utils/supabase/server';
 import Link from 'next/link';

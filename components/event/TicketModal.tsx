@@ -1,14 +1,14 @@
 'use client';
 
 import { Database } from '@/types/supabase';
-import { SolarTicketBold } from '../Icons';
+import { SolarTicketBold } from '../common/Icons';
 import { Dialog, DialogTrigger } from '../ui/dialog';
 import QRCode from 'react-qr-code';
 import { useEffect, useState } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import { UserResponse } from '@supabase/supabase-js';
-import CTAButton from '../CTAButton';
-import { GlassDialogContent } from '../GlassModalContent';
+import CTAButton from '../common/CTAButton';
+import { GlassDialogContent } from '../common/GlassModalContent';
 import { handleErrors } from '@/utils/helpers';
 
 export default function TicketModal({
@@ -33,7 +33,7 @@ export default function TicketModal({
         if (error) handleErrors(error.message, 500);
         if (data) setEventAttendeeResponse(data);
       });
-  }, []);
+  }, [eventId, supabaseClient, userData]);
   return (
     eventAttendeeResponse && (
       <Dialog>

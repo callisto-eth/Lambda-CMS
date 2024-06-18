@@ -8,7 +8,7 @@ import {
   MaterialSymbolsEdit,
   MaterialSymbolsSettings,
   PajamasGithub,
-} from '@/components/Icons';
+} from '@/components/common/Icons';
 import { useEffect, useState, SVGProps, ReactNode } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import { Json } from '@/types/supabase';
@@ -30,7 +30,7 @@ import { Input } from '@/components/ui/input';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { useToast } from '@/components/ui/use-toast';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
-import ImageUpload from '@/components/ImageUpload';
+import ImageUpload from '@/components/common/ImageUpload';
 import { dataURLtoFile } from '@/utils/helpers';
 import { error } from 'console';
 import Connections from '@/components/settings/pages/Connections';

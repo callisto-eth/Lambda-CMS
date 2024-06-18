@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import React from 'react';
-import { ThemeProvider } from '@/components/theme-provider';
 import { Toaster } from '@/components/ui/toaster';
-import { MdiLambda } from '@/components/Icons';
+import { MdiLambda } from '@/components/common/Icons';
+import { ThemeProvider } from '@/components/common/theme-provider';
 
 export const metadata: Metadata = {
   title: 'Lambda | Supercharge your Socials',
@@ -24,13 +24,13 @@ export default async function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning={true}>
       <body className="bg-[#212325] *:font-DM-Sans">
-        <div className="fixed h-screen animateModal w-screen z-[-1] opacity-0 flex justify-center items-center flex-col"></div>
         <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
           enableSystem
+          defaultTheme="dark"
           disableTransitionOnChange
+          attribute="class"
         >
+          <div className="fixed h-screen animateModal w-screen z-[-1] opacity-0 flex justify-center items-center flex-col"></div>
           {children}
           <footer className="md:my-20 md:px-20 px-10 my-10 font-DM-Sans">
             <div className="flex justify-between items-center ">

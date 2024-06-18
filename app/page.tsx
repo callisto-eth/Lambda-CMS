@@ -1,7 +1,7 @@
 'use client';
 
-import AuthModal from '@/components/AuthModal';
-import { MdiLambda } from '@/components/Icons';
+import AuthModal from '@/components/common/AuthModal';
+import { MdiLambda } from '@/components/common/Icons';
 import { createClient } from '@/utils/supabase/client';
 
 import Image from 'next/image';

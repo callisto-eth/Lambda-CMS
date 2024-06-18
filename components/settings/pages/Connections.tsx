@@ -4,7 +4,7 @@ import { ReactNode, useEffect, useState } from 'react';
 import { createClient } from '@/utils/supabase/client';
 
 import { useToast } from '../../ui/use-toast';
-import { PajamasGithub } from '@/components/Icons';
+import { PajamasGithub } from '@/components/common/Icons';
 import { Button } from '@/components/ui/button';
 
 type Provider =
@@ -45,17 +45,18 @@ const lambdaIdentities: IdType[] = [
 ];
 
 export default function Connections() {
+  const { toast } = useToast();
+
+  const supabase = createClient();
+
   const [userIdents, setUserIdents] = useState<any>();
 
   useEffect(() => {
     supabase.auth.getUserIdentities().then((data) => {
       setUserIdents(data.data?.identities);
     });
-  }, []);
+  }, [supabase.auth]);
 
-  const { toast } = useToast();
-
-  const supabase = createClient();
   return (
     <main className="col-span-10 space-y-4">
       <div className="space-y-1">

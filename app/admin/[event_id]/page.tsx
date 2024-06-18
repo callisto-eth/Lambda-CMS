@@ -7,7 +7,7 @@ import {
   MingcutePlugin2Fill,
   PhUsersFourDuotone,
   SolarDangerBold,
-} from '@/components/Icons';
+} from '@/components/common/Icons';
 import { useEffect, useState } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import { Database, Json } from '@/types/supabase';
@@ -60,7 +60,7 @@ export default function Dashboard({
           setEventDataResponseData(eventData.data);
         }
       });
-  }, []);
+  }, [params.event_id]);
 
   return (
     eventDataResponse && (

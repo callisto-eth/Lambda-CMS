@@ -13,7 +13,7 @@ import {
   AccordionTrigger,
   AccordionItem,
 } from '@/components/ui/accordion';
-import { MaterialSymbolsEdit } from '@/components/Icons';
+import { MaterialSymbolsEdit } from '@/components/common/Icons';
 import UpdateSubEventModal from '../UpdateSubEventModal';
 
 export default function Subevents({ eventId }: { eventId: string }) {
@@ -32,7 +32,7 @@ export default function Subevents({ eventId }: { eventId: string }) {
           setSubEventResponse(response.data);
         }
       });
-  }, []);
+  }, [eventId, supabaseClient]);
 
   const { toast } = useToast();
   return (

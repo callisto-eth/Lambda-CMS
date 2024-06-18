@@ -1,6 +1,6 @@
 'use client';
 
-import { PepiconsPencilLeave } from '../Icons';
+import { PepiconsPencilLeave } from '../common/Icons';
 import { DropdownMenuItem } from '../ui/dropdown-menu';
 import { createClient } from '@/utils/supabase/client';
 import { useToast } from '../ui/use-toast';

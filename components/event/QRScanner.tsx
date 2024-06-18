@@ -1,9 +1,9 @@
 'use client';
 import { Scanner } from '@yudiel/react-qr-scanner';
 import { Button } from '../ui/button';
-import { PhHandPalmFill } from '../Icons';
+import { PhHandPalmFill } from '../common/Icons';
 import { Database } from '@/types/supabase';
-import { GlassDialogContent } from '../GlassModalContent';
+import { GlassDialogContent } from '../common/GlassModalContent';
 import { Dialog, DialogTrigger } from '../ui/dialog';
 import { useEffect, useState } from 'react';
 import { createClient } from '@/utils/supabase/client';
@@ -87,7 +87,7 @@ export default function QRScanner({
           }
         });
     }
-  }, [passId]);
+  }, [passId, eventId, subEventId, supabaseClient, toast]);
 
   return (
     eventAttendeeResponse &&

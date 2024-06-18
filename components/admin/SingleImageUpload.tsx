@@ -1,7 +1,7 @@
 'use client';
 
 import { ChangeEvent, useCallback, useEffect, useState } from 'react';
-import { CharmTick, MaterialSymbolsEdit } from '../Icons';
+import { CharmTick, MaterialSymbolsEdit } from '../common/Icons';
 import { useToast } from '../ui/use-toast';
 
 export default function SingleImageUpload({
@@ -15,6 +15,8 @@ export default function SingleImageUpload({
   const [imageTempURL, setImageTempURL] = useState<
     string | ArrayBuffer | null
   >();
+
+  const { toast } = useToast();
 
   const fileReaderCallback = useCallback(
     (eV: ChangeEvent<HTMLInputElement>) => {
@@ -40,9 +42,9 @@ export default function SingleImageUpload({
         fileReader.readAsDataURL(eV.target.files[0]);
       }
     },
-    [],
+    [toast],
   );
-  const { toast } = useToast();
+
   return (
     <label
       className="absolute cursor-pointer md:w-[150px] overflow-hidden md:h-[150px] w-[100px] h-[100px] rounded-full bg-cover border-[6px] bottom-[-50px] left-[10%] border-[#212325]"

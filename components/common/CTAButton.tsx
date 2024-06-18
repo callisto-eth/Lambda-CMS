@@ -1,4 +1,4 @@
-import { Button } from './ui/button';
+import { Button } from '../ui/button';
 
 const buttonVariants = {
   lambdaGlow:
@@ -8,16 +8,22 @@ const buttonVariants = {
 };
 
 export default function CTAButton({
+  disabled = false,
   children,
   variant = 'defaultPrimary',
   onClick = async () => {},
 }: {
+  disabled?: boolean;
   children: React.ReactNode;
   variant?: keyof typeof buttonVariants;
   onClick?: () => Promise<void>;
 }) {
   return (
-    <Button className={buttonVariants[variant]} onClick={onClick}>
+    <Button
+      className={buttonVariants[variant]}
+      onClick={onClick}
+      disabled={disabled}
+    >
       {children}
     </Button>
   );

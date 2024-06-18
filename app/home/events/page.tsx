@@ -1,6 +1,6 @@
 'use client';
 
-import EventCard from '@/components/EventCard';
+import EventCard from '@/components/event/EventCard';
 
 import { createClient } from '@/utils/supabase/client';
 import Link from 'next/link';

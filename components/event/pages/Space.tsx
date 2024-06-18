@@ -1,12 +1,12 @@
 'use client';
 
-import { GlassDialogContent } from '@/components/GlassModalContent';
+import { GlassDialogContent } from '@/components/common/GlassModalContent';
 import {
   MaterialSymbolsAddCircle,
   MaterialSymbolsCancel,
   MaterialSymbolsLightAttachment,
-} from '@/components/Icons';
-const PostBox = lazy(() => import('@/components/PostBox'));
+} from '@/components/common/Icons';
+const PostBox = lazy(() => import('@/components/common/PostBox'));
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 
@@ -62,7 +62,7 @@ export default function Space({
         if (error) handleErrors(error, status);
         if (data) setSpacePosts(data);
       });
-  }, []);
+  }, [spaceId]);
 
   const [modalState, setModalState] = useState(false);
 

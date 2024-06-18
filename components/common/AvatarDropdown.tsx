@@ -1,25 +1,12 @@
 'use client';
 
-import {
-  Mail,
-  MessageSquare,
-  Plus,
-  Settings,
-  User,
-  UserPlus,
-  Users,
-} from 'lucide-react';
+import { Plus, Settings } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuPortal,
-  DropdownMenuSeparator,
   DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -29,9 +16,9 @@ import {
   PepiconsPencilLeave,
 } from './Icons';
 import Link from 'next/link';
-import JoinEventDialog from './JoinEventDialog';
-import CreateEventModal from './CreateEventModal';
-import { Dialog } from './ui/dialog';
+import JoinEventDialog from '../event/JoinEventDialog';
+import CreateEventModal from '../event/CreateEventModal';
+import { Dialog } from '../ui/dialog';
 import { useEffect, useState } from 'react';
 import { createClient } from '@/utils/supabase/client';
 
@@ -46,7 +33,7 @@ export function AvatarDropDown() {
     supabaseClient.auth.getUser().then((user) => {
       if (user) setUserProfile(user.data.user);
     });
-  }, []);
+  }, [supabaseClient.auth]);
   return (
     <Dialog
       open={isCreateEventDialogOpen || isJoinDialogOpen}
