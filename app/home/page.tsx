@@ -29,9 +29,7 @@ export default async function Home() {
       .eq('id', userData.data.user.id)
       .single();
 
-    if (error) {
-      handleErrors(error.message, 500);
-    }
+    console.log(data);
 
     const { data: userEventResponse, error: userEventError } = await supabase
       .schema('connections')
@@ -42,7 +40,7 @@ export default async function Home() {
     if (!userEventResponse) handleErrors(userEventError.message, 500);
 
     return (
-      <main className="p-[0_2rem_0_2.5rem] grid lg:grid-cols-16 gap-x-10">
+      <main className="p-[0_2rem_0_2.5rem] grid lg:grid-cols-16 gap-x-10 mb-10">
         <div className="lg:col-span-12 space-y-5">
           <div className="space-y-5">
             <p className="text-4xl font-semibold align-middle tracking-tight">

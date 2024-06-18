@@ -1,8 +1,6 @@
 import { createClient } from '@/utils/supabase/server';
 import { NextRequest, NextResponse } from 'next/server';
 
-import { jwtDecode } from 'jwt-decode';
-
 type SignInRequestSchema = {
   email: string;
   password: string;
