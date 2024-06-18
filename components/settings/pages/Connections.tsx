@@ -81,7 +81,7 @@ export default function Connections() {
                     await supabase.auth.linkIdentity({
                       options: {
                         redirectTo:
-                          process.env.NODE_ENV === 'production'
+                          process.env.NODE_ENV !== 'production'
                             ? 'http://localhost:3000/auth/callback'
                             : 'https://lambda.events/auth/callback',
                       },
