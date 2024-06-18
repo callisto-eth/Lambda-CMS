@@ -1,14 +1,12 @@
 import EventCard from '@/components/event/EventCard';
 import { PhGearFill } from '@/components/common/Icons';
-import { handleErrors } from '@/utils/helpers';
+import { filter, handleErrors } from '@/utils/helpers';
 import { createClient } from '@/utils/supabase/server';
 import Link from 'next/link';
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
 } from '@/components/ui/carousel';
 
 export default async function Home() {
@@ -141,22 +139,22 @@ export default async function Home() {
                     UPCOMING EVENTS
                   </p>
                   <p className="text-4xl">
-                    {
-                      userEventResponse?.filter(async (userEvent) => {
-                        const { data, error } = await supabase
-                          .from('events')
-                          .select()
-                          .eq('id', userEvent.event)
-                          .single();
+                    {userEventResponse &&
+                      (
+                        await filter(userEventResponse, async (userEvent) => {
+                          const { data, error } = await supabase
+                            .from('events')
+                            .select()
+                            .eq('id', userEvent.event)
+                            .single();
 
-                        if (error) handleErrors(error.message, 500);
-
-                        return (
-                          data?.start_time &&
-                          new Date(data?.start_time) > new Date()
-                        );
-                      }).length
-                    }
+                          if (error) handleErrors(error.message, 500);
+                          return (
+                            data?.start_time &&
+                            new Date(data.start_time) > new Date()
+                          );
+                        })
+                      ).length}
                   </p>
                 </div>
               </div>

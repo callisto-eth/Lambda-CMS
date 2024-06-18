@@ -35,3 +35,15 @@ export function stringToDate(
 export function handleErrors(fetchResponseError: string, status: number) {
   throw new Error(status + ' ' + fetchResponseError);
 }
+
+export async function filter<T>(
+  arr: T[],
+  callback: (item: T) => Promise<string | boolean | undefined>,
+) {
+  const fail = Symbol();
+  return (
+    await Promise.all(
+      arr.map(async (item) => ((await callback(item)) ? item : fail)),
+    )
+  ).filter((i) => i !== fail);
+}
