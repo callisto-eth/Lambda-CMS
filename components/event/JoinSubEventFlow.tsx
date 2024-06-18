@@ -101,6 +101,7 @@ export default function JoinSubEventFlow({
               });
             }
           }
+          setDialogState(true);
         }}
       >
         <MaterialSymbolsJoin className="text-2xl" />
