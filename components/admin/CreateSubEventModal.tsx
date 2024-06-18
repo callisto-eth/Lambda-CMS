@@ -25,6 +25,7 @@ import SearchAddress from '../ui/search-addresses';
 import { Root, createSubEventSchema } from '@/types/subevent';
 import { Database } from '@/types/supabase';
 import { createClient } from '@/utils/supabase/client';
+import { metadata } from '@/app/layout';
 
 export function CreateSubEventModal({
   eventId,
@@ -88,6 +89,7 @@ export function CreateSubEventModal({
         max_attendees: fieldValues.max_attendees,
         platform: fieldValues.platform,
         banner_image: fieldValues.banner_image,
+        metadata: fieldValues.metadata,
       }),
     });
     if (createSubeventResponse.status === 201) {

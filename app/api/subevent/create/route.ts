@@ -9,6 +9,8 @@ export async function POST(req: NextRequest) {
   } = await req.json();
   const supabase = createClient();
 
+  console.log(data);
+
   let { data: createSubeventResponse, error: subeventCreationError } =
     await supabase
       .from('sub_events')
