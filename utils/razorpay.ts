@@ -44,9 +44,8 @@ export const processPayment = async (
           message: string;
         } = await result.json();
 
+        console.log(res);
         if (res.isOk) {
-          console.log('Payment Successful');
-
           const { error: paymentError } = await supabase
             .from('payments')
             .update({ paid: true })

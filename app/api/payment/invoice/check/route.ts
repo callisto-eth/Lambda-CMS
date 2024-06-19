@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
 import { createClient } from '@/utils/supabase/server';
+import { handleErrors } from '@/utils/helpers';
 
 const generatedSignature = (
   razorpayOrderId: string,
@@ -34,11 +35,13 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const { data, error } = await supabase
+  const { error } = await supabase
     .from('payments')
     .update({ paid: true })
-    .match({ rzp_order_id: orderCreationId })
+    .eq('id', orderCreationId)
     .single();
+
+  if (error) handleErrors(error.message, 500);
 
   return NextResponse.json(
     { message: 'payment verified successfully', isOk: true },
