@@ -337,6 +337,7 @@ export type Database = {
           name: string
           organizer: string
           platform: Database["public"]["Enums"]["E_EVENT_PLATFORM"]
+          slug: string | null
           spaces: string | null
           start_time: string
           visibility: Database["public"]["Enums"]["E_EVENT_VISIBILITY"]
@@ -350,6 +351,7 @@ export type Database = {
           name: string
           organizer: string
           platform: Database["public"]["Enums"]["E_EVENT_PLATFORM"]
+          slug?: string | null
           spaces?: string | null
           start_time: string
           visibility: Database["public"]["Enums"]["E_EVENT_VISIBILITY"]
@@ -363,6 +365,7 @@ export type Database = {
           name?: string
           organizer?: string
           platform?: Database["public"]["Enums"]["E_EVENT_PLATFORM"]
+          slug?: string | null
           spaces?: string | null
           start_time?: string
           visibility?: Database["public"]["Enums"]["E_EVENT_VISIBILITY"]
@@ -594,6 +597,18 @@ export type Database = {
         Args: {
           uid: string
           claim: string
+        }
+        Returns: string
+      }
+      generate_slug: {
+        Args: {
+          size: number
+        }
+        Returns: string
+      }
+      generate_uid: {
+        Args: {
+          size: number
         }
         Returns: string
       }
