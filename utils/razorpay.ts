@@ -30,7 +30,7 @@ export const processPayment = async (
 
         const result = await fetch(
           process.env.NODE_ENV === 'production'
-            ? 'https://lambda.events/api/payment/invoice/check'
+            ? 'https://www.lambda.events/api/payment/invoice/check'
             : `http://localhost:3000/api/payment/invoice/check`,
           {
             method: 'POST',
@@ -68,7 +68,7 @@ export const processPayment = async (
               } = await (
                 await fetch(
                   process.env.NODE_ENV === 'production'
-                    ? 'https://lambda.events/api/event/attendee/fetch'
+                    ? 'https://www.lambda.events/api/event/attendee/fetch'
                     : `http://localhost:3000/api/event/attendee/fetch`,
                   {
                     method: 'POST',
