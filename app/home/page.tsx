@@ -56,7 +56,7 @@ export default async function Home() {
                   return (
                     data && (
                       <CarouselItem key={data.id} className="sm:basis-1/2">
-                        <Link href={`/${data.id}`}>
+                        <Link href={`/e/${data.id}`}>
                           <EventCard key={userEvent.id} fetchedEvent={data} />
                         </Link>
                       </CarouselItem>
@@ -81,7 +81,7 @@ export default async function Home() {
                     return;
                 }
                 return (
-                  <Link href={`/${publicEvent.id}`} key={publicEvent.id}>
+                  <Link href={`/e/${publicEvent.id}`} key={publicEvent.id}>
                     <EventCard
                       key={publicEvent.id}
                       fetchedEvent={publicEvent}

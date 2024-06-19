@@ -4,13 +4,12 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function POST(req: NextRequest) {
   const { eventId } = await req.json();
   const supabase = createClient();
-
+  console.log("server" + eventId);
   if (eventId) {
     const { data: eventDataResponse, error: eventDataError } = await supabase
       .from('events')
       .select('*')
-      .eq('id', eventId)
-      .single();
+      .eq('slug', eventId);
 
     if (!eventDataResponse) {
       return NextResponse.json(
@@ -31,7 +30,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(
       {
         error: null,
-        data: eventDataResponse,
+        data: eventDataResponse[0],
         status: 200,
       },
       {

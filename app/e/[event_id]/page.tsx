@@ -24,6 +24,7 @@ export default async function EventInfo({
 }: {
   params: { event_id: string };
 }) {
+  console.log("client" + params.event_id)
   const supabase = createClient();
 
   const {
