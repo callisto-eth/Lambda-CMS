@@ -11,13 +11,16 @@ import JoinEventDialog from '@/components/event/JoinEventDialog';
 
 import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 import { useState } from 'react';
+import Link from 'next/link';
 
 export default function Navbar() {
   const [modalState, setModalState] = useState(false);
 
   return (
     <nav className="p-8 flex items-center justify-between md:space-x-12 space-x-4">
-      <MdiLambda className="text-5xl text-[#FB4500]" />
+      <Link href="/home">
+        <MdiLambda className="text-5xl text-[#FB4500]" />
+      </Link>
       <div className="flex items-center space-x-4 font-DM-Sans">
         <Dialog open={modalState} onOpenChange={setModalState}>
           <DialogTrigger className="hidden md:inline-flex items-center justify-center whitespace-nowrap font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-fit py-1.5 px-2 text-[#948b96] rounded-full bg-clip-padding backdrop-filter text-base bg-white backdrop-blur-sm bg-opacity-70 border border-opacity-10 border-gray-100">
