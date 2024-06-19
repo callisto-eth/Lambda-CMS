@@ -28,11 +28,16 @@ export const processPayment = async (
           razorpaySignature: response.razorpay_signature,
         };
 
-        const result = await fetch('/api/payment/invoice/check', {
-          method: 'POST',
-          body: JSON.stringify(data),
-          headers: { 'Content-Type': 'application/json' },
-        });
+        const result = await fetch(
+          process.env.NODE_ENV === 'production'
+            ? 'https://lambda.events/api/payment/invoice/check'
+            : `http://localhost:3000/api/payment/invoice/check`,
+          {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: { 'Content-Type': 'application/json' },
+          },
+        );
 
         const res: {
           isOk: boolean;
