@@ -160,7 +160,10 @@ export default function ProfileModal() {
 
               <Button
                 type="submit"
-                disabled={!profileForm.formState.isValid}
+                disabled={
+                  profileForm.formState.isSubmitting &&
+                  !profileForm.formState.isValid
+                }
                 className="font-DM-Sans p-3 rounded-xl w-full bg-[#323132] text-md font-semibold text-[#b4b3b4] hover:bg-[#b4b3b4] hover:text-[#323132]"
               >
                 Save

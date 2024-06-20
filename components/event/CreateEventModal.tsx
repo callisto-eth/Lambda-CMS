@@ -398,6 +398,7 @@ export default function CreateEventModal({
             !createdEvent && (
               <Button
                 type="submit"
+                disabled={createEventForm.formState.isSubmitting}
                 onClick={() => setIsPublished(true)}
                 className="font-DM-Sans p-3 rounded-xl w-full bg-[#323132] text-md font-semibold text-[#b4b3b4] hover:bg-[#b4b3b4] hover:text-[#323132]"
               >

@@ -15,9 +15,10 @@ import {
 import { Input } from '@/components/ui/input';
 import { SolarLogin3BoldDuotone } from './Icons';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'next/navigation';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dispatch, SetStateAction, useState } from 'react';
+import { useToast } from '../ui/use-toast';
+import Image from 'next/image';
 
 export default function AuthModal({
   modalOpen,
@@ -50,7 +51,8 @@ function FormComponent({
   setAuthState: (val: 'signin' | 'signup') => void;
   setModalOpen: Dispatch<SetStateAction<boolean>>;
 }) {
-  const pageRouter = useRouter();
+  const { toast } = useToast();
+
   async function onSubmit(formValues: z.infer<typeof authSchema>) {
     const resp = await fetch(`/auth/${authType}`, {
       method: 'POST',
@@ -63,9 +65,21 @@ function FormComponent({
       }),
     });
 
-    if (resp.status === 200) {
+    if (resp.status !== 200) {
+      const respJson = await resp.json();
+      toast({
+        title: '❌ ' + respJson.message.split('_').join(' '),
+        description: 'Please try again',
+      });
+    } else {
       setModalOpen(false);
-      pageRouter.push('/@me');
+      toast({
+        title: '🎉 Welcome to Lambda',
+        description: 'You are now logged in',
+      });
+      setTimeout(() => {
+        window.location.replace('/@me');
+      }, 1000);
     }
   }
 
@@ -204,9 +218,19 @@ function FormComponent({
               ></FormField>
               <Button
                 type="submit"
+                disabled={authForm.formState.isSubmitting}
                 className="font-DM-Sans p-3 rounded-xl w-full bg-[#323132] text-md font-semibold text-[#b4b3b4] hover:bg-[#b4b3b4] hover:text-[#323132]"
               >
-                Continue
+                {authForm.formState.isSubmitting ? (
+                  <Image
+                    src={'/Loading.svg'}
+                    height={20}
+                    width={20}
+                    alt="Loading"
+                  />
+                ) : (
+                  'Continue'
+                )}
               </Button>
             </form>
           </Form>

@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 export default function Footer() {
   return (
-    <footer className="px-5 py-10 border-t border-white border-opacity-10 ">
+    <footer className="mt-10 px-5 py-10 border-t border-white border-opacity-10 ">
       <Image
         src={'/Logo.svg'}
         alt="Lambda"

@@ -1,5 +1,4 @@
 import { createClient } from '@/utils/supabase/server';
-import { headers } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 
 type SignupRequestSchema = {
@@ -24,10 +23,7 @@ export async function POST(req: NextRequest) {
 
   if (error) {
     console.log(error);
-    return NextResponse.json(
-      { message: 'Could not authenticate user' },
-      { status: 500 },
-    );
+    return NextResponse.json({ message: error.code }, { status: error.status });
   }
 
   return NextResponse.json({ message: 'Signed in' }, { status: 200 });

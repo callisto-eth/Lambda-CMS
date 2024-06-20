@@ -82,7 +82,7 @@ export default function Connections() {
                       options: {
                         redirectTo:
                           process.env.NODE_ENV !== 'production'
-                            ? 'http://localhost:3000/auth/callback'
+                            ? 'https://lambda.events/auth/callback'
                             : 'https://lambda.events/auth/callback',
                       },
                       provider: lambdaIdentity.supabaseIdentifier,
