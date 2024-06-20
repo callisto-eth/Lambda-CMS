@@ -2,6 +2,7 @@
 
 import { z } from 'zod';
 import {
+  EosIconsThreeDotsLoading,
   MajesticonsStatusOnline,
   PhCaretLeft,
   SolarCalendarAddBoldDuotone,
@@ -58,8 +59,11 @@ export default function CreateEventModal({
 
   const { toast } = useToast();
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   function onSubmit(values: z.infer<typeof createEventSchema>) {
     if (isPublished) {
+      setIsSubmitting(true);
       const uploadData: CreateEventSchema = {
         name: values.event_name,
         description: values.event_desc,
@@ -95,11 +99,13 @@ export default function CreateEventModal({
             setCreatedEvent(data.data);
             setModalState(false);
             animatePageIn(() => {}, modalData);
+            setIsSubmitting(false);
           } else {
             toast({
               title: '❌ Error',
               description: 'There was an error creating your event',
             });
+            setIsSubmitting(false);
           }
         });
       });
@@ -398,11 +404,15 @@ export default function CreateEventModal({
             !createdEvent && (
               <Button
                 type="submit"
-                disabled={createEventForm.formState.isSubmitting}
+                disabled={isSubmitting}
                 onClick={() => setIsPublished(true)}
                 className="font-DM-Sans p-3 rounded-xl w-full bg-[#323132] text-md font-semibold text-[#b4b3b4] hover:bg-[#b4b3b4] hover:text-[#323132]"
               >
-                Publish
+                {isSubmitting ? (
+                  <EosIconsThreeDotsLoading className="text-3xl" />
+                ) : (
+                  'Publish'
+                )}
               </Button>
             )
           )}

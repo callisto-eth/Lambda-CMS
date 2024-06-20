@@ -7,7 +7,10 @@ import {
   InputOTPSlot,
 } from '@/components/ui/input-otp';
 
-import { MaterialSymbolsJoin } from '@/components/common/Icons';
+import {
+  EosIconsThreeDotsLoading,
+  MaterialSymbolsJoin,
+} from '@/components/common/Icons';
 
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { REGEXP_ONLY_DIGITS_AND_CHARS } from 'input-otp';
@@ -21,6 +24,7 @@ export default function JoinEventDialog() {
   const [inputOTP, setInputOTP] = useState('');
   const [eventLink, setEventLink] = useState('');
   const { toast } = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   return (
     <DialogContent className="p-6 w-[340px] bg-black rounded-3xl text-white font-DM-Sans bg-clip-padding backdrop-filter backdrop-blur-md bg-opacity-10 border border-white border-opacity-10">
       <MaterialSymbolsJoin className="text-6xl text-[#d83e08]" />
@@ -59,8 +63,11 @@ export default function JoinEventDialog() {
           className="p-3 rounded-xl"
         />
         <Button
-          disabled={inputOTP.length !== 6 && eventLink.length === 0}
+          disabled={
+            (inputOTP.length !== 6 && eventLink.length === 0) || isSubmitting
+          }
           onClick={async () => {
+            setIsSubmitting(true);
             const eventCode =
               inputOTP.length === 6
                 ? inputOTP
@@ -71,10 +78,15 @@ export default function JoinEventDialog() {
             if (eventCode.length !== 0) {
               await joinEventWithLink(eventCode, toast);
             }
+            setIsSubmitting(false);
           }}
           className=" p-3 rounded-xl w-full bg-[#323132] text-md font-semibold text-[#b4b3b4] hover:bg-[#b4b3b4] hover:text-[#323132]"
         >
-          Join
+          {isSubmitting ? (
+            <EosIconsThreeDotsLoading className="text-3xl" />
+          ) : (
+            'Join'
+          )}
         </Button>
       </div>
     </DialogContent>
@@ -82,8 +94,6 @@ export default function JoinEventDialog() {
 }
 
 async function joinEventWithLink(eventCode: string, toast: any) {
-  console.log('eventCode', eventCode);
-
   const supabase = createClient();
   const userData = await supabase.auth.getUser();
   const { data, error } = await supabase

@@ -19,6 +19,7 @@ import { Database } from '@/types/supabase';
 import { DateTimePicker } from '../ui/date-time-picker';
 import { useToast } from '../ui/use-toast';
 import SearchAddress from '../ui/search-addresses';
+import { EosIconsThreeDotsLoading } from '../common/Icons';
 
 export default function UpdateSubEventModal({
   subEventId,
@@ -31,6 +32,7 @@ export default function UpdateSubEventModal({
   const supabaseClient = createClient();
   const [subEventResponse, setSubEventResponse] =
     useState<Database['public']['Tables']['sub_events']['Row']>();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { toast } = useToast();
 
@@ -48,6 +50,7 @@ export default function UpdateSubEventModal({
   }, []);
 
   async function onSubmit(fieldValues: any) {
+    setIsSubmitting(true);
     Object.keys(fieldValues).forEach((key) =>
       fieldValues[key] === undefined ? delete fieldValues[key] : {},
     );
@@ -72,6 +75,7 @@ export default function UpdateSubEventModal({
     }
 
     setEditModalState(false);
+    setIsSubmitting(false);
   }
 
   return (
@@ -238,9 +242,14 @@ export default function UpdateSubEventModal({
             />
             <Button
               type="submit"
+              disabled={isSubmitting}
               className="font-DM-Sans p-3 rounded-xl w-full bg-[#323132] text-md font-semibold text-[#b4b3b4] hover:bg-[#b4b3b4] hover:text-[#323132]"
             >
-              Save
+              {isSubmitting ? (
+                <EosIconsThreeDotsLoading className="text-3xl" />
+              ) : (
+                'Save'
+              )}
             </Button>
           </form>
         </Form>

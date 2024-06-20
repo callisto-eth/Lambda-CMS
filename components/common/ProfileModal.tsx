@@ -21,6 +21,7 @@ import { useEffect, useState } from 'react';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { GlassDialogContent } from './GlassModalContent';
+import { EosIconsThreeDotsLoading } from './Icons';
 
 const Dialog = dynamic(
   () => import('@/components/ui/dialog').then((mod) => mod.Dialog),
@@ -30,6 +31,7 @@ export default function ProfileModal() {
   const [uploadedFileProfile, setUploadedProfileFile] = useState<
     string | ArrayBuffer | null
   >();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [modalState, setModalState] = useState(false);
   const supabase = createClient();
 
@@ -50,6 +52,7 @@ export default function ProfileModal() {
   const profileForm = useForm({ resolver: zodResolver(profileSchema) });
 
   function onSubmit(fieldValues: z.infer<typeof profileSchema>) {
+    setIsSubmitting(true);
     fetch('/api/profile/create', {
       method: 'POST',
       headers: {
@@ -72,6 +75,7 @@ export default function ProfileModal() {
         modalData.appendChild(profileImage);
 
         setModalState(false);
+        setIsSubmitting(false);
         animatePageIn(() => {}, modalData);
       });
   }
@@ -160,13 +164,14 @@ export default function ProfileModal() {
 
               <Button
                 type="submit"
-                disabled={
-                  profileForm.formState.isSubmitting &&
-                  !profileForm.formState.isValid
-                }
+                disabled={isSubmitting || !profileForm.formState.isValid}
                 className="font-DM-Sans p-3 rounded-xl w-full bg-[#323132] text-md font-semibold text-[#b4b3b4] hover:bg-[#b4b3b4] hover:text-[#323132]"
               >
-                Save
+                {isSubmitting ? (
+                  <EosIconsThreeDotsLoading className="text-5xl" />
+                ) : (
+                  'Submit'
+                )}
               </Button>
             </form>
           </Form>

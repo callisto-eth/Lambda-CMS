@@ -13,7 +13,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { SolarLogin3BoldDuotone } from './Icons';
+import { EosIconsThreeDotsLoading, SolarLogin3BoldDuotone } from './Icons';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dispatch, SetStateAction, useState } from 'react';
@@ -28,12 +28,15 @@ export default function AuthModal({
   setModalOpen: Dispatch<SetStateAction<boolean>>;
 }) {
   const [authState, setAuthState] = useState<'signin' | 'signup'>('signin');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   return (
     <Dialog open={modalOpen} onOpenChange={setModalOpen}>
       <DialogTrigger className="border border-[#FB4500] bg-transparent rounded-3xl text-md px-16 py-3.5 text-[#FB4500] hover:bg-[#FB4500] hover:text-white transition-all duration-200">
         Build your Event
       </DialogTrigger>
       <FormComponent
+        isSubmitting={isSubmitting}
+        setIsSubmitting={setIsSubmitting}
         setModalOpen={setModalOpen}
         authType={authState}
         setAuthState={setAuthState}
@@ -46,7 +49,11 @@ function FormComponent({
   authType,
   setAuthState,
   setModalOpen,
+  isSubmitting,
+  setIsSubmitting,
 }: {
+  isSubmitting: boolean;
+  setIsSubmitting: Dispatch<SetStateAction<boolean>>;
   authType: 'signin' | 'signup';
   setAuthState: (val: 'signin' | 'signup') => void;
   setModalOpen: Dispatch<SetStateAction<boolean>>;
@@ -54,6 +61,7 @@ function FormComponent({
   const { toast } = useToast();
 
   async function onSubmit(formValues: z.infer<typeof authSchema>) {
+    setIsSubmitting(true);
     const resp = await fetch(`/auth/${authType}`, {
       method: 'POST',
       headers: {
@@ -71,8 +79,10 @@ function FormComponent({
         title: '❌ ' + respJson.message.split('_').join(' '),
         description: 'Please try again',
       });
+      setIsSubmitting(false);
     } else {
       setModalOpen(false);
+      setIsSubmitting(false);
       toast({
         title: '🎉 Welcome to Lambda',
         description: 'You are now logged in',
@@ -166,9 +176,14 @@ function FormComponent({
               ></FormField>
               <Button
                 type="submit"
+                disabled={isSubmitting}
                 className="font-DM-Sans p-3 rounded-xl w-full bg-[#323132] text-md font-semibold text-[#b4b3b4] hover:bg-[#b4b3b4] hover:text-[#323132]"
               >
-                Continue
+                {isSubmitting ? (
+                  <EosIconsThreeDotsLoading className="text-3xl" />
+                ) : (
+                  'Continue'
+                )}
               </Button>
             </form>
           </Form>
@@ -218,16 +233,11 @@ function FormComponent({
               ></FormField>
               <Button
                 type="submit"
-                disabled={authForm.formState.isSubmitting}
+                disabled={isSubmitting}
                 className="font-DM-Sans p-3 rounded-xl w-full bg-[#323132] text-md font-semibold text-[#b4b3b4] hover:bg-[#b4b3b4] hover:text-[#323132]"
               >
-                {authForm.formState.isSubmitting ? (
-                  <Image
-                    src={'/Loading.svg'}
-                    height={20}
-                    width={20}
-                    alt="Loading"
-                  />
+                {isSubmitting ? (
+                  <EosIconsThreeDotsLoading className="text-3xl" />
                 ) : (
                   'Continue'
                 )}

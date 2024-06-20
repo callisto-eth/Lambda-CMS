@@ -26,6 +26,7 @@ import { Root, createSubEventSchema } from '@/types/subevent';
 import { Database } from '@/types/supabase';
 import { createClient } from '@/utils/supabase/client';
 import { metadata } from '@/app/layout';
+import { EosIconsThreeDotsLoading } from '../common/Icons';
 
 export function CreateSubEventModal({
   eventId,
@@ -42,6 +43,7 @@ export function CreateSubEventModal({
   const supabase = createClient();
   const [eventData, setEventData] =
     useState<Database['public']['Tables']['events']['Row']>();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   useEffect(() => {
     supabase
       .from('events')
@@ -60,6 +62,7 @@ export function CreateSubEventModal({
   });
 
   async function onSubmit(fieldValues: z.infer<typeof createSubEventSchema>) {
+    setIsSubmitting(true);
     fieldValues.date.from.setHours(
       fieldValues.start_time.getHours(),
       fieldValues.start_time.getMinutes(),
@@ -102,6 +105,7 @@ export function CreateSubEventModal({
         title: '✅ Subevent Created',
         description: 'Subevent has been created successfully',
       });
+      setIsSubmitting(false);
     }
   }
 
@@ -326,9 +330,14 @@ export function CreateSubEventModal({
 
             <Button
               type="submit"
+              disabled={isSubmitting}
               className="font-DM-Sans p-3 rounded-xl w-full bg-[#323132] text-md font-semibold text-[#b4b3b4] hover:bg-[#b4b3b4] hover:text-[#323132]"
             >
-              Publish
+              {isSubmitting ? (
+                <EosIconsThreeDotsLoading className="text-3xl" />
+              ) : (
+                'Publish'
+              )}
             </Button>
           </form>
         </Form>
