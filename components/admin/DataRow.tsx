@@ -30,22 +30,45 @@ export default function DataRow({
     roleName: 'PARTICIPANT' | 'ADMIN' | 'ORGANIZER',
     eventAttendee: any,
   ) {
-    const { error } = await supabase
-      .schema('connections')
-      .from('event_attendees')
-      .update({ role: roleName })
-      .eq('id', eventAttendee.id);
+    const { data: eventAttendeeData, error: eventAttendeeError } =
+      await supabase
+        .schema('connections')
+        .from('event_attendees')
+        .select()
+        .eq('event', eventAttendee.event)
+        .eq('role', 'ORGANIZER');
 
-    if (error) handleErrors(error.message, 500);
+    if (eventAttendeeError) handleErrors(eventAttendeeError.message, 500);
 
-    toast({
-      title: '✅ Role Updated',
-      description: `Role updated to ${roleName} for ${eventAttendee.username}`,
-    });
+    if (eventAttendeeData) {
+      if (
+        (roleName === 'ADMIN' || 'PARTICIPANT') &&
+        eventAttendeeData.length < 2
+      ) {
+        toast({
+          title: '❌ Error',
+          description: `One organizer need to be present in the event.`,
+        });
+        return;
+      }
 
-    setTimeout(() => {
-      window.location.reload();
-    }, 1000);
+      const { error } = await supabase
+        .schema('connections')
+        .from('event_attendees')
+        .update({ role: roleName })
+        .eq('id', eventAttendee.id);
+
+      if (error) handleErrors(error.message, 500);
+
+      toast({
+        title: '✅ Role Updated',
+        description: `Role updated to ${roleName} for ${eventAttendee.username}`,
+      });
+
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+    }
   }
 
   return (
@@ -104,22 +127,65 @@ export default function DataRow({
             <DropdownMenuItem
               className="flex items-center space-x-2"
               onClick={async () => {
-                const { error } = await supabase
-                  .schema('connections')
-                  .from('event_attendees')
-                  .delete()
-                  .eq('id', eventAttendee.id!);
+                const { data: eventOrganizerData, error: eventOrganizerError } =
+                  await supabase
+                    .schema('connections')
+                    .from('event_attendees')
+                    .select()
+                    .eq('event', eventAttendee.event as string)
+                    .eq('role', 'ORGANIZER');
 
-                if (error) handleErrors(error.message, 500);
+                const { data: eventAttendeeData, error: eventAttendeeError } =
+                  await supabase
+                    .schema('connections')
+                    .from('event_attendees')
+                    .select()
+                    .eq('event', eventAttendee.event as string);
 
-                toast({
-                  title: '✅ User Kicked',
-                  description: `User kicked from the event`,
-                });
+                const userData = await supabase.auth.getUser();
 
-                setTimeout(() => {
-                  window.location.reload();
-                }, 1000);
+                if (
+                  eventOrganizerData &&
+                  eventAttendeeData &&
+                  userData.data.user
+                ) {
+                  if (userData.data.user.id === eventAttendee.attendee) {
+                    toast({
+                      title: '❌ Error',
+                      description: `You cannot kick yourself.`,
+                    });
+
+                    return;
+                  }
+
+                  if (
+                    eventOrganizerData.length === 1 &&
+                    eventAttendee.role === 'ORGANIZER'
+                  ) {
+                    toast({
+                      title: '❌ Error',
+                      description: `One organizer need to be present in the event.`,
+                    });
+                    return;
+                  }
+
+                  const { error } = await supabase
+                    .schema('connections')
+                    .from('event_attendees')
+                    .delete()
+                    .eq('id', eventAttendee.id!);
+
+                  if (error) handleErrors(error.message, 500);
+
+                  toast({
+                    title: '✅ User Kicked',
+                    description: `User kicked from the event`,
+                  });
+
+                  setTimeout(() => {
+                    window.location.reload();
+                  }, 1000);
+                }
               }}
             >
               <MaterialSymbolsPersonOutline />

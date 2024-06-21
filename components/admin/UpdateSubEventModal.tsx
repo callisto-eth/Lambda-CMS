@@ -24,7 +24,9 @@ import { EosIconsThreeDotsLoading } from '../common/Icons';
 export default function UpdateSubEventModal({
   subEventId,
   setEditModalState,
+  eventResponse,
 }: {
+  eventResponse: Database['public']['Tables']['events']['Row'];
   setEditModalState: (state: boolean) => void;
   subEventId: string;
 }) {
@@ -99,13 +101,12 @@ export default function UpdateSubEventModal({
                 <FormItem className="">
                   <FormLabel>Start Time</FormLabel>
                   <FormControl>
-                    {
-                      <DateTimePicker
-                        initialValue={new Date(Date.now())}
-                        date={field.value}
-                        setDate={field.onChange}
-                      />
-                    }
+                    <DateTimePicker
+                      fromDate={new Date(eventResponse.start_time)}
+                      toDate={new Date(eventResponse.end_time)}
+                      date={field.value}
+                      setDate={field.onChange}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -120,7 +121,8 @@ export default function UpdateSubEventModal({
                   <FormControl>
                     {
                       <DateTimePicker
-                        initialValue={new Date(Date.now())}
+                        fromDate={new Date(eventResponse.start_time)}
+                        toDate={new Date(eventResponse.end_time)}
                         date={field.value}
                         setDate={field.onChange}
                       />

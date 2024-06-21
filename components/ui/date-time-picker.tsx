@@ -16,10 +16,14 @@ import { TimePickerDemo } from './time-picker-demo';
 
 export function DateTimePicker({
   initialValue,
+  fromDate,
+  toDate,
   date,
   setDate,
 }: {
-  initialValue: Date;
+  initialValue?: Date;
+  fromDate?: Date;
+  toDate?: Date;
   date: Date;
   setDate: (...event: any[]) => void;
 }) {
@@ -57,7 +61,8 @@ export function DateTimePicker({
         <Calendar
           mode="single"
           className="bg-[#212325]"
-          fromDate={initialValue}
+          fromDate={fromDate && initialValue}
+          toDate={toDate}
           selected={date}
           onSelect={(d) => handleSelect(d)}
           initialFocus

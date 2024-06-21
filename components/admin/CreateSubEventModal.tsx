@@ -29,33 +29,19 @@ import { metadata } from '@/app/layout';
 import { EosIconsThreeDotsLoading } from '../common/Icons';
 
 export function CreateSubEventModal({
-  eventId,
+  eventData,
   setModalState,
   setSubEventResponse,
   subEventResponse,
 }: {
   subEventResponse: any;
   setSubEventResponse: CallableFunction;
-  eventId: string;
+  eventData: Database['public']['Tables']['events']['Row'];
   setModalState: (field: boolean) => void;
 }) {
   const { toast } = useToast();
-  const supabase = createClient();
-  const [eventData, setEventData] =
-    useState<Database['public']['Tables']['events']['Row']>();
+
   const [isSubmitting, setIsSubmitting] = useState(false);
-  useEffect(() => {
-    supabase
-      .from('events')
-      .select()
-      .eq('id', eventId)
-      .single()
-      .then((response) => {
-        if (response.data) {
-          setEventData(response.data);
-        }
-      });
-  }, []);
 
   const createSubEventForm = useForm({
     resolver: zodResolver(createSubEventSchema),
@@ -83,7 +69,7 @@ export function CreateSubEventModal({
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        event: eventId,
+        event: eventData.id,
         topic: fieldValues.topic,
         description: fieldValues.description,
         start_time: fieldValues.date.from.toISOString(),

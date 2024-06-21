@@ -193,7 +193,11 @@ export default function CreateEventModal({
                 <FormItem className="">
                   <FormLabel>Date</FormLabel>
                   <FormControl>
-                    {DatePickerWithRange({ field, className: 'w-full' })}
+                    {DatePickerWithRange({
+                      field,
+                      className: 'w-full',
+                      fromDate: new Date(),
+                    })}
                   </FormControl>
                   <FormMessage />
                 </FormItem>

@@ -22,6 +22,21 @@ export default function Subevents({ eventId }: { eventId: string }) {
   const [subEventResponse, setSubEventResponse] =
     useState<Database['public']['Tables']['sub_events']['Row'][]>();
   const supabaseClient = createClient();
+  const [eventData, setEventData] =
+    useState<Database['public']['Tables']['events']['Row']>();
+  useEffect(() => {
+    supabaseClient
+      .from('events')
+      .select()
+      .eq('id', eventId)
+      .single()
+      .then((response) => {
+        if (response.data) {
+          setEventData(response.data);
+        }
+      });
+  }, []);
+
   useEffect(() => {
     supabaseClient
       .from('sub_events')
@@ -49,12 +64,14 @@ export default function Subevents({ eventId }: { eventId: string }) {
           <DialogTrigger className="py-2 hover:text-white hover:bg-red-500 bg-transparent text-red-500 border border-red-500 p-4 rounded-full text-base">
             Create a Subevent
           </DialogTrigger>
-          <CreateSubEventModal
-            subEventResponse={subEventResponse}
-            setSubEventResponse={setSubEventResponse}
-            setModalState={setModalState}
-            eventId={eventId}
-          />
+          {eventData && (
+            <CreateSubEventModal
+              subEventResponse={subEventResponse}
+              setSubEventResponse={setSubEventResponse}
+              setModalState={setModalState}
+              eventData={eventData}
+            />
+          )}
         </Dialog>
       </div>
       {subEventResponse && (
@@ -130,10 +147,13 @@ export default function Subevents({ eventId }: { eventId: string }) {
                         <MaterialSymbolsEdit className="text-xl" />
                         <p className="px-1">Edit</p>
                       </DialogTrigger>
-                      <UpdateSubEventModal
-                        subEventId={subEvent.id}
-                        setEditModalState={setEditModalState}
-                      />
+                      {eventData && (
+                        <UpdateSubEventModal
+                          subEventId={subEvent.id}
+                          setEditModalState={setEditModalState}
+                          eventResponse={eventData}
+                        />
+                      )}
                     </Dialog>
                   </AccordionContent>
                 </AccordionItem>

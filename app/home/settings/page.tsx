@@ -89,15 +89,8 @@ export default function Dashboard() {
 
   const updateProfileSchema = z.object({
     id: z.string().optional(),
-    username: z.string({
-      required_error: "Username can't be empty",
-    }),
-    bio: z.string({
-      required_error: "Bio can't be empty",
-    }),
-    visibility: z.enum(['PUBLIC', 'PRIVATE'], {
-      required_error: 'Please select a visibility option',
-    }),
+    username: z.string().min(5).max(10).optional(),
+    bio: z.string().min(10).max(500).optional(),
   });
 
   const updateProfileImageSchema = z.object({
@@ -114,7 +107,11 @@ export default function Dashboard() {
     resolver: zodResolver(updateProfileImageSchema),
   });
 
-  function onSubmit(fieldValues: z.infer<typeof updateProfileSchema>) {
+  function onSubmit(fieldValues: any) {
+    Object.keys(fieldValues).forEach((key) =>
+      fieldValues[key] === undefined ? delete fieldValues[key] : {},
+    );
+
     fetch('/api/profile/update', {
       method: 'POST',
       headers: {
